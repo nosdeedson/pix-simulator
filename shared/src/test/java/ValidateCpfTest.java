@@ -1,0 +1,55 @@
+import com.E3N.shared.utils.ValidateCpf;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+public class ValidateCpfTest extends UnitTest {
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "67894545007",
+            "21215462000",
+            "21386982032",
+            "31080379002",
+            "44785218088",
+            "56656495036"
+    })
+    public void validateCpf(String cpf) {
+        boolean result = ValidateCpf.validate(cpf);
+        Assertions.assertTrue(result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "67894j4j007",
+            "2121j462000",
+            "2138698r032",
+            "3108037900t",
+            "4478j218088",
+            "j6656495036"
+    })
+    public void cpfWithLetters(String cpf) {
+        boolean result = ValidateCpf.validate(cpf);
+        Assertions.assertFalse(result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "93005422105",
+            "13045448405",
+            "93217491144",
+            "10172472448",
+            "34119475419",
+            "82556440420",
+            "90886470985",
+            "06790455846",
+            "10240463880",
+            "78161407679",
+    })
+    public void invalidsCpf(String cpf) {
+        boolean result = ValidateCpf.validate(cpf);
+        Assertions.assertFalse(result);
+    }
+}
+
+
