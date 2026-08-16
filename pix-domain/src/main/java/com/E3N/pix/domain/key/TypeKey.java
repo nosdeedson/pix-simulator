@@ -1,4 +1,4 @@
-package com.E3N.pix.domain;
+package com.E3N.pix.domain.key;
 
 
 public enum TypeKey {

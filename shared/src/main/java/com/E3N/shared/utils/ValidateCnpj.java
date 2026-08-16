@@ -29,15 +29,18 @@ public final class ValidateCnpj {
             return acumulator;
         }
         acumulator += digits[digits.length - 1] * multiplicator;
-        if (multiplicator == 9) multiplicator = 2;
-        multiplicator++;
+        if (multiplicator == 9) {
+            multiplicator = 2;
+        } else {
+            multiplicator++;
+        }
         digits = Arrays.copyOfRange(digits, 0, (digits.length - 1));
         return sum(digits, multiplicator, acumulator);
     }
 
     private static boolean validation(int sum, int digitToValidate) {
         int rest = sum % MODULE_11;
-        if ( (MODULE_11 - rest) >= 10 && digitToValidate == 0) return true;
+        if ( rest <= 1  && digitToValidate == 0) return true;
         return (MODULE_11 - rest) == digitToValidate;
     }
 
@@ -51,6 +54,7 @@ public final class ValidateCnpj {
                 digits[i] = (int) chars[i] - MINUS_48;
             }
         }
+       // Arrays.stream(digits).forEach(System.out::println);
         return digits;
     }
 }
