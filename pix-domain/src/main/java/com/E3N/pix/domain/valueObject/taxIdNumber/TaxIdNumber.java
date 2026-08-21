@@ -1,4 +1,4 @@
-package com.E3N.pix.domain.taxIdNumber;
+package com.E3N.pix.domain.valueObject.taxIdNumber;
 
 import com.E3N.pix.domain.owner.TypePerson;
 import com.E3N.shared.utils.ValidateCnpj;

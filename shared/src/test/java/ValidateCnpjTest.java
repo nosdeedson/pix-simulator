@@ -72,6 +72,8 @@ public class ValidateCnpjTest extends UnitTest{
             "05067469000190",
             "33066756000107",
             "53136250000100",
+            "36250000100",
+            "53136250000",
     })
     public void invalidateJustNumericCnpj(String cnpj){
         boolean result = ValidateCnpj.validate(cnpj);

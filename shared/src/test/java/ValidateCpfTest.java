@@ -45,6 +45,8 @@ public class ValidateCpfTest extends UnitTest {
             "06790455846",
             "10240463880",
             "78161407679",
+            "61407679",
+            "78161407",
     })
     public void invalidsCpf(String cpf) {
         boolean result = ValidateCpf.validate(cpf);

@@ -1,31 +1,34 @@
 package com.E3N.pix.domain.owner;
 
 import com.E3N.pix.domain.Entity;
-import com.E3N.pix.domain.taxIdNumber.TaxIdNumber;
+import com.E3N.pix.domain.validation.ValidationHandler;
+import com.E3N.pix.domain.valueObject.name.Name;
+import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public class Owner extends Entity {
     private final TypePerson type;
     private final TaxIdNumber taxIdNumber; // cpf/cnpj
-    private final String name;
+    private final Name name;
     private final Instant keyOwnerShipDate;
     private Instant openClaimCreateionDate;
 
-    public Owner(final UUID id,
-                 final Instant createdAt,
-                 final Instant updatedAt,
-                 final Instant deletedAt,
-                 final TypePerson type,
-                 final String taxIdNumber,
-                 final String name,
-                 final Instant keyOwnerShipDate
+    public Owner(
+            final TypePerson type,
+            final String taxIdNumber,
+            final String name,
+            final Instant keyOwnerShipDate
     ) {
-        super(id, createdAt, updatedAt, deletedAt);
+        super();
         this.type = type;
         this.taxIdNumber = TaxIdNumber.from(type, taxIdNumber);
-        this.name = name;
+        this.name = Name.getInstance(name);
         this.keyOwnerShipDate = keyOwnerShipDate;
+    }
+
+    @Override
+    protected void validate() {
+
     }
 }
