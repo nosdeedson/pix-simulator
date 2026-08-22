@@ -1,6 +1,5 @@
 package com.E3N.pix.domain.valueObject.key;
 
-import com.E3N.pix.domain.validation.Error;
 import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 import com.E3N.shared.utils.*;
@@ -57,6 +56,6 @@ public class KeyValidator extends Validator {
     }
 
     public void createNewError() {
-        this.validationHandler().append(new Error(key.getKey() + " is invalid."));
+        this.validationHandler().append(key.getKey() + " is invalid.");
     }
 }

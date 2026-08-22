@@ -22,7 +22,7 @@ public class Owner extends Entity {
     ) {
         super();
         this.type = type;
-        this.taxIdNumber = TaxIdNumber.from(type, taxIdNumber);
+        this.taxIdNumber = TaxIdNumber.getInstance(type, taxIdNumber);
         this.name = Name.getInstance(name);
         this.keyOwnerShipDate = keyOwnerShipDate;
     }

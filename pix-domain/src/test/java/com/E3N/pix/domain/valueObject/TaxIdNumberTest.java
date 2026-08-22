@@ -1,6 +1,7 @@
 package com.E3N.pix.domain.valueObject;
 
 import com.E3N.pix.domain.owner.TypePerson;
+import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,8 +18,11 @@ public class TaxIdNumberTest {
             final TypePerson type,
             final String document
     ){
-        var result = TaxIdNumber.from(type, document);
+        var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
+        Assertions.assertNull(result.getNotification());
+        Assertions.assertEquals(type, result.getTypePerson());
+        Assertions.assertEquals(document, result.getTaxIdNumber());
     }
 
     @ParameterizedTest
@@ -27,8 +31,13 @@ public class TaxIdNumberTest {
             final TypePerson type,
             final String document
     ){
-        var result = TaxIdNumber.from(type, document);
-        Assertions.assertNull(result);
+        var result = TaxIdNumber.getInstance(type, document);
+        Assertions.assertInstanceOf(TaxIdNumber.class, result);
+        Assertions.assertNull(result.getTypePerson());
+        Assertions.assertNull(result.getTaxIdNumber());
+        Assertions.assertInstanceOf(Notification.class, result.getNotification());
+        var expectedMessage = document + " is invalid.";
+        Assertions.assertEquals(expectedMessage, result.getNotification().getErrors().getFirst().message());
     }
 
     @ParameterizedTest
@@ -37,8 +46,11 @@ public class TaxIdNumberTest {
             final TypePerson type,
             final String document
     ){
-        var result = TaxIdNumber.from(type, document);
+        var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
+        Assertions.assertNull(result.getNotification());
+        Assertions.assertEquals(type, result.getTypePerson());
+        Assertions.assertEquals(document, result.getTaxIdNumber());
     }
 
     @ParameterizedTest
@@ -47,8 +59,13 @@ public class TaxIdNumberTest {
             final TypePerson type,
             final String document
     ){
-        var result = TaxIdNumber.from(type, document);
-        Assertions.assertNull(result);
+        var result = TaxIdNumber.getInstance(type, document);
+        Assertions.assertInstanceOf(TaxIdNumber.class, result);
+        Assertions.assertNull(result.getTypePerson());
+        Assertions.assertNull(result.getTaxIdNumber());
+        Assertions.assertInstanceOf(Notification.class, result.getNotification());
+        var expectedMessage = document + " is invalid.";
+        Assertions.assertEquals(expectedMessage, result.getNotification().getErrors().getFirst().message());
     }
 
     static Stream<Arguments> providerNaturalPerson(){

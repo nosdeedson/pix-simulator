@@ -1,10 +1,10 @@
 package com.E3N.pix.domain.valueObject.name;
 
 
-import com.E3N.pix.domain.Entity;
+import com.E3N.pix.domain.ValueObject;
 import com.E3N.pix.domain.validation.Notification;
 
-public class Name extends Entity {
+public class Name extends ValueObject {
 
     private String name;
     private Notification notification;

@@ -1,11 +1,9 @@
 package com.E3N.pix.domain.valueObject.participant;
 
-import com.E3N.pix.domain.Entity;
+import com.E3N.pix.domain.ValueObject;
 import com.E3N.pix.domain.validation.Notification;
 
-import java.util.regex.Pattern;
-
-public final class Participant extends Entity {
+public final class Participant extends ValueObject {
 
 
     private String participant;

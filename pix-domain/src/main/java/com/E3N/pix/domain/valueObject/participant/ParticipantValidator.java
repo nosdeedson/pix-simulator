@@ -1,6 +1,5 @@
 package com.E3N.pix.domain.valueObject.participant;
 
-import com.E3N.pix.domain.validation.Error;
 import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 
@@ -20,11 +19,11 @@ public class ParticipantValidator extends Validator {
     @Override
     public ValidationHandler validate() {
         if (participant.getParticipant() == null) {
-            validationHandler().append(new Error("Participant should not be null."));
+            validationHandler().append("Participant should not be null.");
             return participant.getNotification();
         }
         var inValid = !pattern.matcher(participant.getParticipant()).matches();
-        if (inValid) validationHandler().append(new Error("Participant is invalid."));
+        if (inValid) validationHandler().append("Participant is invalid.");
         return participant.getNotification();
     }
 }

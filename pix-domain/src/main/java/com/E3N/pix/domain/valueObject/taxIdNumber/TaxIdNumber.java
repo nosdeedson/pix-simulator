@@ -1,37 +1,47 @@
 package com.E3N.pix.domain.valueObject.taxIdNumber;
 
+import com.E3N.pix.domain.ValueObject;
 import com.E3N.pix.domain.owner.TypePerson;
+import com.E3N.pix.domain.validation.Notification;
 import com.E3N.shared.utils.ValidateCnpj;
 import com.E3N.shared.utils.ValidateCpf;
 
-public class TaxIdNumber {
-    private final TypePerson typePerson;
-    private final String taxIdNumber;
+public class TaxIdNumber extends ValueObject {
+    private TypePerson typePerson;
+    private String taxIdNumber;
+    private Notification notification;
 
     private TaxIdNumber(TypePerson typePerson, String taxIdNumber) {
         this.typePerson = typePerson;
         this.taxIdNumber = taxIdNumber;
+        this.validate();
     }
 
-    public static TaxIdNumber from(TypePerson typePerson, String taxIdNumber){
-        return switch (typePerson){
-            case LEGAL_PERSON -> validateLegalPerson(taxIdNumber);
-            case NATURAL_PERSON -> validateNaturalPerson(taxIdNumber);
-            default -> null;
-        };
+    public static TaxIdNumber getInstance(TypePerson typePerson, String taxIdNumber){
+        return new TaxIdNumber(typePerson, taxIdNumber);
     }
 
-    private static TaxIdNumber validateLegalPerson(final String taxIdNumber){
-        var isValid = ValidateCnpj.validate(taxIdNumber);
-        TaxIdNumber taxId = null;
-        if (isValid) taxId = new TaxIdNumber(TypePerson.LEGAL_PERSON, taxIdNumber);
-        return taxId;
+    @Override
+    protected void validate() {
+        this.notification = Notification.create();
+        this.notification = (Notification) new TaxIdNumberValidator(this).validate();
+        if (this.notification.hasError()){
+            this.taxIdNumber = null;
+            this.typePerson = null;
+        }else {
+            this.notification = null;
+        }
     }
 
-    private static TaxIdNumber validateNaturalPerson(final String taxIdNumber){
-        TaxIdNumber taxId = null;
-        var isValid = ValidateCpf.validate(taxIdNumber);
-        if (isValid) taxId = new TaxIdNumber(TypePerson.NATURAL_PERSON, taxIdNumber);
-        return taxId;
+    public TypePerson getTypePerson() {
+        return typePerson;
+    }
+
+    public String getTaxIdNumber() {
+        return taxIdNumber;
+    }
+
+    public Notification getNotification() {
+        return notification;
     }
 }

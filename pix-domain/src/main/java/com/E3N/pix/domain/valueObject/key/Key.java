@@ -1,12 +1,10 @@
 package com.E3N.pix.domain.valueObject.key;
 
-import com.E3N.pix.domain.Either;
-import com.E3N.pix.domain.Entity;
+import com.E3N.pix.domain.ValueObject;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.pix.domain.validation.ValidationHandler;
 
 @SuppressWarnings("all")
-public class Key extends Entity {
+public class Key extends ValueObject {
     private String key;
     private TypeKey type;
     private Notification notification;

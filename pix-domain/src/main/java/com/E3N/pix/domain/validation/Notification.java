@@ -15,13 +15,13 @@ public class Notification implements ValidationHandler{
         return new Notification(new ArrayList<>());
     }
 
-    public static Notification create(final Error error){
+    public static Notification create(final String error){
         return (Notification) new Notification(new ArrayList<>()).append(error);
     }
 
     @Override
-    public ValidationHandler append(Error error) {
-        this.errors.add(error);
+    public ValidationHandler append(final String message) {
+        this.errors.add(new Error(message));
         return this;
     }
 
