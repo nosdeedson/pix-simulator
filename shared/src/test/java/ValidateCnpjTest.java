@@ -1,6 +1,7 @@
 import com.E3N.shared.utils.ValidateCnpj;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @SuppressWarnings("all")
@@ -75,6 +76,7 @@ public class ValidateCnpjTest extends UnitTest{
             "36250000100",
             "53136250000",
     })
+    @NullSource
     public void invalidateJustNumericCnpj(String cnpj){
         boolean result = ValidateCnpj.validate(cnpj);
         Assertions.assertFalse(result);

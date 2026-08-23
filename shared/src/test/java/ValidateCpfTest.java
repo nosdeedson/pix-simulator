@@ -1,6 +1,7 @@
 import com.E3N.shared.utils.ValidateCpf;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 public class ValidateCpfTest extends UnitTest {
@@ -28,6 +29,7 @@ public class ValidateCpfTest extends UnitTest {
             "4478j218088",
             "j6656495036"
     })
+    @NullSource
     public void cpfWithLetters(String cpf) {
         boolean result = ValidateCpf.validate(cpf);
         Assertions.assertFalse(result);

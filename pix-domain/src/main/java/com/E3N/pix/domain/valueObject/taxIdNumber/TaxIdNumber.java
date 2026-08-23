@@ -1,10 +1,8 @@
 package com.E3N.pix.domain.valueObject.taxIdNumber;
 
 import com.E3N.pix.domain.ValueObject;
-import com.E3N.pix.domain.owner.TypePerson;
+import com.E3N.pix.domain.modules.entry.owner.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.shared.utils.ValidateCnpj;
-import com.E3N.shared.utils.ValidateCpf;
 
 public class TaxIdNumber extends ValueObject {
     private TypePerson typePerson;

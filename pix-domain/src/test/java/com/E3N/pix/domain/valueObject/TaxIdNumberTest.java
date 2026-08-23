@@ -1,6 +1,6 @@
 package com.E3N.pix.domain.valueObject;
 
-import com.E3N.pix.domain.owner.TypePerson;
+import com.E3N.pix.domain.modules.entry.owner.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;
 import org.junit.jupiter.api.Assertions;

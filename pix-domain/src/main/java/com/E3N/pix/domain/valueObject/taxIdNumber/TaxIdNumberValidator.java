@@ -1,6 +1,6 @@
 package com.E3N.pix.domain.valueObject.taxIdNumber;
 
-import com.E3N.pix.domain.owner.TypePerson;
+import com.E3N.pix.domain.modules.entry.owner.TypePerson;
 import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 import com.E3N.shared.utils.ValidateCnpj;
@@ -17,6 +17,10 @@ public class TaxIdNumberValidator extends Validator {
 
     @Override
     public ValidationHandler validate() {
+        if (this.taxIdNumber.getTypePerson() == null){
+            validationHandler().append("Type person is required.");
+            return validationHandler();
+        }
         switch (this.taxIdNumber.getTypePerson()){
             case TypePerson.LEGAL_PERSON: {
                 if (!ValidateCnpj.validate(this.taxIdNumber.getTaxIdNumber())){

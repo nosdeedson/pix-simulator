@@ -1,7 +1,8 @@
-package com.E3N.pix.domain;
+package com.E3N.pix.domain.modules.entryKey;
 
-import com.E3N.pix.domain.account.Account;
-import com.E3N.pix.domain.account.AccountType;
+import com.E3N.pix.domain.UnitTest;
+import com.E3N.pix.domain.modules.entry.account.Account;
+import com.E3N.pix.domain.modules.entry.account.AccountType;
 import com.E3N.pix.domain.validation.Notification;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +14,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public class AccountTest extends UnitTest{
+public class AccountTest extends UnitTest {
 
     @ParameterizedTest
     @MethodSource("provider")

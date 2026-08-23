@@ -10,6 +10,7 @@ public final class ValidateCnpj {
 
     @SuppressWarnings("all")
     public static boolean validate(final String cnpj) {
+        if (cnpj == null) return false;
         if (cnpj.length() != 14) return false;
         int[] digits = conversionFromCharToInt(cnpj);
         return isValid(digits);

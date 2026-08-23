@@ -1,12 +1,7 @@
-package com.E3N.pix.domain.account;
+package com.E3N.pix.domain.modules.entry.account;
 
 import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 public class AccountValidator extends Validator {
 

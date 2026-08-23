@@ -1,6 +1,5 @@
-package com.E3N.pix.domain.entryKey;
+package com.E3N.pix.domain.modules.entry.entryKey;
 
-import com.E3N.pix.domain.validation.Error;
 import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 

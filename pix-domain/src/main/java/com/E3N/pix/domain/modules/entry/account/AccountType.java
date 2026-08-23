@@ -1,4 +1,4 @@
-package com.E3N.pix.domain.account;
+package com.E3N.pix.domain.modules.entry.account;
 
 public enum AccountType {
     CACC(1), // CONTA CORRENTE

@@ -6,6 +6,7 @@ public final class ValidateCpf {
     private static final int MODULE_11 = 11;
 
     public static boolean validate(final String cpf){
+        if(cpf == null) return false;
         if (!cpf.matches("\\d+") || cpf.length() != 11) return false;
         char[] chars = cpf.toCharArray();
         int[] digits = new int[11];

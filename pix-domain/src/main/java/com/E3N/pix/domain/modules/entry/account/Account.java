@@ -1,15 +1,13 @@
-package com.E3N.pix.domain.account;
+package com.E3N.pix.domain.modules.entry.account;
 
 import com.E3N.pix.domain.Entity;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.valueObject.branch.Branch;
 import com.E3N.pix.domain.valueObject.number.AccountNumber;
 import com.E3N.pix.domain.valueObject.participant.Participant;
 import com.E3N.shared.utils.DateHelper;
 
 import java.time.Instant;
-import java.time.temporal.TemporalAccessor;
 
 public class Account extends Entity {
     private Branch branch; // ag

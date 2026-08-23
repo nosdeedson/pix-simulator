@@ -1,16 +1,6 @@
-package com.E3N.pix.domain.entryKey;
+package com.E3N.pix.domain.modules.entry.entryKey;
 
 import com.E3N.pix.domain.Entity;
-import com.E3N.pix.domain.owner.Owner;
-import com.E3N.pix.domain.account.Account;
-import com.E3N.pix.domain.validation.ValidationHandler;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
-import com.E3N.pix.domain.valueObject.key.Key;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class EntryKey extends Entity {
     @Override

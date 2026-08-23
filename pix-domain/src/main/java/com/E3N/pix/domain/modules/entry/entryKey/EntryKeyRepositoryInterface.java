@@ -1,4 +1,4 @@
-package com.E3N.pix.domain.entryKey;
+package com.E3N.pix.domain.modules.entry.entryKey;
 
 import com.E3N.pix.domain.EntityRepositoryInterface;
 

@@ -13,6 +13,7 @@ public final class DateHelper {
      * examples of formats [ dd/MM/yyyy dd/MM/yyyy HH:mm:ss ]
      */
     public static Instant getDateFrom(final String dateString, final String format){
+        if (dateString == null) return null;
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
             LocalDate localDate = LocalDate.parse(dateString, formatter);
