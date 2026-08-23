@@ -24,7 +24,7 @@ public class KeyValidator extends Validator {
                 }
             }
             case EVP -> {
-                if (!ValidateKeyEVP.isValid(key.getKey())) {
+                if (!ValidateUUID.isValid(key.getKey())) {
                     createNewError();
                     return validationHandler();
                 }

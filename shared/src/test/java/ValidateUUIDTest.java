@@ -1,10 +1,10 @@
-import com.E3N.shared.utils.ValidateKeyEVP;
+import com.E3N.shared.utils.ValidateUUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class ValidateEVPTest extends UnitTest{
+public class ValidateUUIDTest extends UnitTest{
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -20,7 +20,7 @@ public class ValidateEVPTest extends UnitTest{
             "a9b0c1d2-e3f4-4506-97a8-b9c0d1e2f3a4",
     })
     public void validateEVP(final String EVP) {
-        var key = ValidateKeyEVP.isValid(EVP);
+        var key = ValidateUUID.isValid(EVP);
         Assertions.assertTrue(key);
     }
 
@@ -39,7 +39,7 @@ public class ValidateEVPTest extends UnitTest{
     })
     @NullSource
     public void invalidateEVP(final String EVP) {
-        var key = ValidateKeyEVP.isValid(EVP);
+        var key = ValidateUUID.isValid(EVP);
         Assertions.assertFalse(key);
     }
 }
