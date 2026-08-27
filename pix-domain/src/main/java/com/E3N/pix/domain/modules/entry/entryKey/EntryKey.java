@@ -6,6 +6,7 @@ import com.E3N.pix.domain.modules.entry.owner.Owner;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.key.Key;
 import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.shared.utils.ValidateUUID;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,10 +15,9 @@ import java.util.UUID;
 
 public class EntryKey extends Entity {
 
-
     private Account account;
     private Instant creationDate;
-    private List<Key> keys = new ArrayList<>();
+    private Key key;
     private Owner owner;
     private Reason reason;
     private UUID requestId;
@@ -33,12 +33,12 @@ public class EntryKey extends Entity {
             final String requestId
     ) {
         super();
-        this.keys.add(Key.getInstance(key, type));
+        this.key = Key.getInstance(key, type);
         this.account = account;
         this.owner = owner;
         this.creationDate = Instant.now();
         this.reason = reason;
-        this.requestId = UUID.fromString(requestId);
+        this.requestId = ValidateUUID.isValid(requestId) ? UUID.fromString(requestId) : null;
         validate();
     }
 
@@ -59,7 +59,7 @@ public class EntryKey extends Entity {
         this.notification = (Notification) new EntryKeyValidator(this).validate();
         if (this.notification.hasError()){
             this.account = null;
-            this.keys = null;
+            this.key = null;
             this.creationDate = null;
             this.owner = null;
             this.reason = null;
@@ -77,8 +77,8 @@ public class EntryKey extends Entity {
         return creationDate;
     }
 
-    public List<Key> getKeys() {
-        return keys;
+    public Key getKey() {
+        return key;
     }
 
     public Owner getOwner() {

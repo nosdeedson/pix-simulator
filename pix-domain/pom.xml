@@ -23,6 +23,11 @@
             <artifactId>shared</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.E3N.pix</groupId>
+            <artifactId>test-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Source: https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
