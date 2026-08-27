@@ -15,7 +15,7 @@ public class Key extends ValueObject {
         this.validate();
     }
 
-    public static Key getInstance(final String key, final TypeKey type){
+    public static Key getInstance(final String key, final TypeKey type) {
         return new Key(key, type);
     }
 
@@ -23,11 +23,9 @@ public class Key extends ValueObject {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new KeyValidator(this).validate();
-        if (this.notification.hasError()){
+        if (this.notification.hasError()) {
             this.key = null;
             this.type = null;
-        } else {
-            this.notification = null;
         }
     }
 

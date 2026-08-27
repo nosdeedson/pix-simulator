@@ -57,15 +57,13 @@ public class EntryKey extends Entity {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new EntryKeyValidator(this).validate();
-        if (this.notification.hasError()){
+        if (this.notification.hasError()) {
             this.account = null;
             this.key = null;
             this.creationDate = null;
             this.owner = null;
             this.reason = null;
             this.requestId = null;
-        } else {
-            this.notification = null;
         }
     }
 

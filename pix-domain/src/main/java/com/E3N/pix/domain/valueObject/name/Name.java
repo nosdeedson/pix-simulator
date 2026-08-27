@@ -28,8 +28,6 @@ public class Name extends ValueObject {
         this.notification = (Notification) new NameValidator(this).validate();
         if (this.notification.hasError()) {
             this.name = null;
-        } else {
-            this.notification = null;
         }
     }
 

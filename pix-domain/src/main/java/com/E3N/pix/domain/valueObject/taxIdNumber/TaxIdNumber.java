@@ -15,7 +15,7 @@ public class TaxIdNumber extends ValueObject {
         this.validate();
     }
 
-    public static TaxIdNumber getInstance(TypePerson typePerson, String taxIdNumber){
+    public static TaxIdNumber getInstance(TypePerson typePerson, String taxIdNumber) {
         return new TaxIdNumber(typePerson, taxIdNumber);
     }
 
@@ -23,11 +23,9 @@ public class TaxIdNumber extends ValueObject {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new TaxIdNumberValidator(this).validate();
-        if (this.notification.hasError()){
+        if (this.notification.hasError()) {
             this.taxIdNumber = null;
             this.typePerson = null;
-        }else {
-            this.notification = null;
         }
     }
 

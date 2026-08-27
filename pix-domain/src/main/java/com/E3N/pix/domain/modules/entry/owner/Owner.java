@@ -12,7 +12,7 @@ public class Owner extends Entity {
     private Instant keyOwnerShipDate;
     private Name name;
     private Name tradeName;
-    private Instant openClaimCreateionDate;
+    private Instant openClaimCreationDate;
     private TaxIdNumber taxIdNumber; // cpf/cnpj
     private TypePerson type;
 
@@ -39,8 +39,8 @@ public class Owner extends Entity {
             final TypePerson type,
             final String tradeName
     ) {
-       this.tradeName = Name.getInstance(tradeName, TypePerson.LEGAL_PERSON);
-       this(keyOwnerShipDate, name, taxIdNumber, type);
+        this.tradeName = Name.getInstance(tradeName, TypePerson.LEGAL_PERSON);
+        this(keyOwnerShipDate, name, taxIdNumber, type);
     }
 
     public static Owner getInstanceNaturalPerson(
@@ -71,17 +71,15 @@ public class Owner extends Entity {
             this.name = null;
             this.taxIdNumber = null;
             this.type = null;
-        } else {
-            this.notification = null;
         }
     }
 
-    public Instant getOpenClaimCreateionDate() {
-        return openClaimCreateionDate;
+    public Instant getOpenClaimCreationDate() {
+        return openClaimCreationDate;
     }
 
-    public void setOpenClaimCreateionDate(Instant openClaimCreateionDate) {
-        this.openClaimCreateionDate = openClaimCreateionDate;
+    public void setOpenClaimCreationDate(Instant openClaimCreationDate) {
+        this.openClaimCreationDate = openClaimCreationDate;
     }
 
     public Instant getKeyOwnerShipDate() {

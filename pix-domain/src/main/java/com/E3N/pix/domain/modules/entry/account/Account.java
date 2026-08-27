@@ -48,13 +48,11 @@ public class Account extends Entity {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new AccountValidator(this).validate();
-        if (this.notification.hasError()){
+        if (this.notification.hasError()) {
             this.branch = null;
             this.type = null;
             this.participant = null;
             this.openingDate = null;
-        } else {
-            this.notification = null;
         }
     }
 
@@ -78,7 +76,7 @@ public class Account extends Entity {
         return openingDate;
     }
 
-    protected void setOpeningDate(Instant openingDate){
+    protected void setOpeningDate(Instant openingDate) {
         this.openingDate = openingDate;
     }
 

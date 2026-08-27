@@ -13,7 +13,7 @@ public class AccountNumber extends ValueObject {
         validate();
     }
 
-    public static AccountNumber getInstance(final String number){
+    public static AccountNumber getInstance(final String number) {
         return new AccountNumber(number);
     }
 
@@ -21,10 +21,8 @@ public class AccountNumber extends ValueObject {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new AccountNumberValidator(this).validate();
-        if (this.notification.hasError()){
+        if (this.notification.hasError()) {
             this.number = null;
-        } else {
-            this.notification = null;
         }
     }
 

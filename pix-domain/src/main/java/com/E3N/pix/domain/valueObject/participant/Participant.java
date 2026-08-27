@@ -14,7 +14,7 @@ public final class Participant extends ValueObject {
         this.validate();
     }
 
-    public static Participant getInstance(String participant){
+    public static Participant getInstance(String participant) {
         return new Participant(participant);
     }
 
@@ -22,10 +22,8 @@ public final class Participant extends ValueObject {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new ParticipantValidator(this).validate();
-        if (notification.hasError()){
+        if (notification.hasError()) {
             this.participant = null;
-        } else {
-            this.notification = null;
         }
     }
 

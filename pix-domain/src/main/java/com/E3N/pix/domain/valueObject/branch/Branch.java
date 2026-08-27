@@ -14,7 +14,7 @@ public class Branch extends ValueObject {
         validate();
     }
 
-    public static Branch getInstance(final String branch){
+    public static Branch getInstance(final String branch) {
         return new Branch(branch);
     }
 
@@ -22,13 +22,11 @@ public class Branch extends ValueObject {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new BranchValidator(this).validate();
-        if (this.notification.hasError()){
+        if (this.notification.hasError()) {
             this.branch = null;
-        } else {
-            this.branch = StringUtils.left(branch, 4);
-            this.notification = null;
         }
     }
+
     public String getBranch() {
         return branch;
     }
