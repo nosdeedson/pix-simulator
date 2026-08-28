@@ -89,7 +89,7 @@ public class EntryKeyTest extends UnitTest {
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
         Assertions.assertTrue(result.getNotification().hasError());
-        Assertions.assertTrue(!result.getNotification().getErrors().isEmpty());
+        Assertions.assertTrue(!result.getNotification().getViolations().isEmpty());
     }
 
     static Stream<Arguments> invalidProvider() {
@@ -177,7 +177,7 @@ public class EntryKeyTest extends UnitTest {
         var result = EntryKey.getInstance(expectedKey, TypeKey.CNPJ, account, owner, Reason.USER_REQUESTED, expectedRequestId.toString());
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertTrue(result.getNotification().getErrors().getFirst().message().contains("Key R9WEGOGH000166 should be equal to taxIdNumber"));
+        Assertions.assertTrue(result.getNotification().getViolations().getFirst().message().contains("Key R9WEGOGH000166 should be equal to taxIdNumber"));
     }
 
     @ParameterizedTest
@@ -191,7 +191,7 @@ public class EntryKeyTest extends UnitTest {
         var result = EntryKey.getInstance(expectedKey, TypeKey.CNPJ, account, owner, Reason.USER_REQUESTED, requestId);
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertTrue(result.getNotification().getErrors().getFirst().message().contains("Request Id is invalid or null."));
+        Assertions.assertTrue(result.getNotification().getViolations().getFirst().message().contains("Request Id is invalid or null."));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class EntryKeyTest extends UnitTest {
         var result = EntryKey.getInstance(expectedKey, TypeKey.CNPJ, account, owner, null, expectedRequestId.toString());
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertTrue(result.getNotification().getErrors().getFirst().message().contains("Reason is required."));
+        Assertions.assertTrue(result.getNotification().getViolations().getFirst().message().contains("Reason is required."));
     }
 
     @Test
@@ -217,14 +217,14 @@ public class EntryKeyTest extends UnitTest {
         var result = EntryKey.getInstance(expectedKey, TypeKey.CNPJ, account, owner, Reason.USER_REQUESTED, expectedRequestId.toString());
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertEquals(4, result.getNotification().getErrors().size());
+        Assertions.assertEquals(4, result.getNotification().getViolations().size());
         var expectedErrors = Arrays.asList(
                 new Error("KeyOwnershipDate is required."),
                 new Error("Min size of name is 3, Max size is 100."),
                 new Error("Min size of name is 3, Max size is 100."),
                 new Error("TaxIdNumber: 123456789 is invalid.")
         );
-        Assertions.assertTrue(expectedErrors.containsAll(result.getNotification().getErrors()));
+        Assertions.assertTrue(expectedErrors.containsAll(result.getNotification().getViolations()));
     }
 
     @Test
@@ -237,7 +237,7 @@ public class EntryKeyTest extends UnitTest {
         var result = EntryKey.getInstance(expectedKey, TypeKey.CNPJ, account, owner, Reason.USER_REQUESTED, expectedRequestId.toString());
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertEquals(5, result.getNotification().getErrors().size());
+        Assertions.assertEquals(5, result.getNotification().getViolations().size());
         var expectedErrors = Arrays.asList(
                 new Error("Branch is invalid."),
                 new Error("Account Number is invalid."),
@@ -245,7 +245,7 @@ public class EntryKeyTest extends UnitTest {
                 new Error("Participant is invalid."),
                 new Error("Account Type is required.")
         );
-        Assertions.assertTrue(expectedErrors.containsAll(result.getNotification().getErrors()));
+        Assertions.assertTrue(expectedErrors.containsAll(result.getNotification().getViolations()));
     }
 
     @Test
@@ -258,12 +258,12 @@ public class EntryKeyTest extends UnitTest {
         var result = EntryKey.getInstance(expectedKey, TypeKey.CNPJ, account, owner, Reason.USER_REQUESTED, expectedRequestId.toString());
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertEquals(2, result.getNotification().getErrors().size());
+        Assertions.assertEquals(2, result.getNotification().getViolations().size());
         var expectedErrors = Arrays.asList(
                 new Error("R9WEGO%H000166 is invalid."),
                 new Error("TaxIdNumber: R9WEGO%H000166 is invalid.")
         );
-        Assertions.assertTrue(expectedErrors.containsAll(result.getNotification().getErrors()));
+        Assertions.assertTrue(expectedErrors.containsAll(result.getNotification().getViolations()));
     }
 
     // entryKey type natural person
@@ -290,6 +290,6 @@ public class EntryKeyTest extends UnitTest {
         var result = EntryKey.getInstance(expectedKey, TypeKey.CPF, account, owner, Reason.USER_REQUESTED, expectedRequestId.toString());
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertTrue(result.getNotification().getErrors().getFirst().message().contains("Key 91621117448 should be equal"));
+        Assertions.assertTrue(result.getNotification().getViolations().getFirst().message().contains("Key 91621117448 should be equal"));
     }
 }

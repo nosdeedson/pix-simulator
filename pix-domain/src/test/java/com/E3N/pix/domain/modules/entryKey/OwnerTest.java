@@ -75,7 +75,7 @@ public class OwnerTest extends UnitTest {
                 new Error("Name must not be null."),
                 new Error("73735342019 is invalid."),
                 new Error("TradeName is required for Legal person.")
-        ).containsAll(result.getNotification().getErrors()));
+        ).containsAll(result.getNotification().getViolations()));
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
     }
 
@@ -163,7 +163,7 @@ public class OwnerTest extends UnitTest {
                 new Error("Name must not be null."),
                 new Error("73735342019 is invalid."),
                 new Error("TradeName is required for Legal person.")
-        ).containsAll(result.getNotification().getErrors()));
+        ).containsAll(result.getNotification().getViolations()));
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
     }
 

@@ -9,8 +9,6 @@ import com.E3N.pix.domain.valueObject.key.TypeKey;
 import com.E3N.shared.utils.ValidateUUID;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class EntryKey extends Entity {
@@ -21,6 +19,8 @@ public class EntryKey extends Entity {
     private Owner owner;
     private Reason reason;
     private UUID requestId;
+    private final String correlationId;
+    private final Instant responseTime;
 
     private Notification notification;
 
@@ -39,6 +39,8 @@ public class EntryKey extends Entity {
         this.creationDate = Instant.now();
         this.reason = reason;
         this.requestId = ValidateUUID.isValid(requestId) ? UUID.fromString(requestId) : null;
+        this.correlationId = UUID.randomUUID().toString().replace("-", "");
+        this.responseTime = Instant.now();
         validate();
     }
 
@@ -93,5 +95,13 @@ public class EntryKey extends Entity {
 
     public Notification getNotification() {
         return notification;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public Instant getResponseTime() {
+        return responseTime;
     }
 }

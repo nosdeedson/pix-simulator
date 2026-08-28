@@ -6,7 +6,7 @@ import com.E3N.shared.utils.*;
 
 
 public class KeyValidator extends Validator {
-
+    private final static String PROPERTY = "EntryKey.key";
     private final Key key;
 
     public KeyValidator(Key key) {
@@ -56,6 +56,6 @@ public class KeyValidator extends Validator {
     }
 
     public void createNewError() {
-        this.validationHandler().append(key.getKey() + " is invalid.");
+        this.validationHandler().append(key.getKey() + " is invalid.", key.getKey(), PROPERTY);
     }
 }

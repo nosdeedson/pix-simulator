@@ -17,7 +17,7 @@ public class TaxIdNumberTest {
     public void givenValidNaturalPersonDocument_shouldReturnOk(
             final TypePerson type,
             final String document
-    ){
+    ) {
         var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
         Assertions.assertNull(result.getNotification());
@@ -30,14 +30,14 @@ public class TaxIdNumberTest {
     public void givenInvalidNaturalPersonDocument_shouldReturnOk(
             final TypePerson type,
             final String document
-    ){
+    ) {
         var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
         Assertions.assertNull(result.getTypePerson());
         Assertions.assertNull(result.getTaxIdNumber());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
         var expectedMessage = document + " is invalid.";
-        Assertions.assertEquals(expectedMessage, result.getNotification().getErrors().getFirst().message());
+        Assertions.assertEquals(expectedMessage, result.getNotification().getViolations().getFirst().message());
     }
 
     @ParameterizedTest
@@ -45,7 +45,7 @@ public class TaxIdNumberTest {
     public void givenValidLegalPersonDocument_shouldReturnOk(
             final TypePerson type,
             final String document
-    ){
+    ) {
         var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
         Assertions.assertNull(result.getNotification());
@@ -58,17 +58,17 @@ public class TaxIdNumberTest {
     public void givenInvalidLegalPersonDocument_shouldReturnOk(
             final TypePerson type,
             final String document
-    ){
+    ) {
         var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
         Assertions.assertNull(result.getTypePerson());
         Assertions.assertNull(result.getTaxIdNumber());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
         var expectedMessage = document + " is invalid.";
-        Assertions.assertEquals(expectedMessage, result.getNotification().getErrors().getFirst().message());
+        Assertions.assertEquals(expectedMessage, result.getNotification().getViolations().getFirst().message());
     }
 
-    static Stream<Arguments> providerNaturalPerson(){
+    static Stream<Arguments> providerNaturalPerson() {
         return Stream.of(
                 Arguments.of(TypePerson.NATURAL_PERSON, "29037866077"),
                 Arguments.of(TypePerson.NATURAL_PERSON, "31420919202"),
@@ -83,7 +83,7 @@ public class TaxIdNumberTest {
         );
     }
 
-    static Stream<Arguments> providerLegalPerson(){
+    static Stream<Arguments> providerLegalPerson() {
         return Stream.of(
                 Arguments.of(TypePerson.LEGAL_PERSON, "16818539000192"),
                 Arguments.of(TypePerson.LEGAL_PERSON, "95773457000145"),
@@ -98,7 +98,7 @@ public class TaxIdNumberTest {
         );
     }
 
-    static Stream<Arguments> providerInvalidNaturalPerson(){
+    static Stream<Arguments> providerInvalidNaturalPerson() {
         return Stream.of(
                 Arguments.of(TypePerson.NATURAL_PERSON, "037866077"),
                 Arguments.of(TypePerson.NATURAL_PERSON, "21420918202"),
@@ -113,7 +113,7 @@ public class TaxIdNumberTest {
         );
     }
 
-    static Stream<Arguments> providerInvalidLegalPerson(){
+    static Stream<Arguments> providerInvalidLegalPerson() {
         return Stream.of(
                 Arguments.of(TypePerson.LEGAL_PERSON, "16818538000192"),
                 Arguments.of(TypePerson.LEGAL_PERSON, "95773456000145"),

@@ -23,7 +23,7 @@ public class ParticipantTest extends UnitTest {
             "22896431",
             "36864992",
     })
-    public void whenReceiveValidParticipantValues_shouldReturnParticipant(final String participant){
+    public void whenReceiveValidParticipantValues_shouldReturnParticipant(final String participant) {
         var resul = Participant.getInstance(participant);
         Assertions.assertInstanceOf(Participant.class, resul);
         Assertions.assertNull(resul.getNotification());
@@ -43,17 +43,17 @@ public class ParticipantTest extends UnitTest {
             "JTNJMB",
     })
     @NullSource
-    public void whenReceiveInvalidParticipantValues_shouldReturnParticipant(final String participant){
+    public void whenReceiveInvalidParticipantValues_shouldReturnParticipant(final String participant) {
         var resul = Participant.getInstance(participant);
         Assertions.assertInstanceOf(Participant.class, resul);
         Assertions.assertInstanceOf(Notification.class, resul.getNotification());
         String expectedMessage;
-        if (participant == null){
+        if (participant == null) {
             expectedMessage = "Participant should not be null.";
         } else {
             expectedMessage = "Participant is invalid.";
         }
-        Assertions.assertEquals(expectedMessage, resul.getNotification().getErrors().getFirst().message());
+        Assertions.assertEquals(expectedMessage, resul.getNotification().getViolations().getFirst().message());
 
     }
 }

@@ -1,13 +1,13 @@
 package com.E3N.pix.domain.valueObject;
 
-import com.E3N.pix.domain.Either;
 import com.E3N.pix.domain.UnitTest;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
 import com.E3N.pix.domain.valueObject.key.Key;
+import com.E3N.pix.domain.valueObject.key.TypeKey;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
@@ -15,7 +15,7 @@ public class KeyTest extends UnitTest {
 
     @ParameterizedTest
     @MethodSource("provider")
-    public void givenAValidTypeOfKey_shouldReturnAKeys(final String value, final TypeKey type){
+    public void givenAValidTypeOfKey_shouldReturnAKeys(final String value, final TypeKey type) {
         var k = Key.getInstance(value, type);
         Assertions.assertInstanceOf(Key.class, k);
         Assertions.assertEquals(type, k.getType());
@@ -25,7 +25,7 @@ public class KeyTest extends UnitTest {
 
     @ParameterizedTest
     @MethodSource("invalidProvider")
-    public void givenAInvalidTypeOfKey_shouldReturnAKeys(final String value, final TypeKey type){
+    public void givenAInvalidTypeOfKey_shouldReturnAKeys(final String value, final TypeKey type) {
         var k = Key.getInstance(value, type);
         Assertions.assertInstanceOf(Key.class, k);
         Assertions.assertNull(k.getType());
@@ -33,7 +33,7 @@ public class KeyTest extends UnitTest {
         Assertions.assertInstanceOf(Notification.class, k.getNotification());
         Assertions.assertTrue(k.getNotification().hasError());
         var expectedMessage = value + " is invalid.";
-        Assertions.assertEquals(k.getNotification().getErrors().getFirst().message(), expectedMessage);
+        Assertions.assertEquals(k.getNotification().getViolations().getFirst().message(), expectedMessage);
     }
 
     static Stream<Arguments> provider() {

@@ -25,7 +25,7 @@ public class AccountNumberTest extends UnitTest {
             "123466",
             "123477",
     })
-    public void givenValidAccountNumbers_shouldReturnAnInstance(final String value){
+    public void givenValidAccountNumbers_shouldReturnAnInstance(final String value) {
         var result = AccountNumber.getInstance(value);
         Assertions.assertInstanceOf(AccountNumber.class, result);
         Assertions.assertEquals(value, result.getNumber());
@@ -45,11 +45,11 @@ public class AccountNumberTest extends UnitTest {
             "xxx",
             "123x477",
     })
-    public void givenInvalidAccountNumbers_shouldReturnAnInstanceWithNotification(final String value){
+    public void givenInvalidAccountNumbers_shouldReturnAnInstanceWithNotification(final String value) {
         var result = AccountNumber.getInstance(value);
         Assertions.assertInstanceOf(AccountNumber.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
         Assertions.assertTrue(Arrays.asList("Account Number is required.", "Account Number is invalid.")
-                .contains(result.getNotification().getErrors().getFirst().message()));
+                .contains(result.getNotification().getViolations().getFirst().message()));
     }
 }

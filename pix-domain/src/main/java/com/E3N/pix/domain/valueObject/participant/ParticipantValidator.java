@@ -6,6 +6,7 @@ import com.E3N.pix.domain.validation.Validator;
 import java.util.regex.Pattern;
 
 public class ParticipantValidator extends Validator {
+    private final static String PROPERTY = "Account.participant";
     private static final String PARTICIPANT_REGEX = "(?i)^[a-z0-9]{8}$";
     private static final Pattern pattern = Pattern.compile(PARTICIPANT_REGEX);
 
@@ -19,11 +20,12 @@ public class ParticipantValidator extends Validator {
     @Override
     public ValidationHandler validate() {
         if (participant.getParticipant() == null) {
-            validationHandler().append("Participant should not be null.");
+            validationHandler().append("Participant should not be null.", participant.getParticipant(), PROPERTY);
             return participant.getNotification();
         }
         var inValid = !pattern.matcher(participant.getParticipant()).matches();
-        if (inValid) validationHandler().append("Participant is invalid.");
+        if (inValid)
+            validationHandler().append("Participant is invalid.", participant.getParticipant(), PROPERTY);
         return participant.getNotification();
     }
 }

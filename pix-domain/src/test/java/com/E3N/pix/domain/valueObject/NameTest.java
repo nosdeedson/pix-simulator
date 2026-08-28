@@ -6,14 +6,15 @@ import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.name.Name;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class NameTest extends UnitTest {
 
-//    valid name legal person
+    //    valid name legal person
     @ParameterizedTest
     @MethodSource("providerValidNamePerson")
     public void givenValidNames_shouldReturnName(final String name, final TypePerson typePerson) {
@@ -23,7 +24,7 @@ public class NameTest extends UnitTest {
         Assertions.assertNull(result.getNotification());
     }
 
-    static Stream<Arguments> providerValidNamePerson(){
+    static Stream<Arguments> providerValidNamePerson() {
         return Stream.of(
                 Arguments.of("Maria Eduarda Silva", TypePerson.NATURAL_PERSON),
                 Arguments.of("João Pedro Oliveira", TypePerson.NATURAL_PERSON),
@@ -53,10 +54,10 @@ public class NameTest extends UnitTest {
                 "Must be a full name.",
                 "Min size of name is 3, Max size is 100."
         );
-        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getErrors().getFirst().message()));
+        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().message()));
     }
 
-    static Stream<Arguments> providerInvalidNamePerson(){
+    static Stream<Arguments> providerInvalidNamePerson() {
         return Stream.of(
                 Arguments.of("Maria", TypePerson.NATURAL_PERSON),
                 Arguments.of("João Pedro Oliveira@", TypePerson.NATURAL_PERSON),
@@ -80,7 +81,7 @@ public class NameTest extends UnitTest {
         Assertions.assertNull(result.getNotification());
     }
 
-    static Stream<Arguments> providerValidNameForLegalPerson(){
+    static Stream<Arguments> providerValidNameForLegalPerson() {
         return Stream.of(
                 Arguments.of("Velo", TypePerson.LEGAL_PERSON),
                 Arguments.of("Zeta", TypePerson.LEGAL_PERSON),
@@ -95,7 +96,7 @@ public class NameTest extends UnitTest {
         );
     }
 
-// invalid legal person names
+    // invalid legal person names
     @ParameterizedTest
     @MethodSource("providerInvalidNameForLegalPerson")
     public void givenInvalidNamesForLegalPerson_shouldReturnNameWithNotification(final String name, final TypePerson typePerson) {
@@ -110,11 +111,11 @@ public class NameTest extends UnitTest {
                 "Must be a full name.",
                 "Min size of name is 3, Max size is 100."
         );
-        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getErrors().getFirst().message()));
+        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().message()));
     }
 
 
-    static Stream<Arguments> providerInvalidNameForLegalPerson(){
+    static Stream<Arguments> providerInvalidNameForLegalPerson() {
         return Stream.of(
                 Arguments.of("Velo@", TypePerson.LEGAL_PERSON),
                 Arguments.of("Zeta#", TypePerson.LEGAL_PERSON),

@@ -24,7 +24,7 @@ public class AccountTest extends UnitTest {
             final String participant,
             final AccountType type,
             final String opening
-    ){
+    ) {
         var expectedBranch = StringUtils.leftPad(branch, 4, "0");
         var result = Account.getInstance(expectedBranch,
                 number,
@@ -48,7 +48,7 @@ public class AccountTest extends UnitTest {
             final String participant,
             final AccountType type,
             final String opening
-    ){
+    ) {
         var result = Account.getInstance(branch,
                 number,
                 participant,
@@ -58,7 +58,7 @@ public class AccountTest extends UnitTest {
         Assertions.assertInstanceOf(Account.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
         Assertions.assertTrue(Arrays.asList(
-                "Branch is required.",
+                        "Branch is required.",
                         "Branch is invalid.",
                         "Account Number is required.",
                         "Account Number is invalid.",
@@ -67,10 +67,10 @@ public class AccountTest extends UnitTest {
                         "Participant should not be null.",
                         "Participant is invalid."
                 )
-                .contains(result.getNotification().getErrors().getFirst().message()));
+                .contains(result.getNotification().getViolations().getFirst().message()));
     }
 
-    static Stream<Arguments> provider(){
+    static Stream<Arguments> provider() {
         return Stream.of(
                 Arguments.of("1", "1234", "00000000", AccountType.CACC, "12/08/1980"),
                 Arguments.of("2", "1234", "04332281", AccountType.OTHR, "12/08/1980"),
@@ -85,7 +85,7 @@ public class AccountTest extends UnitTest {
         );
     }
 
-    static Stream<Arguments> invalidProvider(){
+    static Stream<Arguments> invalidProvider() {
         return Stream.of(
 //                Arguments.of("100000", "1234", "00000000", AccountType.CACC, "12/08/1980"),
 //                Arguments.of("2", "qqqq", "04332281", AccountType.OTHR, "32/08/1980"),

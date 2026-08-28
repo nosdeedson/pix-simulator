@@ -26,7 +26,7 @@ public class BranchTest extends UnitTest {
             "1",
             "1"
     })
-    public void givenValidBranchValues_shouldReturnAnInstanceWithNotification(final String value){
+    public void givenValidBranchValues_shouldReturnAnInstanceWithNotification(final String value) {
         var expectedBranch = StringUtils.leftPad(value, 4, "0");
         var result = Branch.getInstance(value);
         Assertions.assertInstanceOf(Branch.class, result);
@@ -49,11 +49,11 @@ public class BranchTest extends UnitTest {
             "00001"
     })
     @NullSource
-    public void givenInvalidBranchValues_shouldReturnAnInstance(final String value){
+    public void givenInvalidBranchValues_shouldReturnAnInstance(final String value) {
         var result = Branch.getInstance(value);
         Assertions.assertInstanceOf(Branch.class, result);
         Assertions.assertNull(result.getBranch());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertTrue(Arrays.asList("Branch is required.", "Branch is invalid.").contains(result.getNotification().getErrors().getFirst().message()));
+        Assertions.assertTrue(Arrays.asList("Branch is required.", "Branch is invalid.").contains(result.getNotification().getViolations().getFirst().message()));
     }
 }

@@ -12,6 +12,7 @@
         <module>pix-domain</module>
         <module>shared</module>
         <module>test-common</module>
+        <module>pix-servive</module>
     </modules>
 
     <properties>

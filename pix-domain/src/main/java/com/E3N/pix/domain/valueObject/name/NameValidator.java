@@ -5,7 +5,7 @@ import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 
 public class NameValidator extends Validator {
-
+    private final static String PROPERTY = "Owner.name";
     private final Name name;
 
     protected NameValidator(final Name name) {
@@ -16,20 +16,22 @@ public class NameValidator extends Validator {
     @Override
     public ValidationHandler validate() {
         if (this.name.getName() == null) {
-            validationHandler().append("Name must not be null.");
+            validationHandler().append("Name must not be null.", name.getName(), PROPERTY);
             return name.getNotification();
         }
         String nameValidated = this.name.getName().trim();
-        boolean hasInvalidChar = nameValidated.matches(".*[^\\p{L}\\s].*");;
-        if (hasInvalidChar) validationHandler().append("Name should not have special characters.");
-        if (this.name.getType() == null){
-            validationHandler().append("TypePerson must not be null.");
+        boolean hasInvalidChar = nameValidated.matches(".*[^\\p{L}\\s].*");
+
+        if (hasInvalidChar)
+            validationHandler().append("Name should not have special characters.", name.getName(), PROPERTY);
+        if (this.name.getType() == null) {
+            validationHandler().append("TypePerson must not be null.", name.getName(), PROPERTY);
             return validationHandler();
         }
-        if( !nameValidated.contains(" ") && this.name.getType().equals(TypePerson.NATURAL_PERSON))
-            validationHandler().append("Must be a full name.");
+        if (!nameValidated.contains(" ") && this.name.getType().equals(TypePerson.NATURAL_PERSON))
+            validationHandler().append("Must be a full name.", name.getName(), PROPERTY);
         if (nameValidated.length() < 3 || nameValidated.length() > 100) validationHandler()
-                .append("Min size of name is 3, Max size is 100.");
+                .append("Min size of name is 3, Max size is 100.", name.getName(), PROPERTY);
         return name.getNotification();
     }
 }
