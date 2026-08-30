@@ -9,6 +9,7 @@ import com.E3N.shared.utils.DateHelper;
 import java.time.Instant;
 
 public class Owner extends Entity {
+    // TODO keyOwnerShipDate IS PART OF EntryKey
     private Instant keyOwnerShipDate;
     private Name name;
     private Name tradeName;
@@ -22,8 +23,7 @@ public class Owner extends Entity {
             final String keyOwnerShipDate,
             final String name,
             final String taxIdNumber,
-            final TypePerson type
-    ) {
+            final TypePerson type) {
         super();
         this.keyOwnerShipDate = DateHelper.getDateFrom(keyOwnerShipDate, "dd/MM/yyyy");
         this.name = Name.getInstance(name, type);
@@ -37,8 +37,7 @@ public class Owner extends Entity {
             final String name,
             final String taxIdNumber,
             final TypePerson type,
-            final String tradeName
-    ) {
+            final String tradeName) {
         this.tradeName = Name.getInstance(tradeName, TypePerson.LEGAL_PERSON);
         this(keyOwnerShipDate, name, taxIdNumber, type);
     }
@@ -47,8 +46,7 @@ public class Owner extends Entity {
             final String keyOwnerShipDate,
             final String name,
             final String taxIdNumber,
-            final TypePerson type
-    ) {
+            final TypePerson type) {
         return new Owner(keyOwnerShipDate, name, taxIdNumber, type);
     }
 
@@ -57,8 +55,7 @@ public class Owner extends Entity {
             final String name,
             final String taxIdNumber,
             final String tradeName,
-            final TypePerson type
-    ) {
+            final TypePerson type) {
         return new Owner(keyOwnerShipDate, name, taxIdNumber, type, tradeName);
     }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://pix.com/soap/contract"
+    targetNamespace="http://pix.com/soap/contract"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:element name="Problem">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="type" type="xs:string"/>
+                <xs:element name="title" type="xs:string"/>
+                <xs:element name="status" type="xs:int"/>
+                <xs:element name="detail" type="xs:string"/>
+                <xs:element name="Violations" type="tns:ViolationsType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ViolationsType">
+        <xs:sequence>
+            <xs:element name="Violation" type="tns:ViolationType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ViolationType">
+        <xs:sequence>
+            <xs:element name="reason" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+            <xs:element name="property" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
