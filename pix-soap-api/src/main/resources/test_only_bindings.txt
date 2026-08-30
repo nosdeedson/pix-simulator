@@ -1,0 +1,23 @@
+// intent to organize classes in folder to use it must alter the pom.xml adding
+                    <bindingIncludes>
+                        <bindingInclude>bindings.xjb</bindingInclude>
+                    </bindingIncludes>
+// and name this file to bindings.xjb
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               version="3.0">
+
+    <jaxb:bindings schemaLocation="entryKey.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.E3N.pix.soap.contract.entryKey"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="problem.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.E3N.pix.soap.contract.problem"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+</jaxb:bindings>

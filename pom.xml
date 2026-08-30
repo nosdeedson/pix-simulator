@@ -13,6 +13,7 @@
         <module>shared</module>
         <module>test-common</module>
         <module>pix-servive</module>
+        <module>pix-soap-api</module>
     </modules>
 
     <properties>
