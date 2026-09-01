@@ -31,7 +31,7 @@ public class BranchTest extends UnitTest {
         var result = Branch.getInstance(value);
         Assertions.assertInstanceOf(Branch.class, result);
         Assertions.assertEquals(expectedBranch, result.getBranch());
-        Assertions.assertNull(result.getNotification());
+        Assertions.assertFalse(result.getNotification().hasError());
     }
 
     @ParameterizedTest
@@ -54,6 +54,6 @@ public class BranchTest extends UnitTest {
         Assertions.assertInstanceOf(Branch.class, result);
         Assertions.assertNull(result.getBranch());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        Assertions.assertTrue(Arrays.asList("Branch is required.", "Branch is invalid.").contains(result.getNotification().getViolations().getFirst().message()));
+        Assertions.assertTrue(Arrays.asList("Branch is null.", "Branch is invalid.").contains(result.getNotification().getViolations().getFirst().reason()));
     }
 }

@@ -29,7 +29,7 @@ public class AccountNumberTest extends UnitTest {
         var result = AccountNumber.getInstance(value);
         Assertions.assertInstanceOf(AccountNumber.class, result);
         Assertions.assertEquals(value, result.getNumber());
-        Assertions.assertNull(result.getNotification());
+        Assertions.assertFalse(result.getNotification().hasError());
     }
 
     @ParameterizedTest
@@ -50,6 +50,6 @@ public class AccountNumberTest extends UnitTest {
         Assertions.assertInstanceOf(AccountNumber.class, result);
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
         Assertions.assertTrue(Arrays.asList("Account Number is required.", "Account Number is invalid.")
-                .contains(result.getNotification().getViolations().getFirst().message()));
+                .contains(result.getNotification().getViolations().getFirst().reason()));
     }
 }

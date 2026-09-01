@@ -1,16 +1,16 @@
 package com.E3N.pix.service.entryKey;
 
 import com.E3N.pix.domain.modules.entry.entryKey.EntryKey;
-import com.E3N.pix.domain.modules.entry.entryKey.EntryKeyRepositoryInterface;
+import com.E3N.pix.domain.modules.entry.owner.OwnerRepositoryInterface;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.Either;
 import com.E3N.pix.service.entryKey.dto.EntryKeyDto;
 
 public class EntryKeyService {
 
-    private final EntryKeyRepositoryInterface entryKeyRepository;
+    private final OwnerRepositoryInterface entryKeyRepository;
 
-    public EntryKeyService(EntryKeyRepositoryInterface entryKeyRepository) {
+    public EntryKeyService(OwnerRepositoryInterface entryKeyRepository) {
         this.entryKeyRepository = entryKeyRepository;
     }
 

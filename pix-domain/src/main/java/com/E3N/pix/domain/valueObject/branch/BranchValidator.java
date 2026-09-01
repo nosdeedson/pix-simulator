@@ -16,7 +16,7 @@ public class BranchValidator extends Validator {
     @Override
     public ValidationHandler validate() {
         if (this.branch.getBranch() == null) {
-            validationHandler().append("Branch is null", branch.getBranch(), PROPERTY);
+            validationHandler().append("Branch is null.", branch.getBranch(), PROPERTY);
         } else if (!this.branch.getBranch().matches("^(?!0+$)\\d{1,4}$")) {
             validationHandler().append("Branch is invalid.", branch.getBranch(), PROPERTY);
         }

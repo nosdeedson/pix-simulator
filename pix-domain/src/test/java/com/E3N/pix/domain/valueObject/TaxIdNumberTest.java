@@ -20,7 +20,7 @@ public class TaxIdNumberTest {
     ) {
         var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
-        Assertions.assertNull(result.getNotification());
+        Assertions.assertFalse(result.getNotification().hasError());
         Assertions.assertEquals(type, result.getTypePerson());
         Assertions.assertEquals(document, result.getTaxIdNumber());
     }
@@ -36,8 +36,8 @@ public class TaxIdNumberTest {
         Assertions.assertNull(result.getTypePerson());
         Assertions.assertNull(result.getTaxIdNumber());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        var expectedMessage = document + " is invalid.";
-        Assertions.assertEquals(expectedMessage, result.getNotification().getViolations().getFirst().message());
+        var expectedMessage = "TaxIdNumber is invalid.";
+        Assertions.assertEquals(expectedMessage, result.getNotification().getViolations().getFirst().reason());
     }
 
     @ParameterizedTest
@@ -48,7 +48,7 @@ public class TaxIdNumberTest {
     ) {
         var result = TaxIdNumber.getInstance(type, document);
         Assertions.assertInstanceOf(TaxIdNumber.class, result);
-        Assertions.assertNull(result.getNotification());
+        Assertions.assertFalse(result.getNotification().hasError());
         Assertions.assertEquals(type, result.getTypePerson());
         Assertions.assertEquals(document, result.getTaxIdNumber());
     }
@@ -64,8 +64,8 @@ public class TaxIdNumberTest {
         Assertions.assertNull(result.getTypePerson());
         Assertions.assertNull(result.getTaxIdNumber());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        var expectedMessage = document + " is invalid.";
-        Assertions.assertEquals(expectedMessage, result.getNotification().getViolations().getFirst().message());
+        var expectedMessage = "TaxIdNumber is invalid.";
+        Assertions.assertEquals(expectedMessage, result.getNotification().getViolations().getFirst().reason());
     }
 
     static Stream<Arguments> providerNaturalPerson() {

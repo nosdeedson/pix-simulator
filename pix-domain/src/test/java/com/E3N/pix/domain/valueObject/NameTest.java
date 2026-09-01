@@ -21,7 +21,7 @@ public class NameTest extends UnitTest {
         var result = Name.getInstance(name, typePerson);
         Assertions.assertInstanceOf(Name.class, result);
         Assertions.assertEquals(result.getName(), name);
-        Assertions.assertNull(result.getNotification());
+        Assertions.assertFalse(result.getNotification().hasError());
     }
 
     static Stream<Arguments> providerValidNamePerson() {
@@ -54,7 +54,7 @@ public class NameTest extends UnitTest {
                 "Must be a full name.",
                 "Min size of name is 3, Max size is 100."
         );
-        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().message()));
+        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().reason()));
     }
 
     static Stream<Arguments> providerInvalidNamePerson() {
@@ -78,7 +78,7 @@ public class NameTest extends UnitTest {
         var result = Name.getInstance(name, typePerson);
         Assertions.assertInstanceOf(Name.class, result);
         Assertions.assertEquals(result.getName(), name);
-        Assertions.assertNull(result.getNotification());
+        Assertions.assertFalse(result.getNotification().hasError());
     }
 
     static Stream<Arguments> providerValidNameForLegalPerson() {
@@ -111,7 +111,7 @@ public class NameTest extends UnitTest {
                 "Must be a full name.",
                 "Min size of name is 3, Max size is 100."
         );
-        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().message()));
+        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().reason()));
     }
 
 

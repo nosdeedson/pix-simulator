@@ -4,7 +4,7 @@ import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 
 public class AccountValidator extends Validator {
-    private final static String PROPERTY = "Entrykey.Account";
+    private final static String PROPERTY = "Account.";
     private final Account account;
 
     protected AccountValidator(Account account) {
@@ -14,6 +14,17 @@ public class AccountValidator extends Validator {
 
     @Override
     public ValidationHandler validate() {
+        if (this.account.getEntryKeys() == null) {
+            validationHandler().append("At least one EntryKey should be informed", null, "Account.entryKey");
+        }
+        if (this.account.getEntryKeys() != null && !this.account.getEntryKeys().isEmpty()) {
+            var entryKey = this.account.getEntryKeys().getLast();
+            if (entryKey.getNotification() != null && entryKey.getNotification().hasError()) {
+                validationHandler().relateNotificationToMe(PROPERTY,
+                        entryKey.getNotification().getViolations()
+                );
+            }
+        }
         if (this.account.getBranch().getNotification().hasError()) {
             validationHandler().relateNotificationToMe(
                     PROPERTY,
@@ -27,7 +38,7 @@ public class AccountValidator extends Validator {
             );
         }
         if (this.account.getOpeningDate() == null) {
-            validationHandler().append("OpeningDate is required.", account.getOpeningDate().toString(), PROPERTY);
+            validationHandler().append("OpeningDate is required.", null, "Account.openingDate");
         }
         if (this.account.getParticipant().getNotification().hasError()) {
             validationHandler().relateNotificationToMe(
@@ -36,7 +47,7 @@ public class AccountValidator extends Validator {
             );
         }
         if (this.account.getType() == null) {
-            validationHandler().append("Account Type is required.", account.getType().name(), PROPERTY);
+            validationHandler().append("Account Type is required.", null, "Account.type");
         }
         return this.account.getNotification();
     }

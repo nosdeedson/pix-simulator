@@ -20,7 +20,7 @@ public class KeyTest extends UnitTest {
         Assertions.assertInstanceOf(Key.class, k);
         Assertions.assertEquals(type, k.getType());
         Assertions.assertEquals(value, k.getKey());
-        Assertions.assertNull(k.getNotification());
+        Assertions.assertFalse(k.getNotification().hasError());
     }
 
     @ParameterizedTest
@@ -33,7 +33,7 @@ public class KeyTest extends UnitTest {
         Assertions.assertInstanceOf(Notification.class, k.getNotification());
         Assertions.assertTrue(k.getNotification().hasError());
         var expectedMessage = value + " is invalid.";
-        Assertions.assertEquals(k.getNotification().getViolations().getFirst().message(), expectedMessage);
+        Assertions.assertEquals(k.getNotification().getViolations().getFirst().reason(), expectedMessage);
     }
 
     static Stream<Arguments> provider() {

@@ -18,6 +18,26 @@ public abstract class RandomKeys {
             "camila.barbosa@icloud.com",
     };
 
+    private static final String[] INVALID_EMAILS = {
+            "plainaddress",
+            "#@%^%#$@#$@#.com",
+            "@example.com",
+            "Joe Smith <email@example.com>",
+            "email.example.com",
+            "email@example@example.com",
+            ".email@example.com",
+            "email.@example.com",
+            "email..email@example.com",
+            "あいうえお@example.com",
+            "email@example.com (Joe Smith)",
+            "email@example",
+            "email@-example.com",
+            "email@example.web",
+            "email@111.222.333.44444",
+            "email@example..com",
+            "Abc..123@example.com"
+    };
+
     private static final String[] PHONE_NUMBER = {
             "+5511961774958",
             "+5521983214567",
@@ -54,6 +74,19 @@ public abstract class RandomKeys {
             "26947723744",
     };
 
+    public static final String[] INVALID_NATURAL_PERSON_DOCUMENTS = {
+            "00000000000",
+            "11111111111",
+            "22222222222",
+            "33333333333",
+            "44444444444",
+            "55555555555",
+            "66666666666",
+            "77777777777",
+            "88888888888",
+            "99999999999",
+    };
+
     public static final String[] LEGAL_PERSON_DOCUMENTS = {
             "41977322000172",
             "25597632000105",
@@ -75,6 +108,19 @@ public abstract class RandomKeys {
             "S63BCM7L000133",
             "CMW0HZHA000135",
             "8DT74MNN000100",
+    };
+
+    public static final String[] INVALID_LEGAL_PERSON_DOCUMENTS = {
+            "00000000000000",
+            "11111111111111",
+            "12345678000190",
+            "99999999999999",
+            "07526557000100",
+            "45987321000112",
+            "33444555000178",
+            "14785236000144",
+            "88777666000133",
+            "55666777000199",
     };
 
     private static final String[] uuids = {
@@ -100,6 +146,10 @@ public abstract class RandomKeys {
         return Arrays.asList(EMAILS).get(random.nextInt(9) + 1);
     }
 
+    public static String randomInvalidEmails() {
+        return Arrays.asList(INVALID_EMAILS).get(random.nextInt(16) + 1);
+    }
+
     public static String randomPhone() {
         return Arrays.asList(PHONE_NUMBER)
                 .get(random.nextInt(9) + 1);
@@ -109,7 +159,16 @@ public abstract class RandomKeys {
         return Arrays.asList(NATURAL_PERSON_DOCUMENTS).get(random.nextInt(19) + 1);
     }
 
+    public static String randomInvalidNaturalPersonDocuments() {
+        return Arrays.asList(INVALID_NATURAL_PERSON_DOCUMENTS).get(random.nextInt(9) + 1);
+    }
+
     public static String randomLegalPersonDocument() {
         return Arrays.asList(LEGAL_PERSON_DOCUMENTS).get(random.nextInt(19) + 1);
+    }
+
+    public static String randomInvalidLegalPersonDocument(final Integer whichOne) {
+        int which = whichOne == null ? random.nextInt() + 1 : whichOne;
+        return Arrays.asList(INVALID_LEGAL_PERSON_DOCUMENTS).get(which);
     }
 }

@@ -24,13 +24,13 @@ public class TaxIdNumberValidator extends Validator {
         switch (this.taxIdNumber.getTypePerson()) {
             case TypePerson.LEGAL_PERSON: {
                 if (!ValidateCnpj.validate(this.taxIdNumber.getTaxIdNumber())) {
-                    validationHandler().append("TaxIdNumber  is invalid.", taxIdNumber.getTaxIdNumber(), PROPERTY);
+                    validationHandler().append("TaxIdNumber is invalid.", taxIdNumber.getTaxIdNumber(), PROPERTY);
                 }
                 return validationHandler();
             }
             case TypePerson.NATURAL_PERSON: {
                 if (!ValidateCpf.validate(this.taxIdNumber.getTaxIdNumber())) {
-                    validationHandler().append("TaxIdNumber  is invalid.", taxIdNumber.getTaxIdNumber(), PROPERTY);
+                    validationHandler().append("TaxIdNumber is invalid.", taxIdNumber.getTaxIdNumber(), PROPERTY);
                 }
                 return validationHandler();
             }

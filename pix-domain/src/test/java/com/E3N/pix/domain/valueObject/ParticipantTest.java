@@ -26,7 +26,7 @@ public class ParticipantTest extends UnitTest {
     public void whenReceiveValidParticipantValues_shouldReturnParticipant(final String participant) {
         var resul = Participant.getInstance(participant);
         Assertions.assertInstanceOf(Participant.class, resul);
-        Assertions.assertNull(resul.getNotification());
+        Assertions.assertFalse(resul.getNotification().hasError());
         Assertions.assertEquals(resul.getParticipant(), participant);
     }
 
@@ -53,7 +53,7 @@ public class ParticipantTest extends UnitTest {
         } else {
             expectedMessage = "Participant is invalid.";
         }
-        Assertions.assertEquals(expectedMessage, resul.getNotification().getViolations().getFirst().message());
+        Assertions.assertEquals(expectedMessage, resul.getNotification().getViolations().getFirst().reason());
 
     }
 }

@@ -1,6 +1,7 @@
 package com.E3N.pix.domain.modules.entry.account;
 
 import com.E3N.pix.domain.Entity;
+import com.E3N.pix.domain.modules.entry.entryKey.EntryKey;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.branch.Branch;
 import com.E3N.pix.domain.valueObject.number.AccountNumber;
@@ -8,6 +9,8 @@ import com.E3N.pix.domain.valueObject.participant.Participant;
 import com.E3N.shared.utils.DateHelper;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Account extends Entity {
     private Branch branch; // ag
@@ -15,6 +18,7 @@ public class Account extends Entity {
     private Instant openingDate;
     private Participant participant; // ISPB
     private AccountType type;
+    private List<EntryKey> entryKeys;
 
     private Notification notification;
 
@@ -23,14 +27,18 @@ public class Account extends Entity {
             final String number,
             final String participant,
             final AccountType type,
-            final String openingDate
+            final String openingDate,
+            final EntryKey entryKey
     ) {
         super();
+        if (this.entryKeys == null)
+            this.entryKeys = new ArrayList<>();
         this.participant = Participant.getInstance(participant);
         this.branch = Branch.getInstance(branch);
         this.number = AccountNumber.getInstance(number);
         this.type = type;
         this.openingDate = DateHelper.getDateFrom(openingDate, "dd/MM/yyyy");
+        this.entryKeys.add(entryKey);
         validate();
     }
 
@@ -39,9 +47,10 @@ public class Account extends Entity {
             final String number,
             final String participant,
             final AccountType type,
-            final String openingDate
+            final String openingDate,
+            final EntryKey entryKey
     ) {
-        return new Account(branch, number, participant, type, openingDate);
+        return new Account(branch, number, participant, type, openingDate, entryKey);
     }
 
     @Override
@@ -82,5 +91,9 @@ public class Account extends Entity {
 
     public Notification getNotification() {
         return notification;
+    }
+
+    public List<EntryKey> getEntryKeys() {
+        return entryKeys;
     }
 }
