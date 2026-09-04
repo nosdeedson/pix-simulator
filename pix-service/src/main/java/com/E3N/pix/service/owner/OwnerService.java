@@ -34,7 +34,4 @@ public class OwnerService {
         return Either.right(owner);
     }
 
-    public Owner update(final OwnerDto dto, final Owner owner) {
-        return this.ownerRepository.update(owner);
-    }
 }

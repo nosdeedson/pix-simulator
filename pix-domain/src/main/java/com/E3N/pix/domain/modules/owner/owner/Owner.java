@@ -9,6 +9,7 @@ import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Owner extends Entity {
 
@@ -59,6 +60,28 @@ public class Owner extends Entity {
             return new Owner(name, tradeName, taxIdNumber, type, account);
         }
         return new Owner(name, taxIdNumber, type, account);
+    }
+
+    // create the tests
+    public void validateNewAccount(final Account newAccount) {
+        var newKey = newAccount.getEntryKeys().getFirst();
+        Optional<Account> accountAlreadyExist = this.accounts.stream()
+                .filter(it ->
+                        it.getNumber().getNumber().equals(newAccount.getNumber().getNumber())
+                                && it.getBranch().getBranch().equals(newAccount.getBranch().getBranch())
+                                && it.getParticipant().getParticipant().equals(newAccount.getParticipant().getParticipant())
+                )
+                .findFirst();
+        if (accountAlreadyExist.isPresent()) {
+            accountAlreadyExist.get().addKey(newKey);
+        } else {
+            this.addAccount(newAccount);
+        }
+    }
+
+    public void addAccount(final Account newAccount) {
+        this.accounts.add(newAccount);
+        this.validate();
     }
 
     @Override

@@ -14,6 +14,7 @@
         <module>test-common</module>
         <module>pix-service</module>
         <module>pix-soap-api</module>
+        <module>pix-application</module>
     </modules>
 
     <properties>

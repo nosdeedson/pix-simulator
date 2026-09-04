@@ -53,6 +53,12 @@ public class Account extends Entity {
         return new Account(branch, number, participant, type, openingDate, entryKey);
     }
 
+    // create the tests
+    public void addKey(final EntryKey newKey) {
+        this.entryKeys.add(newKey);
+        this.validate();
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();
