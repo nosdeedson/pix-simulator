@@ -1,7 +1,7 @@
 package com.E3N.pix.domain.valueObject;
 
 import com.E3N.pix.domain.UnitTest;
-import com.E3N.pix.domain.modules.entry.owner.TypePerson;
+import com.E3N.pix.domain.modules.owner.owner.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.name.Name;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +20,7 @@ public class NameTest extends UnitTest {
     public void givenValidNames_shouldReturnName(final String name, final TypePerson typePerson) {
         var result = Name.getInstance(name, typePerson);
         Assertions.assertInstanceOf(Name.class, result);
-        Assertions.assertEquals(result.getName(), name);
+        Assertions.assertEquals(name, result.getName());
         Assertions.assertFalse(result.getNotification().hasError());
     }
 

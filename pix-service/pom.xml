@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>pix-domain</artifactId>
+    <artifactId>pix-service</artifactId>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -20,15 +20,9 @@
     <dependencies>
         <dependency>
             <groupId>com.E3N.pix</groupId>
-            <artifactId>shared</artifactId>
+            <artifactId>pix-domain</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.E3N.pix</groupId>
-            <artifactId>test-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
     </dependencies>
 
 </project>

@@ -1,6 +1,6 @@
 package com.E3N.pix.domain.valueObject.name;
 
-import com.E3N.pix.domain.modules.entry.owner.TypePerson;
+import com.E3N.pix.domain.modules.owner.owner.TypePerson;
 import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 
@@ -20,7 +20,12 @@ public class NameValidator extends Validator {
             return name.getNotification();
         }
         String nameValidated = this.name.getName().trim();
-        boolean hasInvalidChar = nameValidated.matches(".*[^\\p{L}\\s].*");
+        boolean hasInvalidChar = false;
+        if (TypePerson.LEGAL_PERSON.equals(this.name.getType())) {
+            hasInvalidChar = !nameValidated.matches("^(?!.*__)[\\p{L}\\s\\-_]+$");
+        } else {
+            hasInvalidChar = !nameValidated.matches("^[\\p{L}\\s]+$");
+        }
 
         if (hasInvalidChar)
             validationHandler().append("Name should not have special characters.", name.getName(), PROPERTY);

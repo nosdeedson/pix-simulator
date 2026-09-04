@@ -2,7 +2,7 @@ package com.E3N.pix.domain.valueObject.name;
 
 
 import com.E3N.pix.domain.ValueObject;
-import com.E3N.pix.domain.modules.entry.owner.TypePerson;
+import com.E3N.pix.domain.modules.owner.owner.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 
 public class Name extends ValueObject {
