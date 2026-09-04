@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class NameTest extends UnitTest {
@@ -47,14 +48,7 @@ public class NameTest extends UnitTest {
         Assertions.assertInstanceOf(Name.class, result);
         Assertions.assertNull(result.getName());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        var messagesErrors = Arrays.asList(
-                "Name must not be null.",
-                "Name should not have special characters.",
-                "TypePerson must not be null.",
-                "Must be a full name.",
-                "Min size of name is 3, Max size is 100."
-        );
-        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().reason()));
+        Assertions.assertTrue(expectedErrors().contains(result.getNotification().getViolations().getFirst().reason()));
     }
 
     static Stream<Arguments> providerInvalidNamePerson() {
@@ -104,16 +98,8 @@ public class NameTest extends UnitTest {
         Assertions.assertInstanceOf(Name.class, result);
         Assertions.assertNull(result.getName());
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
-        var messagesErrors = Arrays.asList(
-                "Name must not be null.",
-                "Name should not have special characters.",
-                "TypePerson must not be null.",
-                "Must be a full name.",
-                "Min size of name is 3, Max size is 100."
-        );
-        Assertions.assertTrue(messagesErrors.contains(result.getNotification().getViolations().getFirst().reason()));
+        Assertions.assertTrue(expectedErrors().contains(result.getNotification().getViolations().getFirst().reason()));
     }
-
 
     static Stream<Arguments> providerInvalidNameForLegalPerson() {
         return Stream.of(
@@ -128,6 +114,16 @@ public class NameTest extends UnitTest {
                 Arguments.of(null, TypePerson.LEGAL_PERSON),
                 Arguments.of("Vibe", null),
                 Arguments.of("Axis$ Souza", TypePerson.LEGAL_PERSON)
+        );
+    }
+
+    static List<String> expectedErrors() {
+        return Arrays.asList(
+                "Name must not be null.",
+                "Name should not have special characters.",
+                "TypePerson must not be null.",
+                "Must be a full name.",
+                "Min size of name is 3, Max size is 100."
         );
     }
 }
