@@ -14,24 +14,19 @@ public class OwnerService {
         this.ownerRepository = ownerRepository;
     }
 
-    public Either<Notification, Owner> getOrCreate(final OwnerDto dto) {
-        var owner = this.ownerRepository.findByTaxIdNumber(dto.taxIdNumber());
-        if (owner == null) {
-            var account = dto.account().toEntity();
-            owner = Owner.getInstance(
-                    dto.name(),
-                    dto.tradeName(),
-                    dto.taxIdNumber(),
-                    dto.typePerson(),
-                    account
-            );
-            if (owner.getNotification().hasError()) {
-                return Either.left(owner.getNotification());
-            }
-            owner = this.ownerRepository.save(owner);
-            return Either.right(owner);
-        }
-        return Either.right(owner);
+    public Either<Notification, Owner> create(final OwnerDto dto) {
+       var owner = Owner.getInstance(
+               dto.name(),
+               dto.tradeName(),
+               dto.taxIdNumber(),
+               dto.typePerson(),
+               dto.account().toEntity()
+       );
+       if (owner.getNotification().hasError()){
+           return Either.left(owner.getNotification());
+       }
+       owner = this.ownerRepository.save(owner);
+       return Either.right(owner);
     }
 
 }

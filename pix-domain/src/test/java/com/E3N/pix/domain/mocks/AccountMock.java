@@ -37,7 +37,6 @@ public abstract class AccountMock {
         );
     }
 
-    //
     public static AccountType randomAccountType() {
         return Arrays.asList(AccountType.values()).get(random.nextInt(4) + 1);
     }

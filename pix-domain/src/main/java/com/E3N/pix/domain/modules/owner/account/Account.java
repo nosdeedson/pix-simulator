@@ -53,10 +53,21 @@ public class Account extends Entity {
         return new Account(branch, number, participant, type, openingDate, entryKey);
     }
 
-    // create the tests
     public void addKey(final EntryKey newKey) {
         this.entryKeys.add(newKey);
         this.validate();
+    }
+
+    /** create tests
+     * as one owner was found with a key, validating the account and participant
+     * if both are equals owner is trying to create the same key
+     * @param participant @description participant of the request
+     * @param accountNumber @description accountNumber of the request
+     * @return @description if participant of the account and the number are equals return true
+     */
+    public boolean sameParticipant(final String participant, final String accountNumber){
+        return this.participant.getParticipant().equals(participant)
+                && this.number.getNumber().equals(accountNumber);
     }
 
     @Override

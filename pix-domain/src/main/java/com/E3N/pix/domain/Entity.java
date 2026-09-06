@@ -20,5 +20,21 @@ public abstract class Entity {
         this.deletedAt = null;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Instant getDeletedAt() {
+        return deletedAt;
+    }
+
     protected abstract void validate();
 }

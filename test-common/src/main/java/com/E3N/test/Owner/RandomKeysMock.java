@@ -1,6 +1,7 @@
 package com.E3N.test.Owner;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public abstract class RandomKeysMock {
@@ -81,6 +82,22 @@ public abstract class RandomKeysMock {
     public static String randomPhone() {
         return Arrays.asList(PHONE_NUMBER)
                 .get(random.nextInt(9) + 1);
+    }
+
+    public static String randomInvalidPhoneNumber(){
+        List<String> invalidNumbers = Arrays.asList(
+                "+55 (11) 8765-4321",      // Missing mandatory mobile 9th digit
+                "+55 (21) 79123-4567",     // Mobile 9th digit is not a 9
+                "+55 (11) 91234-56789",    // Too many digits
+                "+55 (31) 1234-5678",      // Landline starting with invalid digit 1
+                "+55 (51) 0234-5678",      // Landline starting with invalid digit 0
+                "+55 (01) 99123-4567",     // Area code (DDD) 01 does not exist
+                "+55 (20) 99123-4567",     // Area code (DDD) 20 does not exist
+                "+55 (60) 99123-4567",     // Area code (DDD) 60 does not exist
+                "+55 021 (11) 99123-4567", // Contains internal domestic carrier code (021)
+                "015 55 (11) 99123-4567"   // Misplaced carrier code before country code
+        );
+        return invalidNumbers.get(random.nextInt(10));
     }
 
     public static String randomNaturalPersonDocument() {

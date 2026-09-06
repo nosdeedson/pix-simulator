@@ -2,11 +2,12 @@ package com.E3N.pix.domain.modules.owner.owner;
 
 import com.E3N.pix.domain.repository.CRUDRepositoryInterface;
 
+import java.util.Optional;
+
 public interface OwnerRepositoryInterface extends CRUDRepositoryInterface<Owner> {
 
-    Owner findByTaxIdNumber(final String taxIdNumber);
+    Optional<Owner> findByTaxIdNumber(final String taxIdNumber);
 
-    boolean cannotHaveMoreKey(final String taxIdNumber, TypePerson typePerson);
+    Optional<Owner> findByKey(final String key);
 
-    boolean keyExist(final String taxIdNumber, final String key);
 }

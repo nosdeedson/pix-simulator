@@ -1,13 +1,17 @@
 package com.E3N.pix.domain.modules.owner;
 
 import com.E3N.pix.domain.UnitTest;
+import com.E3N.pix.domain.mocks.AccountMock;
 import com.E3N.pix.domain.mocks.EntryKeyMock;
 import com.E3N.pix.domain.modules.owner.account.Account;
 import com.E3N.pix.domain.modules.owner.account.AccountType;
 import com.E3N.pix.domain.modules.owner.entryKey.EntryKey;
 import com.E3N.pix.domain.validation.Notification;
+import com.E3N.test.Owner.RandomAccountNumberMock;
+import com.E3N.test.Owner.RandomParticipant;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -107,5 +111,51 @@ public class AccountTest extends UnitTest {
                 Arguments.of("1", "1234", "3050754100", AccountType.SVGS, "12/12/1980", EntryKeyMock.getEntryKeyPhone()),
                 Arguments.of("1", "1234", null, AccountType.CACC, "12/10/1980", EntryKeyMock.getInvalidEntryKeyCnpj(1))
         );
+    }
+
+    @Test
+    public void givenAValidEntryKey_whenCallingAddKey_shouldAddItToAccount(){
+        var key = EntryKeyMock.getEntryKeyCnpj();
+        var account = AccountMock.getRandomAccountWithSpecificEntryKey(key);
+        Assertions.assertEquals(key.getKey().getKey(), account.getEntryKeys().getFirst().getKey().getKey());
+        Assertions.assertEquals(1, account.getEntryKeys().size());
+        var anotherKey = EntryKeyMock.getEntryKeyEmail();
+        account.addKey(anotherKey);
+        Assertions.assertEquals(2, account.getEntryKeys().size());
+        Assertions.assertEquals(key.getKey().getKey(), account.getEntryKeys().getFirst().getKey().getKey());
+        Assertions.assertEquals(anotherKey.getKey().getKey(), account.getEntryKeys().getLast().getKey().getKey());
+        Assertions.assertFalse(account.getNotification().hasError());
+    }
+
+    @Test
+    public void givenInvalidEntryKey_whenCallingAddKey_shouldReturnAccountWithNotification(){
+        var key = EntryKeyMock.getEntryKeyCnpj();
+        var account = AccountMock.getRandomAccountWithSpecificEntryKey(key);
+        Assertions.assertEquals(key.getKey().getKey(), account.getEntryKeys().getFirst().getKey().getKey());
+        Assertions.assertEquals(1, account.getEntryKeys().size());
+        var invalidKey = EntryKeyMock.getEntryKeyInvalidEmail();
+        account.addKey(invalidKey);
+        Assertions.assertEquals(2, account.getEntryKeys().size());
+        Assertions.assertEquals(key.getKey().getKey(), account.getEntryKeys().getFirst().getKey().getKey());
+        Assertions.assertNull(account.getEntryKeys().getLast().getKey());
+        Assertions.assertTrue(account.getNotification().hasError());
+    }
+
+    @Test
+    public void givenExistingAccountNumberAndParticipant_whenCallingSameParticipant_shouldReturnTrue(){
+        var entryKey = EntryKeyMock.getEntryKeyCnpj();
+        var account = AccountMock.getRandomAccountWithSpecificEntryKey(entryKey);
+        var expectedAccountNumber = account.getNumber().getNumber();
+        var expectedParticipant = account.getParticipant().getParticipant();
+        Assertions.assertTrue(account.sameParticipant(expectedParticipant, expectedAccountNumber));
+    }
+
+    @Test
+    public void givenNotExistingAccountNumberAndParticipant_whenCallingSameParticipant_shouldReturnFalse(){
+        var entryKey = EntryKeyMock.getEntryKeyCnpj();
+        var account = AccountMock.getRandomAccountWithSpecificEntryKey(entryKey);
+        var expectedAccountNumber = RandomAccountNumberMock.randomAccountNumber();
+        var expectedParticipant =  RandomParticipant.getParticipant();
+        Assertions.assertFalse(account.sameParticipant(expectedParticipant, expectedAccountNumber));
     }
 }

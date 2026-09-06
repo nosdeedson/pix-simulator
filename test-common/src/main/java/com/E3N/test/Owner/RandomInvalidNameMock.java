@@ -19,8 +19,8 @@ public abstract class RandomInvalidNameMock {
     }
 
     public static String getInvalidCompanyName() {
-        var whichOne = random.nextInt(SPECIAL_CHARACTERS.length + 1) + 1;
-        if (whichOne == 10) return null;
+        var whichOne = random.nextInt(SPECIAL_CHARACTERS.length + 1);
+        if (whichOne == 9) return null;
         var defect = " " + Arrays.asList(SPECIAL_CHARACTERS).get(whichOne);
         return faker.company().name().replace(" ", defect);
     }

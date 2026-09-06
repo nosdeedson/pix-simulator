@@ -23,7 +23,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class OwnerServiceTest extends UniTest {
 
@@ -36,19 +35,17 @@ public class OwnerServiceTest extends UniTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        Mockito.reset(ownerRepository);
     }
-
 
     @ParameterizedTest
     @MethodSource("provider")
     public void givenAValidOwnerDto_shouldCreateOwner(OwnerDto dto) {
         var expectedOwner = MockOwner.get(dto);
-        Mockito.when(ownerRepository.findByTaxIdNumber(dto.taxIdNumber()))
-                .thenReturn(null);
         Mockito.when(ownerRepository.save(Mockito.any(Owner.class)))
                 .thenReturn(expectedOwner);
 
-        Either<Notification, Owner> result = ownerService.getOrCreate(dto);
+        Either<Notification, Owner> result = ownerService.create(dto);
         Owner owner = null;
         Notification notification = null;
         if (result instanceof Either.Right<Notification, Owner>(Owner value1)) {
@@ -61,30 +58,8 @@ public class OwnerServiceTest extends UniTest {
         Assertions.assertNull(notification);
     }
 
-    @ParameterizedTest
-    @MethodSource("provider")
-    public void givenAValidOwnerDto_shouldReturnOwnerFromBD(OwnerDto dto) {
-        var expectedOwner = MockOwner.get(dto);
-        Mockito.when(ownerRepository.findByTaxIdNumber(dto.taxIdNumber()))
-                .thenReturn(expectedOwner);
-        Mockito.when(ownerRepository.save(Mockito.any(Owner.class)))
-                .thenReturn(expectedOwner);
-
-        Either<Notification, Owner> result = ownerService.getOrCreate(dto);
-        Owner owner = null;
-        Notification notification = null;
-        if (result instanceof Either.Right<Notification, Owner>(Owner value1)) {
-            owner = value1;
-        } else if (result instanceof Either.Left<Notification, Owner>(Notification value)) {
-            notification = value;
-        }
-        Assertions.assertInstanceOf(Either.class, result);
-        Assertions.assertInstanceOf(Owner.class, owner);
-        Assertions.assertNull(notification);
-    }
-
-    static Stream<Arguments> provider() {
-        return Stream.of(
+    static List<Arguments> provider() {
+        return List.of(
                 Arguments.of(OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.CPF)),
                 Arguments.of(OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.PHONE)),
                 Arguments.of(OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.EVP)),
@@ -99,13 +74,8 @@ public class OwnerServiceTest extends UniTest {
     @ParameterizedTest
     @MethodSource("provideInvalidOwners")
     public void givenInvalidOwnerDto_shouldReturnNotification(OwnerDto dto) {
-        var expectedOwner = MockOwner.get(dto);
-        Mockito.when(ownerRepository.findByTaxIdNumber(dto.taxIdNumber()))
-                .thenReturn(null);
-        Mockito.when(ownerRepository.save(Mockito.any(Owner.class)))
-                .thenReturn(expectedOwner);
 
-        Either<Notification, Owner> result = ownerService.getOrCreate(dto);
+        Either<Notification, Owner> result = ownerService.create(dto);
         Owner owner = null;
         Notification notification = null;
         if (result instanceof Either.Right<Notification, Owner>(Owner value1)) {
@@ -123,10 +93,11 @@ public class OwnerServiceTest extends UniTest {
         Assertions.assertTrue(notification.hasError());
         Assertions.assertTrue(expectedErrors().containsAll(violations));
         Assertions.assertNull(owner);
+        Mockito.verify(ownerRepository, Mockito.never()).save(Mockito.any(Owner.class));
     }
 
-    static Stream<Arguments> provideInvalidOwners() {
-        return Stream.of(
+    static List<Arguments> provideInvalidOwners() {
+        return List.of(
                 Arguments.of(OwnerDtoMock.getInvalidOwner(TypePerson.NATURAL_PERSON, TypeKey.CPF)),
                 Arguments.of(OwnerDtoMock.getInvalidOwner(TypePerson.NATURAL_PERSON, TypeKey.EVP)),
                 Arguments.of(OwnerDtoMock.getInvalidOwner(TypePerson.NATURAL_PERSON, TypeKey.EMAIL)),
