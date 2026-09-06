@@ -48,20 +48,17 @@ public class CreateEntryKeyUseCase {
             }
         } else {
             owner = optionalOwner.get();
+            if (owner.canNotHaveMoreKeys()){
+                return Either.left(Notification.create("Owner is not allowed to have more keys", dto.taxIdNumber(), "Owner"));
+            }
         }
         Optional<Account> optionalAccount = Optional.empty();
         if (owner != null) {
-            optionalAccount = owner.getAccounts().stream()
-                    .filter(it -> it.getNumber().getNumber().equals(dto.account().accountNumber()))
-                    .findAny();
+            owner.addNewAccountOrNewKey(dto.account().toEntity());
         }
-        EntryKey newKey = dto.account().entryKeyDto().toEntity();
-        if (newKey.getNotification().hasError()){
-            return Either.left(newKey.getNotification());
+        if (owner != null && owner.getNotification().hasError()){
+            return Either.left(owner.getNotification());
         }
-        if (newKey.getNotification().hasError())
-            return Either.left(newKey.getNotification());
-        optionalAccount.ifPresent(account -> account.addKey(newKey));
         return Either.right(this.ownerRepository.update(owner));
     }
 }

@@ -62,8 +62,19 @@ public class Owner extends Entity {
         return new Owner(name, taxIdNumber, type, account);
     }
 
+    public boolean canNotHaveMoreKeys(){
+        var qtdKeys = 0;
+        for (Account acc: this.getAccounts()){
+            qtdKeys += acc.getEntryKeys().size();
+        }
+        if (this.type.equals(TypePerson.LEGAL_PERSON)){
+            return qtdKeys > 20;
+        }
+        return qtdKeys > 5;
+    }
+
     // create the tests
-    public void validateNewAccount(final Account newAccount) {
+    public void addNewAccountOrNewKey(final Account newAccount) {
         var newKey = newAccount.getEntryKeys().getFirst();
         Optional<Account> accountAlreadyExist = this.accounts.stream()
                 .filter(it ->
@@ -79,7 +90,7 @@ public class Owner extends Entity {
         }
     }
 
-    public void addAccount(final Account newAccount) {
+    private void addAccount(final Account newAccount) {
         this.accounts.add(newAccount);
         this.validate();
     }

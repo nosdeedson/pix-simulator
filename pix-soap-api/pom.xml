@@ -19,11 +19,11 @@
 
     <dependencies>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.pix</groupId>-->
-        <!--            <artifactId>pix-application</artifactId>-->
-        <!--            <version>${project.version}</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.E3N.pix</groupId>
+            <artifactId>pix-application</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- Source:
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web-services -->
         <dependency>

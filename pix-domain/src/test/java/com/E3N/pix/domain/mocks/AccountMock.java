@@ -51,4 +51,15 @@ public abstract class AccountMock {
                 EntryKeyMock.getEntryKeyEmail()
         );
     }
+
+    public static Account getInvalidOneWithInvalidKey(){
+        return Account.getInstance(
+                "123456",
+                "123456ll",
+                "123456789",
+                null,
+                "32/08/2026",
+                EntryKeyMock.getInvalidEntryKeyCnpj(null)
+        );
+    }
 }
