@@ -1,72 +1,40 @@
 package com.E3N.pix.soap.mapper;
 
 import com.E3N.pix.domain.modules.owner.owner.Owner;
-import com.E3N.pix.domain.validation.Notification;
-import com.E3N.pix.domain.validation.Violation;
 import com.E3N.pix.soap.contract.*;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.SoapMessage;
-
-import javax.xml.transform.Result;
-import java.util.Locale;
+import com.E3N.shared.utils.DateHelper;
 
 public abstract class EntryKeyResponseMapper {
 
     public static CreateEntryKeyResponse from(Owner owner) {
         var response = new CreateEntryKeyResponse();
         var entryKey = new EntryResponseType();
+        entryKey.setCreationDate(DateHelper.fromInstant(owner.getCreatedAt()));
+        entryKey.setKeyOwnershipDate(DateHelper.fromInstant(owner.getAccounts().getLast().getEntryKeys().getLast().getKeyOwnershipDate()));
+        entryKey.setKey(owner.getAccounts().getLast().getEntryKeys().getLast().getKey().getKey());
+        entryKey.setKeyType(KeyType.valueOf(owner.getAccounts().getLast().getEntryKeys().getLast().getKey().getType().name()));
+        // OwnerType
+        OwnerType owerType = new OwnerType();
+
+        owerType.setName(owerType.getName());
+        if (owner.getTradeName() != null) owerType.setTradeName(owerType.getTradeName());
+        owerType.setTaxIdNumber(owerType.getTaxIdNumber());
+        owerType.setType(OwnerTypeEnum.fromValue(owner.getType().name()));
+
+        entryKey.setOwner(owerType);
+
+        // accountType
+        AccountType accountType = new AccountType();
+        var acc = owner.getAccounts().getLast();
+        accountType.setAccountNumber(acc.getNumber().getNumber());
+        accountType.setAccountType(AccountTypeEnum.fromValue(acc.getType().name()));
+        accountType.setBranch(acc.getBranch().getBranch());
+        accountType.setOpeningDate(DateHelper.fromInstant(acc.getOpeningDate()));
+        accountType.setParticipant(acc.getParticipant().getParticipant());
+        entryKey.setAccount(accountType);
+
         response.setEntry(entryKey);
         return response;
     }
 
-    public static MessageContext from(Notification notification, MessageContext context) {
-        try {
-
-            Problem problem = getProblem(notification);
-            final SoapMessage response = (SoapMessage) context.getResponse();
-            final SoapBody body = response.getSoapBody();
-            final SoapFault soapFault = body.addClientOrSenderFault(
-                    problem.getDetail(),
-                    Locale.ENGLISH
-            );
-            final SoapFaultDetail detail = soapFault.addFaultDetail();
-            Result result = detail.getResult();
-            JAXBContext jaxbContext = JAXBContext.newInstance(Problem.class);
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.marshal(problem, result);
-            return context;
-        } catch (JAXBException e) {
-
-            // treat the exception returning appropriate error
-            return null;
-        }
-    }
-
-    private static Problem getProblem(Notification notification) {
-        Problem problem = new Problem();
-        problem.setTitle("Entry is invalid");
-        problem.setType("http://pix.com/soap/contract");
-        problem.setStatus(400);
-        problem.setDetail("Entry has invalid values");
-        notification.getViolations()
-                .stream().map(it -> {
-                    ViolationType value = new ViolationType(;
-                }).forEach(problem.getViolations().getViolation()::add);
-        return problem;
-    }
-
-    public static Problem getErrorResponse() {
-        var errorGeneric = new Problem();
-        errorGeneric.setTitle("Generic Error");
-        errorGeneric.setType("http://pix.com/soap/contract");
-        errorGeneric.setStatus(500);
-        errorGeneric.setDetail("Error while processing request.");
-        return errorGeneric;
-    }
 }

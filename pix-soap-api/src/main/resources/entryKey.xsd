@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:tns="http://pix.com/soap/contract"
-    targetNamespace="http://pix.com/soap/contract"
-    elementFormDefault="qualified"
-    attributeFormDefault="unqualified">
+           xmlns:tns="http://pix.com/soap/contract"
+           targetNamespace="http://pix.com/soap/contract"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
 
     <xs:element name="CreateEntryKeyRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Signature" type="xs:string" minOccurs="0" />
-                <xs:element name="Entry" type="tns:EntryType" />
-                <xs:element name="Reason" type="tns:ReasonType" />
-                <xs:element name="RequestId" type="xs:string" />
+                <xs:element name="Signature" type="xs:string" minOccurs="0"/>
+                <xs:element name="Entry" type="tns:EntryType"/>
+                <xs:element name="Reason" type="tns:ReasonType"/>
+                <xs:element name="RequestId" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -19,10 +19,10 @@
     <xs:element name="CreateEntryKeyResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Signature" type="xs:string" minOccurs="0" />
-                <xs:element name="ResponseTime" type="xs:dateTime" />
-                <xs:element name="CorrelationId" type="xs:string" />
-                <xs:element name="Entry" type="tns:EntryResponseType" />
+                <xs:element name="Signature" type="xs:string" minOccurs="0"/>
+                <xs:element name="ResponseTime" type="xs:dateTime"/>
+                <xs:element name="CorrelationId" type="xs:string"/>
+                <xs:element name="Entry" type="tns:EntryResponseType"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -31,8 +31,8 @@
         <xs:complexContent>
             <xs:extension base="tns:EntryType">
                 <xs:sequence>
-                    <xs:element name="CreationDate" type="xs:dateTime" />
-                    <xs:element name="KeyOwnershipDate" type="xs:dateTime" />
+                    <xs:element name="CreationDate" type="xs:dateTime"/>
+                    <xs:element name="KeyOwnershipDate" type="xs:dateTime"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -41,61 +41,62 @@
 
     <xs:complexType name="EntryType">
         <xs:sequence>
-            <xs:element name="Key" type="xs:string" />
-            <xs:element name="KeyType" type="tns:KeyTypeType" />
-            <xs:element name="Account" type="tns:AccountType" />
-            <xs:element name="Owner" type="tns:OwnerType" />
+            <xs:element name="Key" type="xs:string"/>
+            <xs:element name="KeyType" type="tns:KeyType"/>
+            <xs:element name="Account" type="tns:AccountType"/>
+            <xs:element name="Owner" type="tns:OwnerType"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:simpleType name="KeyTypeType">
+    <xs:simpleType name="KeyType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="CPF" />
-            <xs:enumeration value="CNPJ" />
-            <xs:enumeration value="PHONE" />
-            <xs:enumeration value="EMAIL" />
-            <xs:enumeration value="EVP" />
+            <xs:enumeration value="CPF"/>
+            <xs:enumeration value="CNPJ"/>
+            <xs:enumeration value="PHONE"/>
+            <xs:enumeration value="EMAIL"/>
+            <xs:enumeration value="EVP"/>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:complexType name="AccountType">
         <xs:sequence>
-            <xs:element name="Participant" type="xs:string" />
-            <xs:element name="Branch" type="xs:string" />
-            <xs:element name="AccountNumber" type="xs:string" />
-            <xs:element name="AccountType" type="tns:AccountTypeEnum" />
-            <xs:element name="OpeningDate" type="xs:dateTime" />
+            <xs:element name="Participant" type="xs:string"/>
+            <xs:element name="Branch" type="xs:string"/>
+            <xs:element name="AccountNumber" type="xs:string"/>
+            <xs:element name="AccountType" type="tns:AccountTypeEnum"/>
+            <xs:element name="OpeningDate" type="xs:dateTime"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:simpleType name="AccountTypeEnum">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="CACC" />
-            <xs:enumeration value="SVGS" />
-            <xs:enumeration value="SLRY" />
-            <xs:enumeration value="TRAN" />
+            <xs:enumeration value="CACC"/>
+            <xs:enumeration value="SVGS"/>
+            <xs:enumeration value="SLRY"/>
+            <xs:enumeration value="TRAN"/>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:complexType name="OwnerType">
         <xs:sequence>
-            <xs:element name="Type" type="tns:OwnerTypeEnum" />
-            <xs:element name="TaxIdNumber" type="xs:string" />
-            <xs:element name="Name" type="xs:string" />
+            <xs:element name="Type" type="tns:OwnerTypeEnum"/>
+            <xs:element name="TaxIdNumber" type="xs:string"/>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="TradeName" minOccurs="0" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:simpleType name="OwnerTypeEnum">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="NATURAL_PERSON" />
-            <xs:enumeration value="LEGAL_PERSON" />
+            <xs:enumeration value="NATURAL_PERSON"/>
+            <xs:enumeration value="LEGAL_PERSON"/>
         </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="ReasonType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="USER_REQUESTED" />
-            <xs:enumeration value="RECONCILIATION" />
+            <xs:enumeration value="USER_REQUESTED"/>
+            <xs:enumeration value="RECONCILIATION"/>
         </xs:restriction>
     </xs:simpleType>
 

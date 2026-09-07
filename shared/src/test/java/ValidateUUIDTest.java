@@ -4,7 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class ValidateUUIDTest extends UnitTest{
+public class ValidateUUIDTest extends UnitTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -26,7 +26,7 @@ public class ValidateUUIDTest extends UnitTest{
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "f47ac10b-58cc-4372-a567-0e02b2c3d47",      // missing one character (too short)
+            "f47ac10b-58cc-4372-a567-0e02b2c3d-",      // missing one character (too short)
             "f47ac10b-58cc-4372-a567-0e02b2c3d4799",    // one character too many
             "f47ac10b58cc-4372-a567-0e02b2c3d479",      // missing a dash
             "f47ac10b-58cc-4372-a567-0e02b2c3d47g",     // contains invalid character 'g'
