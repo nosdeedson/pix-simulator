@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Owner extends Entity {
 
@@ -49,6 +50,25 @@ public class Owner extends Entity {
         this(name, taxIdNumber, type, account);
     }
 
+    private Owner(
+            final UUID id,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt,
+            final String name,
+            final String tradeName,
+            final String taxIdNumber,
+            final TypePerson type,
+            final List<Account> accounts
+    ) {
+        super(id, createdAt, updatedAt, deletedAt);
+        this.name = Name.getInstance(name, type);
+        this.taxIdNumber = TaxIdNumber.getInstance(type, taxIdNumber);
+        this.type = type;
+        this.tradeName = Name.getInstance(tradeName, TypePerson.LEGAL_PERSON);
+        this.accounts = accounts;
+    }
+
     public static Owner getInstance(
             final String name,
             final String tradeName,
@@ -62,12 +82,36 @@ public class Owner extends Entity {
         return new Owner(name, taxIdNumber, type, account);
     }
 
-    public boolean canNotHaveMoreKeys(){
+    public static Owner getInstance(
+            final UUID id,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt,
+            final String name,
+            final String tradeName,
+            final String taxIdNumber,
+            final TypePerson type,
+            final List<Account> accounts
+    ) {
+        return new Owner(
+                id,
+                createdAt,
+                updatedAt,
+                deletedAt,
+                name,
+                tradeName,
+                taxIdNumber,
+                type,
+                accounts
+        );
+    }
+
+    public boolean canNotHaveMoreKeys() {
         var qtdKeys = 0;
-        for (Account acc: this.getAccounts()){
+        for (Account acc : this.getAccounts()) {
             qtdKeys += acc.getEntryKeys().size();
         }
-        if (this.type.equals(TypePerson.LEGAL_PERSON)){
+        if (this.type.equals(TypePerson.LEGAL_PERSON)) {
             return qtdKeys > 20;
         }
         return qtdKeys > 5;

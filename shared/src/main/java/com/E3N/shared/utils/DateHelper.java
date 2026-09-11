@@ -2,10 +2,7 @@ package com.E3N.shared.utils;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.DateTimeException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.GregorianCalendar;
 
@@ -31,6 +28,13 @@ public final class DateHelper {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(day.toEpochMilli());
         return DatatypeFactory.newDefaultInstance().newXMLGregorianCalendar(calendar);
+    }
+
+    public static String fromGregorianCalendar(final XMLGregorianCalendar day) {
+        Instant instant = day.toGregorianCalendar().toZonedDateTime().toInstant();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                .withZone(ZoneId.systemDefault());
+        return formatter.format(instant);
     }
 
 }

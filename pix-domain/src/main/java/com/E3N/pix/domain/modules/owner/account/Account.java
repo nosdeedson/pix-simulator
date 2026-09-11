@@ -11,6 +11,7 @@ import com.E3N.shared.utils.DateHelper;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Account extends Entity {
     private Branch branch; // ag
@@ -42,6 +43,39 @@ public class Account extends Entity {
         validate();
     }
 
+    private Account(
+            final UUID id,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt,
+            final String branch,
+            final String number,
+            final String participant,
+            final AccountType type,
+            final Instant openingDate,
+            final List<EntryKey> keys
+    ) {
+        super(id, createdAt, updatedAt, deletedAt);
+        this.entryKeys = keys;
+        this.participant = Participant.getInstance(participant);
+        this.branch = Branch.getInstance(branch);
+        this.number = AccountNumber.getInstance(number);
+        this.type = type;
+        this.openingDate = openingDate;
+        this.entryKeys = keys;
+    }
+
+    /**
+     * Will validate the instance
+     *
+     * @param branch      @description
+     * @param number      @description
+     * @param participant @description
+     * @param type        @description
+     * @param openingDate @description
+     * @param entryKey    @description
+     * @return @description will return a Domain Account
+     */
     public static Account getInstance(
             final String branch,
             final String number,
@@ -53,19 +87,52 @@ public class Account extends Entity {
         return new Account(branch, number, participant, type, openingDate, entryKey);
     }
 
+    /**
+     * Won't validate the instance, should be used to convert from BD to Domain
+     *
+     * @param id          @description
+     * @param createdAt   @description
+     * @param updatedAt   @description
+     * @param deletedAt   @description
+     * @param branch      @description
+     * @param number      @description
+     * @param participant @description
+     * @param type        @description
+     * @param openingDate @description
+     * @param keys        @description
+     * @return will return an instance using data from BD
+     */
+    public static Account getInstance(
+            final UUID id,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt,
+            final String branch,
+            final String number,
+            final String participant,
+            final AccountType type,
+            final Instant openingDate,
+            final List<EntryKey> keys
+    ) {
+        return new Account(
+                id, createdAt, updatedAt, deletedAt, branch, number, participant, type, openingDate, keys
+        );
+    }
+
     public void addKey(final EntryKey newKey) {
         this.entryKeys.add(newKey);
         this.validate();
     }
 
-    /** create tests
+    /**
      * as one owner was found with a key, validating the account and participant
      * if both are equals owner is trying to create the same key
-     * @param participant @description participant of the request
+     *
+     * @param participant   @description participant of the request
      * @param accountNumber @description accountNumber of the request
      * @return @description if participant of the account and the number are equals return true
      */
-    public boolean sameParticipant(final String participant, final String accountNumber){
+    public boolean sameParticipant(final String participant, final String accountNumber) {
         return this.participant.getParticipant().equals(participant)
                 && this.number.getNumber().equals(accountNumber);
     }

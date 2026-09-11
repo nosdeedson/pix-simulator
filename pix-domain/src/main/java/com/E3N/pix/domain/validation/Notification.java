@@ -24,7 +24,7 @@ public class Notification implements ValidationHandler {
         this.violations = violations;
     }
 
-    private static Notification create(final String type, final String title, final int status, final String detail) {
+    public static Notification create(final String type, final String title, final int status, final String detail) {
         return new Notification(new ArrayList<>(), type, title, status, detail);
     }
 
@@ -49,6 +49,12 @@ public class Notification implements ValidationHandler {
     }
 
     @Override
+    public ValidationHandler append(Violation violation) {
+        this.getViolations().add(violation);
+        return this;
+    }
+
+    @Override
     public List<Violation> getViolations() {
         return this.violations;
     }
@@ -56,5 +62,21 @@ public class Notification implements ValidationHandler {
     @Override
     public <T> T validate(Validation<T> aValidation) {
         return aValidation.validate();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public String getDetail() {
+        return detail;
     }
 }

@@ -3,7 +3,7 @@ package com.E3N.test.Owner;
 import java.math.BigInteger;
 import java.util.Random;
 
-public abstract class RandomAccountNumberMock {
+public abstract class RandomAccountMock {
     private static final Random random = new Random();
 
     public static String randomAccountNumber() {

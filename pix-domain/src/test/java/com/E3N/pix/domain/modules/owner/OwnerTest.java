@@ -9,111 +9,101 @@ import com.E3N.pix.domain.modules.owner.owner.Owner;
 import com.E3N.pix.domain.modules.owner.owner.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.validation.Violation;
-import com.E3N.test.Owner.RandomKeysMock;
+import com.E3N.test.Owner.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.UUID;
 
 public class OwnerTest extends UnitTest {
     static List<Arguments> providerNaturalPerson() {
         return List.of(
-                Arguments.of(
-                        "Edson Jose de Souza",
-                        "27305672246",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("27305672246"))),
-                Arguments.of(
-                        "Lucineia Souza",
-                        "47820019590",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("47820019590"))),
-                Arguments.of(
-                        "Juliana Souza",
-                        "85628685828",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("85628685828"))),
-                Arguments.of(
-                        "João Silva",
-                        "92212939043",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("92212939043"))),
-                Arguments.of(
-                        "Jose Ribeiro",
-                        "96639666022",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("96639666022"))),
-                Arguments.of(
-                        "Pedro Silva",
-                        "74427945562",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("74427945562"))),
-                Arguments.of(
-                        "Antonio Silva",
-                        "75628144657",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("75628144657"))),
-                Arguments.of(
-                        "Jussara Vaconcelos",
-                        "99467334470",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("99467334470"))),
-                Arguments.of(
-                        "Rachel Green",
-                        "75291652160",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("75291652160"))),
-                Arguments.of(
-                        "Robert Green",
-                        "73735342019",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("73735342019")))
+                Arguments.of("Edson Jose de Souza", "27305672246", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("27305672246"))),
+                Arguments.of("Lucineia Souza", "47820019590", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("47820019590"))),
+                Arguments.of("Juliana Souza", "85628685828", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("85628685828"))),
+                Arguments.of("João Silva", "92212939043", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("92212939043"))),
+                Arguments.of("Jose Ribeiro", "96639666022", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("96639666022"))),
+                Arguments.of("Pedro Silva", "74427945562", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("74427945562"))),
+                Arguments.of("Antonio Silva", "75628144657", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("75628144657"))),
+                Arguments.of("Jussara Vaconcelos", "99467334470", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("99467334470"))),
+                Arguments.of("Rachel Green", "75291652160", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("75291652160"))),
+                Arguments.of("Robert Green", "73735342019", TypePerson.NATURAL_PERSON, AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("73735342019")))
         );
+    }
+
+    // valid natural person
+    @ParameterizedTest
+    @MethodSource("providerNaturalPerson")
+    public void givenValidNaturalPerson_shouldReturnOwner(
+            final String name,
+            final String taxIdNumber,
+            final TypePerson type,
+            final Account account
+    ) {
+        var result = Owner.getInstance(name, null, taxIdNumber, type, account);
+        Assertions.assertInstanceOf(Owner.class, result);
+        Assertions.assertEquals(name, result.getName().getName());
+        Assertions.assertEquals(taxIdNumber, result.getTaxIdNumber().getTaxIdNumber());
+        Assertions.assertEquals(type, result.getType());
     }
 
     static List<Arguments> providerInvalidNaturalPerson() {
         return List.of(
-                Arguments.of(
-                        "Edson Jose de Souza",
-                        "27304672246",  // invalid
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("27304672246"))),
-                Arguments.of(
-                        "Lucineia", // invalid
-                        "47820019590",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("47820019590"))),
-                Arguments.of(
-                        "Juliana Souza",
-                        "85628684828",
-                        TypePerson.LEGAL_PERSON, // invalid
+                Arguments.of("Edson Jose de Souza", "27304672246", null,
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("27304672246"))), // invalidTypePerson.NATURAL_PERSON,
+                Arguments.of("Lucineia", "47820019590", null,
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("47820019590"))), // invalid"47820019590",TypePerson.NATURAL_PERSON,
+                Arguments.of("Juliana Souza", "85628684828", TypePerson.LEGAL_PERSON,
                         AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("85628684828"))),
-                Arguments.of(
-                        "João Silva",
-                        "92212939043",
-                        null, // invalid
+                Arguments.of("João Silva", "92212939043", null,
                         AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("92212939043"))),
-                Arguments.of(
-                        "Jose Ribeiro",
-                        "96639666022",
-                        TypePerson.NATURAL_PERSON,
-                        AccountMock.getInvalidOne()),
-                Arguments.of(
-                        "Pedro @Silva",
-                        "74427945562",
-                        TypePerson.NATURAL_PERSON,
+                Arguments.of("Jose Ribeiro", "96639666022", TypePerson.NATURAL_PERSON, AccountMock.getInvalidOne()),
+                Arguments.of("Pedro @Silva", "74427945562", TypePerson.NATURAL_PERSON,
                         AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCnpj(RandomKeysMock.randomInvalidEmails()))),
-                Arguments.of(
-                        "An",
-                        "75628144657",
-                        TypePerson.NATURAL_PERSON,
+                Arguments.of("An", "75628144657", TypePerson.NATURAL_PERSON,
                         AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCnpj(RandomKeysMock.randomInvalidNaturalPersonDocuments())))
         );
+    }
+
+    // invalid natural person
+    @ParameterizedTest
+    @MethodSource("providerInvalidNaturalPerson")
+    public void givenInvalidNaturalPerson_shouldReturnOwnerWithNotification(
+            final String name,
+            final String taxIdNumber,
+            final TypePerson type,
+            final Account account
+    ) {
+        var result = Owner.getInstance(name, null, taxIdNumber, type, account);
+        Assertions.assertInstanceOf(Owner.class, result);
+        Assertions.assertTrue(Arrays.asList(
+                "Must be a full name.",
+                "TaxIdNumber is invalid.",
+                "Person type is required.",
+                "Name should not have special characters",
+                "Min size of name is 3, Max size is 100.",
+                "Invalid value.",
+                taxIdNumber + "Invalid value.",
+                "Type person is required.",
+                "Name must not be null",
+                "TypePerson must not be null.",
+                "Name should not have special characters.",
+                "Name must not be null.",
+                "73735342019 is invalid.",
+                "TradeName is required for Legal person.",
+                "Branch is invalid.",
+                "Account Number is invalid.",
+                "OpeningDate is required.",
+                "Participant is invalid.",
+                "Account Type is required."
+        ).contains(result.getNotification().getViolations().getFirst().reason()));
+        Assertions.assertInstanceOf(Notification.class, result.getNotification());
     }
 
     static List<Arguments> providerLegalPerson() {
@@ -161,6 +151,22 @@ public class OwnerTest extends UnitTest {
         );
     }
 
+    //    // valid legal person
+    @ParameterizedTest
+    @MethodSource("providerLegalPerson")
+    public void givenValidLegalPerson_shouldReturnOwner(
+            final String name,
+            final String taxIdNumber,
+            final TypePerson type,
+            final Account account
+    ) {
+        var result = Owner.getInstance(name, name, taxIdNumber, type, account);
+        Assertions.assertInstanceOf(Owner.class, result);
+        Assertions.assertEquals(name, result.getName().getName());
+        Assertions.assertEquals(taxIdNumber, result.getTaxIdNumber().getTaxIdNumber());
+        Assertions.assertEquals(type, result.getType());
+    }
+
     static List<Arguments> providerInvalidLegalPerson() {
         return List.of(
                 Arguments.of("Aura", "XEHG5J79000191", TypePerson.LEGAL_PERSON,
@@ -198,107 +204,6 @@ public class OwnerTest extends UnitTest {
                 Arguments.of("Prism", "67208003000196", TypePerson.LEGAL_PERSON,
                         AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCnpj("XEHG5J79000191"))) // keyOwnership invalid
         );
-    }
-
-    static List<Arguments> provideOwnersToAddAccount() {
-        return List.of(
-                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEmail())),
-                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEVP())),
-                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyPhone())),
-                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, "9L25PV0S000125"),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCnpj("9L25PV0S000125"))),
-                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEmail())),
-                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEVP())),
-                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyPhone())),
-                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, "21436386470"),
-                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("21436386470")))
-        );
-    }
-
-    static List<Arguments> provideOwnersAndInvalidAccounts() {
-        return List.of(
-                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
-                        AccountMock.getInvalidOne()),
-                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
-                        AccountMock.getInvalidOneWithInvalidKey()),
-                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
-                        AccountMock.getInvalidOne()),
-                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
-                        AccountMock.getInvalidOneWithInvalidKey())
-        );
-    }
-
-    // valid natural person
-    @ParameterizedTest
-    @MethodSource("providerNaturalPerson")
-    public void givenValidNaturalPerson_shouldReturnOwner(
-            final String name,
-            final String taxIdNumber,
-            final TypePerson type,
-            final Account account
-    ) {
-        var result = Owner.getInstance(name, null, taxIdNumber, type, account);
-        Assertions.assertInstanceOf(Owner.class, result);
-        Assertions.assertEquals(name, result.getName().getName());
-        Assertions.assertEquals(taxIdNumber, result.getTaxIdNumber().getTaxIdNumber());
-        Assertions.assertEquals(type, result.getType());
-    }
-
-    //    // invalid natural person
-    @ParameterizedTest
-    @MethodSource("providerInvalidNaturalPerson")
-    public void givenInvalidNaturalPerson_shouldReturnOwnerWithNotification(
-            final String name,
-            final String taxIdNumber,
-            final TypePerson type,
-            final Account account
-    ) {
-        var result = Owner.getInstance(name, null, taxIdNumber, type, account);
-        Assertions.assertInstanceOf(Owner.class, result);
-        Assertions.assertTrue(Arrays.asList(
-                "Must be a full name.",
-                "TaxIdNumber is invalid.",
-                "Person type is required.",
-                "Name should not have special characters",
-                "Min size of name is 3, Max size is 100.",
-                "Invalid value.",
-                taxIdNumber + "Invalid value.",
-                "Type person is required.",
-                "Name must not be null",
-                "TypePerson must not be null.",
-                "Name should not have special characters.",
-                "Name must not be null.",
-                "73735342019 is invalid.",
-                "TradeName is required for Legal person.",
-                "Branch is invalid.",
-                "Account Number is invalid.",
-                "OpeningDate is required.",
-                "Participant is invalid.",
-                "Account Type is required."
-        ).contains(result.getNotification().getViolations().getFirst().reason()));
-        Assertions.assertInstanceOf(Notification.class, result.getNotification());
-    }
-
-    //    // valid legal person
-    @ParameterizedTest
-    @MethodSource("providerLegalPerson")
-    public void givenValidLegalPerson_shouldReturnOwner(
-            final String name,
-            final String taxIdNumber,
-            final TypePerson type,
-            final Account account
-    ) {
-        var result = Owner.getInstance(name, name, taxIdNumber, type, account);
-        Assertions.assertInstanceOf(Owner.class, result);
-        Assertions.assertEquals(name, result.getName().getName());
-        Assertions.assertEquals(taxIdNumber, result.getTaxIdNumber().getTaxIdNumber());
-        Assertions.assertEquals(type, result.getType());
     }
 
     //    // invalid legal person
@@ -340,6 +245,27 @@ public class OwnerTest extends UnitTest {
         Assertions.assertInstanceOf(Notification.class, result.getNotification());
     }
 
+    static List<Arguments> provideOwnersToAddAccount() {
+        return List.of(
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEmail())),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEVP())),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyPhone())),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, "9L25PV0S000125"),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCnpj("9L25PV0S000125"))),
+                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEmail())),
+                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEVP())),
+                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyPhone())),
+                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, "21436386470"),
+                        AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCpf("21436386470")))
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideOwnersToAddAccount")
     public void givenValidOwner_whenCallingAddNewAccountOrNewKey_shouldAddAccount(Owner owner, Account newAccount) {
@@ -350,6 +276,20 @@ public class OwnerTest extends UnitTest {
         Assertions.assertEquals(1, owner.getAccounts().getFirst().getEntryKeys().size());
         Assertions.assertEquals(1, owner.getAccounts().getLast().getEntryKeys().size());
     }
+
+    static List<Arguments> provideOwnersAndInvalidAccounts() {
+        return List.of(
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
+                        AccountMock.getInvalidOne()),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, null),
+                        AccountMock.getInvalidOneWithInvalidKey()),
+                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
+                        AccountMock.getInvalidOne()),
+                Arguments.of(OwnerMock.getOwner(TypePerson.NATURAL_PERSON, null),
+                        AccountMock.getInvalidOneWithInvalidKey())
+        );
+    }
+
 
     @ParameterizedTest
     @MethodSource("provideOwnersAndInvalidAccounts")
@@ -362,7 +302,7 @@ public class OwnerTest extends UnitTest {
     }
 
     @Test
-    public void givenValidOwnerWithMaxKeys_whenCallingCanNotHaveMoreKeys_shouldReturnTrue(){
+    public void givenValidOwnerWithMaxKeys_whenCallingCanNotHaveMoreKeys_shouldReturnTrue() {
         var owner = OwnerMock.getOwnerWithMaxKeys(TypePerson.LEGAL_PERSON, 20);
         var owner1 = OwnerMock.getOwnerWithMaxKeys(TypePerson.NATURAL_PERSON, 5);
         Assertions.assertTrue(owner.canNotHaveMoreKeys());
@@ -370,10 +310,46 @@ public class OwnerTest extends UnitTest {
     }
 
     @Test
-    public void givenValidOwnerWithMaxKeys_whenCallingCanNotHaveMoreKeys_shouldReturnFalse(){
+    public void givenValidOwnerWithMaxKeys_whenCallingCanNotHaveMoreKeys_shouldReturnFalse() {
         var owner = OwnerMock.getOwnerWithMaxKeys(TypePerson.LEGAL_PERSON, 10);
         var owner1 = OwnerMock.getOwnerWithMaxKeys(TypePerson.NATURAL_PERSON, 3);
         Assertions.assertFalse(owner.canNotHaveMoreKeys());
         Assertions.assertFalse(owner1.canNotHaveMoreKeys());
+    }
+
+    @Test
+    public void givenValidValuesForNaturalPerson_whenCallingGetInstanceWithId_shouldReturnTheSameId() {
+        var expectedAccount = AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEmail());
+        var expectedId = UUID.randomUUID();
+        var expectedDate = Instant.parse(RandomDateMock.getRandomStringDate());
+        var expectedName = RandomValidName.randomValidName();
+        var expectedTaxIdNumber = RandomCpfMock.getRandomCFP();
+        var oldOwner = Owner.getInstance(expectedId, expectedDate, expectedDate, null, expectedName, null, expectedTaxIdNumber, TypePerson.NATURAL_PERSON, List.of(expectedAccount));
+        Assertions.assertInstanceOf(Owner.class, oldOwner);
+        Assertions.assertEquals(expectedId, oldOwner.getId());
+        Assertions.assertEquals(expectedDate, oldOwner.getUpdatedAt());
+        Assertions.assertEquals(expectedDate, oldOwner.getCreatedAt());
+        Assertions.assertEquals(expectedName, oldOwner.getName().getName());
+        Assertions.assertEquals(expectedTaxIdNumber, oldOwner.getTaxIdNumber().getTaxIdNumber());
+        Assertions.assertEquals(TypePerson.NATURAL_PERSON, oldOwner.getType());
+        Assertions.assertEquals(expectedAccount.getId().toString(), oldOwner.getAccounts().getFirst().getId().toString());
+    }
+
+    @Test
+    public void givenValidValuesForLegal_whenCallingGetInstanceWithId_shouldReturnTheSameId() {
+        var expectedAccount = AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyEmail());
+        var expectedId = UUID.randomUUID();
+        var expectedDate = Instant.parse(RandomDateMock.getRandomStringDate());
+        var expectedName = RandomValidName.randomValidCompanyName();
+        var expectedTaxIdNumber = RandomCNPJMock.getRandomCNPJ();
+        var oldOwner = Owner.getInstance(expectedId, expectedDate, expectedDate, null, expectedName, expectedName, expectedTaxIdNumber, TypePerson.LEGAL_PERSON, List.of(expectedAccount));
+        Assertions.assertInstanceOf(Owner.class, oldOwner);
+        Assertions.assertEquals(expectedId, oldOwner.getId());
+        Assertions.assertEquals(expectedDate, oldOwner.getUpdatedAt());
+        Assertions.assertEquals(expectedDate, oldOwner.getCreatedAt());
+        Assertions.assertEquals(expectedName, oldOwner.getName().getName());
+        Assertions.assertEquals(expectedTaxIdNumber, oldOwner.getTaxIdNumber().getTaxIdNumber());
+        Assertions.assertEquals(TypePerson.LEGAL_PERSON, oldOwner.getType());
+        Assertions.assertEquals(expectedAccount.getId().toString(), oldOwner.getAccounts().getFirst().getId().toString());
     }
 }

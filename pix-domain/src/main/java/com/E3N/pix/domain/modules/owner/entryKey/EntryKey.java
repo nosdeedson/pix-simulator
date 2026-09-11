@@ -38,6 +38,30 @@ public class EntryKey extends Entity {
         validate();
     }
 
+    private EntryKey(
+            final UUID id,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt,
+            final String key,
+            final TypeKey type,
+            final Instant creationDate,
+            final Reason reason,
+            final String requestId,
+            final String correlationId,
+            final Instant responseTime,
+            final Instant keyOwnershipDate
+    ) {
+        super(id, createdAt, updatedAt, deletedAt);
+        this.key = Key.getInstance(key, type);
+        this.creationDate = creationDate;
+        this.reason = reason;
+        this.requestId = UUID.fromString(requestId);
+        this.correlationId = correlationId;
+        this.responseTime = responseTime;
+        this.keyOwnershipDate = keyOwnershipDate;
+    }
+
     public static EntryKey getInstance(
             final String key,
             final TypeKey type,
@@ -45,6 +69,23 @@ public class EntryKey extends Entity {
             final String requestId
     ) {
         return new EntryKey(key, type, reason, requestId);
+    }
+
+    public static EntryKey getInstance(
+            final UUID id,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt,
+            final String key,
+            final TypeKey type,
+            final Instant creationDate,
+            final Reason reason,
+            final String requestId,
+            final String correlationId,
+            final Instant responseTime,
+            final Instant keyOwnershipDate
+    ){
+        return new EntryKey(id, createdAt, updatedAt, deletedAt, key, type, creationDate, reason, requestId, correlationId, responseTime, keyOwnershipDate);
     }
 
     @Override

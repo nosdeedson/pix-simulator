@@ -6,8 +6,11 @@ import com.E3N.pix.domain.mocks.EntryKeyMock;
 import com.E3N.pix.domain.modules.owner.account.Account;
 import com.E3N.pix.domain.modules.owner.account.AccountType;
 import com.E3N.pix.domain.modules.owner.entryKey.EntryKey;
+import com.E3N.pix.domain.modules.owner.entryKey.Reason;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.test.Owner.RandomAccountNumberMock;
+import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.test.Owner.RandomAccountMock;
+import com.E3N.test.Owner.RandomKeysMock;
 import com.E3N.test.Owner.RandomParticipant;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +21,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class AccountTest extends UnitTest {
@@ -41,6 +46,7 @@ public class AccountTest extends UnitTest {
                 entryKey
         );
         Assertions.assertInstanceOf(Account.class, result);
+        Assertions.assertNotNull(result.getId());
         Assertions.assertEquals(type, result.getType());
         Assertions.assertEquals(number, result.getNumber().getNumber());
         Assertions.assertEquals(expectedBranch, result.getBranch().getBranch());
@@ -114,7 +120,7 @@ public class AccountTest extends UnitTest {
     }
 
     @Test
-    public void givenAValidEntryKey_whenCallingAddKey_shouldAddItToAccount(){
+    public void givenAValidEntryKey_whenCallingAddKey_shouldAddItToAccount() {
         var key = EntryKeyMock.getEntryKeyCnpj();
         var account = AccountMock.getRandomAccountWithSpecificEntryKey(key);
         Assertions.assertEquals(key.getKey().getKey(), account.getEntryKeys().getFirst().getKey().getKey());
@@ -128,7 +134,7 @@ public class AccountTest extends UnitTest {
     }
 
     @Test
-    public void givenInvalidEntryKey_whenCallingAddKey_shouldReturnAccountWithNotification(){
+    public void givenInvalidEntryKey_whenCallingAddKey_shouldReturnAccountWithNotification() {
         var key = EntryKeyMock.getEntryKeyCnpj();
         var account = AccountMock.getRandomAccountWithSpecificEntryKey(key);
         Assertions.assertEquals(key.getKey().getKey(), account.getEntryKeys().getFirst().getKey().getKey());
@@ -142,7 +148,7 @@ public class AccountTest extends UnitTest {
     }
 
     @Test
-    public void givenExistingAccountNumberAndParticipant_whenCallingSameParticipant_shouldReturnTrue(){
+    public void givenExistingAccountNumberAndParticipant_whenCallingSameParticipant_shouldReturnTrue() {
         var entryKey = EntryKeyMock.getEntryKeyCnpj();
         var account = AccountMock.getRandomAccountWithSpecificEntryKey(entryKey);
         var expectedAccountNumber = account.getNumber().getNumber();
@@ -151,11 +157,29 @@ public class AccountTest extends UnitTest {
     }
 
     @Test
-    public void givenNotExistingAccountNumberAndParticipant_whenCallingSameParticipant_shouldReturnFalse(){
+    public void givenNotExistingAccountNumberAndParticipant_whenCallingSameParticipant_shouldReturnFalse() {
         var entryKey = EntryKeyMock.getEntryKeyCnpj();
         var account = AccountMock.getRandomAccountWithSpecificEntryKey(entryKey);
-        var expectedAccountNumber = RandomAccountNumberMock.randomAccountNumber();
-        var expectedParticipant =  RandomParticipant.getParticipant();
+        var expectedAccountNumber = RandomAccountMock.randomAccountNumber();
+        var expectedParticipant = RandomParticipant.getParticipant();
         Assertions.assertFalse(account.sameParticipant(expectedParticipant, expectedAccountNumber));
+    }
+
+    @Test
+    public void givenValidValues_whenCallingGetInstanceWithId_shouldReturnInstanceWithSameId() {
+        var requestIdExpected = UUID.randomUUID().toString();
+        var entryKeys = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, requestIdExpected);
+        var idExpected = UUID.randomUUID();
+        var createdAtExpected = Instant.parse("2007-12-03T10:15:30.00Z");
+        var updatedAtExpected = Instant.parse("2007-12-03T10:15:30.00Z");
+
+        var oldAccount = Account.getInstance(idExpected, createdAtExpected, updatedAtExpected, null, "1234",
+                RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, Instant.now(), List.of(entryKeys));
+        Assertions.assertNotNull(oldAccount);
+        Assertions.assertInstanceOf(Account.class, oldAccount);
+        Assertions.assertEquals(idExpected, oldAccount.getId());
+        Assertions.assertEquals(createdAtExpected, oldAccount.getCreatedAt());
+        Assertions.assertNull(oldAccount.getDeletedAt());
+        Assertions.assertEquals(entryKeys.getId().toString(), oldAccount.getEntryKeys().getFirst().getId().toString());
     }
 }

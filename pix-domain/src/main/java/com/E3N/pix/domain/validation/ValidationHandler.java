@@ -7,6 +7,8 @@ public interface ValidationHandler {
 
     ValidationHandler append(ValidationHandler handler);
 
+    ValidationHandler append(Violation violation);
+
     <T> T validate(Validation<T> aValidation);
 
     List<Violation> getViolations();

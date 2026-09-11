@@ -9,7 +9,7 @@ import com.E3N.pix.service.owner.dto.AccountDto;
 import com.E3N.pix.service.owner.dto.EntryKeyDto;
 import com.E3N.pix.service.owner.mocks.dto.EntryKeyDtoMock;
 import com.E3N.pix.service.owner.mocks.dto.RandomAccountTypeMock;
-import com.E3N.test.Owner.RandomAccountNumberMock;
+import com.E3N.test.Owner.RandomAccountMock;
 import com.E3N.test.Owner.RandomDateMock;
 import com.E3N.test.Owner.RandomParticipant;
 import org.junit.jupiter.api.Assertions;
@@ -26,40 +26,40 @@ public class AccountDtoTest extends UniTest {
     static Stream<Arguments> provider() {
         return Stream.of(
                 Arguments.of(
-                        RandomAccountNumberMock.randomBranch(),
-                        RandomAccountNumberMock.randomAccountNumber(),
+                        RandomAccountMock.randomBranch(),
+                        RandomAccountMock.randomAccountNumber(),
                         RandomDateMock.getRandomDate(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.EMAIL)
                 ),
                 Arguments.of(
-                        RandomAccountNumberMock.randomBranch(),
-                        RandomAccountNumberMock.randomAccountNumber(),
+                        RandomAccountMock.randomBranch(),
+                        RandomAccountMock.randomAccountNumber(),
                         RandomDateMock.getRandomDate(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.CNPJ)
                 ),
                 Arguments.of(
-                        RandomAccountNumberMock.randomBranch(),
-                        RandomAccountNumberMock.randomAccountNumber(),
+                        RandomAccountMock.randomBranch(),
+                        RandomAccountMock.randomAccountNumber(),
                         RandomDateMock.getRandomDate(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.CPF)
                 ),
                 Arguments.of(
-                        RandomAccountNumberMock.randomBranch(),
-                        RandomAccountNumberMock.randomAccountNumber(),
+                        RandomAccountMock.randomBranch(),
+                        RandomAccountMock.randomAccountNumber(),
                         RandomDateMock.getRandomDate(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.PHONE)
                 ),
                 Arguments.of(
-                        RandomAccountNumberMock.randomBranch(),
-                        RandomAccountNumberMock.randomAccountNumber(),
+                        RandomAccountMock.randomBranch(),
+                        RandomAccountMock.randomAccountNumber(),
                         RandomDateMock.getRandomDate(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),

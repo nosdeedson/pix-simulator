@@ -3,7 +3,7 @@ package com.E3N.pix.domain.mocks;
 import com.E3N.pix.domain.modules.owner.account.Account;
 import com.E3N.pix.domain.modules.owner.account.AccountType;
 import com.E3N.pix.domain.modules.owner.entryKey.EntryKey;
-import com.E3N.test.Owner.RandomAccountNumberMock;
+import com.E3N.test.Owner.RandomAccountMock;
 import com.E3N.test.Owner.RandomDateMock;
 import com.E3N.test.Owner.RandomParticipant;
 
@@ -28,8 +28,8 @@ public abstract class AccountMock {
 
     public static Account getRandomAccountWithSpecificEntryKey(final EntryKey key) {
         return Account.getInstance(
-                RandomAccountNumberMock.randomBranch(),
-                RandomAccountNumberMock.randomAccountNumber(),
+                RandomAccountMock.randomBranch(),
+                RandomAccountMock.randomAccountNumber(),
                 RandomParticipant.getParticipant(),
                 randomAccountType(),
                 RandomDateMock.getRandomDate(),
@@ -52,7 +52,7 @@ public abstract class AccountMock {
         );
     }
 
-    public static Account getInvalidOneWithInvalidKey(){
+    public static Account getInvalidOneWithInvalidKey() {
         return Account.getInstance(
                 "123456",
                 "123456ll",
