@@ -32,13 +32,13 @@ public abstract class AccountMock {
                 RandomAccountMock.randomAccountNumber(),
                 RandomParticipant.getParticipant(),
                 randomAccountType(),
-                RandomDateMock.getRandomDate(),
+                RandomDateMock.getRandomStringDateWithoutTimeZone(),
                 key
         );
     }
 
     public static AccountType randomAccountType() {
-        return Arrays.asList(AccountType.values()).get(random.nextInt(4) + 1);
+        return Arrays.asList(AccountType.values()).get(random.nextInt(AccountType.values().length));
     }
 
     public static Account getInvalidOne() {

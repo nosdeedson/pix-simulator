@@ -38,7 +38,7 @@ public class Account extends Entity {
         this.branch = Branch.getInstance(branch);
         this.number = AccountNumber.getInstance(number);
         this.type = type;
-        this.openingDate = DateHelper.getDateFrom(openingDate, "dd/MM/yyyy");
+        this.openingDate = DateHelper.getDateFrom(openingDate, "yyyy-MM-dd HH:mm:ss");
         this.entryKeys.add(entryKey);
         validate();
     }
@@ -179,5 +179,18 @@ public class Account extends Entity {
 
     public List<EntryKey> getEntryKeys() {
         return entryKeys;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "branch=" + branch +
+                ", number=" + number +
+                ", openingDate=" + openingDate +
+                ", participant=" + participant +
+                ", type=" + type +
+                ", entryKeys=" + entryKeys +
+                ", notification=" + notification +
+                '}';
     }
 }

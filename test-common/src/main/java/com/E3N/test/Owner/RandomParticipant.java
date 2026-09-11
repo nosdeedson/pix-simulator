@@ -31,7 +31,7 @@ public abstract class RandomParticipant {
     };
 
     public static String getParticipant() {
-        int r = random.nextInt(19) + 1;
+        int r = random.nextInt(RANDOM_PARTICIPANT.length - 1);
         return Arrays.asList(RANDOM_PARTICIPANT).get(r);
     }
 }

@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 public final class DateHelper {
 
     /**
-     * examples of formats [ dd/MM/yyyy dd/MM/yyyy HH:mm:ss ]
+     * examples of formats [ dd/MM/yyyy dd/MM/yyyy HH:mm:ss yyyy-MM-dd HH:mm:ss ]
      */
     public static Instant getDateFrom(final String dateString, final String format) {
         if (dateString == null) return null;
@@ -32,7 +32,7 @@ public final class DateHelper {
 
     public static String fromGregorianCalendar(final XMLGregorianCalendar day) {
         Instant instant = day.toGregorianCalendar().toZonedDateTime().toInstant();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }

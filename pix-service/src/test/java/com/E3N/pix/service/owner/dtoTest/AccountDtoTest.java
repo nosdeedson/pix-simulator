@@ -28,7 +28,7 @@ public class AccountDtoTest extends UniTest {
                 Arguments.of(
                         RandomAccountMock.randomBranch(),
                         RandomAccountMock.randomAccountNumber(),
-                        RandomDateMock.getRandomDate(),
+                        RandomDateMock.getRandomStringDateWithoutTimeZone(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.EMAIL)
@@ -36,7 +36,7 @@ public class AccountDtoTest extends UniTest {
                 Arguments.of(
                         RandomAccountMock.randomBranch(),
                         RandomAccountMock.randomAccountNumber(),
-                        RandomDateMock.getRandomDate(),
+                        RandomDateMock.getRandomStringDateWithoutTimeZone(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.CNPJ)
@@ -44,7 +44,7 @@ public class AccountDtoTest extends UniTest {
                 Arguments.of(
                         RandomAccountMock.randomBranch(),
                         RandomAccountMock.randomAccountNumber(),
-                        RandomDateMock.getRandomDate(),
+                        RandomDateMock.getRandomStringDateWithoutTimeZone(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.CPF)
@@ -52,7 +52,7 @@ public class AccountDtoTest extends UniTest {
                 Arguments.of(
                         RandomAccountMock.randomBranch(),
                         RandomAccountMock.randomAccountNumber(),
-                        RandomDateMock.getRandomDate(),
+                        RandomDateMock.getRandomStringDateWithoutTimeZone(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.PHONE)
@@ -60,7 +60,7 @@ public class AccountDtoTest extends UniTest {
                 Arguments.of(
                         RandomAccountMock.randomBranch(),
                         RandomAccountMock.randomAccountNumber(),
-                        RandomDateMock.getRandomDate(),
+                        RandomDateMock.getRandomStringDateWithoutTimeZone(),
                         RandomParticipant.getParticipant(),
                         RandomAccountTypeMock.getAccountType(),
                         EntryKeyDtoMock.getEntryKeyDto(TypeKey.EVP)

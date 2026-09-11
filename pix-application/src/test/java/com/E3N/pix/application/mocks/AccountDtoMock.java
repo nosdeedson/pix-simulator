@@ -12,7 +12,7 @@ public abstract class AccountDtoMock {
         return new AccountDto(
                 RandomAccountMock.randomBranch(),
                 RandomAccountMock.randomAccountNumber(),
-                RandomDateMock.getRandomDate(),
+                RandomDateMock.getRandomStringDateWithoutTimeZone(),
                 RandomParticipant.getParticipant(),
                 RandomAccountTypeMock.getAccountType(),
                 EntryKeyDtoMock.getEntryKeyDto(typeKey)

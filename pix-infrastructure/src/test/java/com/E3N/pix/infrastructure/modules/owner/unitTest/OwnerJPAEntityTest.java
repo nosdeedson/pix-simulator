@@ -20,7 +20,7 @@ public class OwnerJPAEntityTest extends UnitTest {
     @Test
     public void givenValidValuesForNaturalPerson_whenCallingGetInstanceWithId_shouldReturnSameId() {
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
-        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, "09/08/2026", key);
+        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);
         var owner = Owner.getInstance(RandomValidName.randomValidName(), null, RandomCpfMock.getRandomCFP(), TypePerson.NATURAL_PERSON, account);
         var entity = OwnerJPAEntity.from(owner);
         Assertions.assertInstanceOf(OwnerJPAEntity.class, entity);
@@ -31,7 +31,7 @@ public class OwnerJPAEntityTest extends UnitTest {
     @Test
     public void givenValidValuesForLegalPerson_whenCallingGetInstanceWithId_shouldReturnSameId() {
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
-        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, "09/08/2026", key);
+        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);
         var expectedName = RandomValidName.randomValidCompanyName();
         var owner = Owner.getInstance(expectedName, expectedName, RandomCNPJMock.getRandomCNPJ(), TypePerson.LEGAL_PERSON, account);
         var entity = OwnerJPAEntity.from(owner);
@@ -43,7 +43,7 @@ public class OwnerJPAEntityTest extends UnitTest {
     @Test
     public void givenValidOwnerJPAAsNaturalPerson_whenCallingGetInstanceWithId_shouldReturnOwner() {
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
-        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, "09/08/2026", key);
+        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);
         var expectedOwner = Owner.getInstance(RandomValidName.randomValidName(), null, RandomCpfMock.getRandomCFP(), TypePerson.NATURAL_PERSON, account);
         var entity = OwnerJPAEntity.from(expectedOwner);
         var owner = OwnerJPAEntity.from(entity);
@@ -55,7 +55,7 @@ public class OwnerJPAEntityTest extends UnitTest {
     @Test
     public void givenValidOwnerJPAAsLegalPerson_whenCallingGetInstanceWithId_shouldReturnSameId() {
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
-        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, "09/08/2026", key);
+        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);
         var expectedName = RandomValidName.randomValidCompanyName();
         var expectedOwner = Owner.getInstance(expectedName, expectedName, RandomCNPJMock.getRandomCNPJ(), TypePerson.LEGAL_PERSON, account);
         var entity = OwnerJPAEntity.from(expectedOwner);

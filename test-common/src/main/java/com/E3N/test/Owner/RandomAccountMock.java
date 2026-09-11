@@ -1,5 +1,7 @@
 package com.E3N.test.Owner;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -13,6 +15,6 @@ public abstract class RandomAccountMock {
 
     public static String randomBranch() {
         int value = random.nextInt(9998) + 1;
-        return String.valueOf(value);
+        return StringUtils.leftPad(String.valueOf(value), 4, "0");
     }
 }

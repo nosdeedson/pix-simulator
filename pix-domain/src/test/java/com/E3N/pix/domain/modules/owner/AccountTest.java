@@ -10,9 +10,9 @@ import com.E3N.pix.domain.modules.owner.entryKey.Reason;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.key.TypeKey;
 import com.E3N.test.Owner.RandomAccountMock;
+import com.E3N.test.Owner.RandomDateMock;
 import com.E3N.test.Owner.RandomKeysMock;
 import com.E3N.test.Owner.RandomParticipant;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,8 +37,8 @@ public class AccountTest extends UnitTest {
             final String opening,
             final EntryKey entryKey
     ) {
-        var expectedBranch = StringUtils.leftPad(branch, 4, "0");
-        var result = Account.getInstance(expectedBranch,
+        var result = Account.getInstance(
+                branch,
                 number,
                 participant,
                 type,
@@ -49,24 +49,34 @@ public class AccountTest extends UnitTest {
         Assertions.assertNotNull(result.getId());
         Assertions.assertEquals(type, result.getType());
         Assertions.assertEquals(number, result.getNumber().getNumber());
-        Assertions.assertEquals(expectedBranch, result.getBranch().getBranch());
+        Assertions.assertEquals(branch, result.getBranch().getBranch());
         Assertions.assertInstanceOf(Instant.class, result.getOpeningDate());
         Assertions.assertEquals(participant, result.getParticipant().getParticipant());
         Assertions.assertEquals(1, result.getEntryKeys().size());
     }
 
-    static Stream<Arguments> provider() {
-        return Stream.of(
-                Arguments.of("1", "1234", "00000000", AccountType.CACC, "12/08/1980", EntryKeyMock.getEntryKeyCnpj()),
-                Arguments.of("2", "1234", "04332281", AccountType.OTHR, "12/08/1980", EntryKeyMock.getEntryKeyCpf()),
-                Arguments.of("01", "1234", "08357240", AccountType.SLRY, "12/08/1990", EntryKeyMock.getEntryKeyEmail()),
-                Arguments.of("1", "12345678998765432112", "13673855", AccountType.SVGS, "01/02/2026", EntryKeyMock.getEntryKeyEVP()),
-                Arguments.of("1", "1234", "18188384", AccountType.TRAN, "12/08/2022", EntryKeyMock.getEntryKeyPhone()),
-                Arguments.of("0001", "1234X", "18236120", AccountType.TRAN, "12/08/1999", EntryKeyMock.getEntryKeyCnpj()),
-                Arguments.of("1000", "1234x", "18236120", AccountType.OTHR, "12/09/2023", EntryKeyMock.getEntryKeyCpf()),
-                Arguments.of("1", "1234", "27351731", AccountType.SLRY, "12/11/1980", EntryKeyMock.getEntryKeyEmail()),
-                Arguments.of("1", "1234", "30507541", AccountType.SVGS, "12/12/1980", EntryKeyMock.getEntryKeyEVP()),
-                Arguments.of("1", "1234", "57HWH4JZ", AccountType.CACC, "12/10/1980", EntryKeyMock.getEntryKeyPhone())
+    static List<Arguments> provider() {
+        return List.of(
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyCnpj()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.OTHR, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyCpf()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.SLRY, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyEmail()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.SVGS, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyEVP()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.TRAN, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyPhone()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.TRAN, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyCnpj()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.OTHR, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyCpf()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.SLRY, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyEmail()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.SVGS, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyEVP()),
+                Arguments.of(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                        RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyPhone())
         );
     }
 
@@ -106,7 +116,7 @@ public class AccountTest extends UnitTest {
 
     static Stream<Arguments> invalidProvider() {
         return Stream.of(
-                Arguments.of("100000", "1234", "00000000", AccountType.CACC, "12/08/1980", EntryKeyMock.getEntryKeyPhone()),
+                Arguments.of("100000", "1234", "00000000", AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyPhone()),
                 Arguments.of("2", "qqqq", "04332281", AccountType.OTHR, "32/08/1980", EntryKeyMock.getEntryKeyPhone()),
                 Arguments.of("01", "1234", "08357240", AccountType.SLRY, "12/13/1990", EntryKeyMock.getEntryKeyPhone()),
                 Arguments.of("1", "12345678998765432112a", "13673855", AccountType.SVGS, "01/02/2026", EntryKeyMock.getEntryKeyPhone()),
