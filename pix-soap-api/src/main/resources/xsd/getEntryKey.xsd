@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://pix.com/soap/contract"
+           targetNamespace="http://pix.com/soap/contract"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+    <xs:include schemaLocation="entryKey.xsd"/>
+
+    <xs:complexType name="GetEntryKeyResponse">
+        <xs:sequence>
+            <xs:element name="Signature" type="xs:string"/>
+            <xs:element name="ResponseTime" type="xs:dateTime"/>
+            <xs:element name="CorrelationId" type="xs:string"/>
+            <xs:element name="Entry" type="tns:EntryResponseType" />
+            <xs:element name="OwnerStatistics" type="tns:OwnerStatisticsType"/>
+            <xs:element name="KeyStatistics" type="tns:KeyStatisticsType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OwnerStatisticsType">
+        <xs:sequence>
+            <xs:element name="Spi" type="SpiType"/>
+            <xs:element name="FraudMarkers" type="tns:FraudMarkersType"/>
+            <xs:element name="InfractionReports" type="tns:InfractionReportsType"/>
+            <xs:element name="Entries" type="tns:EntriesType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="KeyStatisticsType">
+        <xs:sequence>
+            <xs:element name="Spi" type="SpiType"/>
+            <xs:element name="FraudMarkers" type="tns:FraudMarkersType"/>
+            <xs:element name="InfractionReports" type="tns:InfractionReportsType"/>
+            <xs:element name="Entries" type="tns:EntriesType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EntriesType">
+        <xs:sequence>
+            <xs:element name="Watermark" type="xs:dateTime"/>
+            <xs:element name="RegisteredAccounts" minOccurs="0" maxOccurs="1" type="xs:int"/>
+            <xs:element name="DistinctAccounts" minOccurs="0" maxOccurs="1" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SpiType">
+        <xs:sequence>
+            <xs:element name="Watermark" type="xs:dateTime"/>
+            <xs:element name="Settlements" type="tns:PeriodType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FraudMarkersType">
+        <xs:sequence>
+            <xs:element name="Watermark" type="xs:dateTime"/>
+            <xs:element name="ApplicationFrauds" type="tns:PeriodType"/>
+            <xs:element name="MuleAccounts" type="tns:PeriodType"/>
+            <xs:element name="ScammerAccounts" type="tns:PeriodType"/>
+            <xs:element name="OtherFrauds" type="tns:PeriodType"/>
+            <xs:element name="UnknowFrauds" type="tns:PeriodType"/>
+            <xs:element name="TotalFraudTransactionalAmount" type="tns:PeriodType"/>
+            <xs:element name="DistinctFraudReporters" type="tns:PeriodType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InfractionReportsType">
+        <xs:sequence>
+            <xs:element name="Watermark" type="xs:dateTime"/>
+            <xs:element name="OpenReports" type="xs:int" />
+            <xs:element name="OpenReportsDistinctReporters" type="xs:int" />
+            <xs:element name="RejectedReports" type="tns:PeriodType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PeriodType">
+        <xs:attribute name="d90" type="tns:CountType" use="required"/>
+        <xs:attribute name="m12" type="tns:CountType" use="required"/>
+        <xs:attribute name="m60" type="tns:CountType" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="CountType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
