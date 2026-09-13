@@ -1,5 +1,6 @@
 package com.E3N.pix.infrastructure.modules.owner;
 
+import com.E3N.pix.infrastructure.modules.entryKey.EntryKeyJPAEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,10 @@ public interface OwnerJPARepository extends JpaRepository<OwnerJPAEntity, String
             "WHERE o.taxIdNumber = :taxIdNumber")
     Optional<OwnerJPAEntity> findByTaxIdNumber(@Param("taxIdNumber") String taxIdNumber);
 
-    @Query("SELECT o FROM Owner o JOIN FETCH o.accounts a JOIN FETCH a.keyJPAs ek WHERE ek.key = :key")
+    // BRINGS ALL KEYS OF ACCOUNT
+    @Query("SELECT o FROM Owner o JOIN FETCH o.accounts a JOIN a.keyJPAs ek WHERE ek.key = :key")
     Optional<OwnerJPAEntity> findByKey(@Param("key") String key);
+
+    @Query("SELECT DISTINCT ek FROM entry_key ek JOIN FETCH ek.account a JOIN FETCH a.owner WHERE ek.key = :key")
+    Optional<EntryKeyJPAEntity> findFromKey(@Param("key") String key);
 }

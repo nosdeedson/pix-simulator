@@ -1,8 +1,8 @@
-package com.E3N.pix.application.modules;
+package com.E3N.pix.application.modules.owner;
 
 import com.E3N.pix.application.CreateEntryKeyUseCase;
 import com.E3N.pix.application.UnitTest;
-import com.E3N.pix.application.mocks.OwnerDtoMock;
+import com.E3N.pix.application.modules.owner.mocks.OwnerDtoMock;
 import com.E3N.pix.domain.modules.owner.owner.Owner;
 import com.E3N.pix.domain.modules.owner.owner.OwnerRepositoryInterface;
 import com.E3N.pix.domain.modules.owner.owner.TypePerson;

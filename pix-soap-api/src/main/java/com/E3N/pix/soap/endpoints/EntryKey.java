@@ -17,7 +17,7 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 
-@Endpoint
+@Endpoint("entries")
 public class EntryKey {
     private static final String NAME_SPACE_URI = "https://pix.com/soap/contract";
     private final OwnerRepositoryImpl ownerRepository;

@@ -172,4 +172,12 @@ public class EntryKeyJPAEntity extends GenericEntity {
     public void setKeyOwnershipDate(Instant keyOwnershipDate) {
         this.keyOwnershipDate = keyOwnershipDate;
     }
+
+    public AccountJPAEntity getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountJPAEntity account) {
+        this.account = account;
+    }
 }

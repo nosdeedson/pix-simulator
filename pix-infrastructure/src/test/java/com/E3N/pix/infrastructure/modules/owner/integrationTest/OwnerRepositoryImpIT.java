@@ -52,6 +52,35 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
+    void givenValidKey_whenCalling_findByKey_shouldFindOwner(){
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        var expectedKeyToFind = owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        owner = repository.save(owner);
+        Assertions.assertInstanceOf(Owner.class, owner);
+        Assertions.assertEquals(1, owner.getAccounts().getFirst().getEntryKeys().size());
+        var newKey = EntryKey.getInstance(RandomKeysMock.randomEVP(), TypeKey.EVP, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        owner.getAccounts().getFirst().getEntryKeys().add(newKey);
+        owner = repository.save(owner);
+
+        var requestedOwner = repository.findByKey(expectedKeyToFind);
+        Assertions.assertInstanceOf(Optional.class, requestedOwner);
+        Assertions.assertInstanceOf(Owner.class, requestedOwner.get());
+        Assertions.assertEquals(2, requestedOwner.get().getAccounts().getFirst().getEntryKeys().size());
+
+    }
+
+    @Test
+    void givenInvalidKey_whenCalling_findByKey_shouldOptionalEmpty(){
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        var expectedKeyToFind = "does-not-exist";
+        owner = repository.save(owner);
+
+        var requestedOwner = repository.findByKey(expectedKeyToFind);
+        Assertions.assertInstanceOf(Optional.class, requestedOwner);
+        Assertions.assertTrue(requestedOwner.isEmpty());
+    }
+
+    @Test
     public void givenValidOwner_whenCalling_save_shouldReturnNaturalPerson() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var expectedTaxIdNumber = owner.getTaxIdNumber().getTaxIdNumber();

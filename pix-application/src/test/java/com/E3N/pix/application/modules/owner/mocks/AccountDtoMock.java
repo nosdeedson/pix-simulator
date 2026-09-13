@@ -1,4 +1,4 @@
-package com.E3N.pix.application.mocks;
+package com.E3N.pix.application.modules.owner.mocks;
 
 import com.E3N.pix.domain.valueObject.key.TypeKey;
 import com.E3N.pix.service.owner.dto.AccountDto;

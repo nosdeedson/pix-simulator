@@ -2,6 +2,7 @@ package com.E3N.pix.infrastructure.modules.owner;
 
 import com.E3N.pix.domain.modules.owner.owner.Owner;
 import com.E3N.pix.domain.modules.owner.owner.OwnerRepositoryInterface;
+import com.E3N.pix.infrastructure.modules.entryKey.EntryKeyJPAEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
