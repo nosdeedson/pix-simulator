@@ -1,20 +1,21 @@
 package com.E3N.pix.soap.endpoints;
 
 import com.E3N.pix.application.CreateEntryKeyUseCase;
+import com.E3N.pix.application.GetEntryKeyUseCase;
 import com.E3N.pix.domain.modules.owner.owner.Owner;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.infrastructure.modules.owner.OwnerRepositoryImpl;
 import com.E3N.pix.service.Either;
 import com.E3N.pix.soap.contract.CreateEntryKeyRequest;
 import com.E3N.pix.soap.contract.CreateEntryKeyResponse;
+import com.E3N.pix.soap.contract.GetEntryKeyResponse;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
 import com.E3N.pix.soap.mapper.entryKey.EntryKeyResponseMapper;
 import com.E3N.pix.soap.mapper.entryKey.OwnerDtoMapper;
+import com.E3N.pix.soap.validation.entryKey.ValidationEntryKeyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import org.springframework.ws.server.endpoint.annotation.*;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
 
 @Endpoint("entries")
@@ -47,6 +48,34 @@ public class EntryKey {
             var message = e.getMessage() != null ? e.getMessage() : e.getLocalizedMessage() != null ? e.getLocalizedMessage() : "Unknown error";
             Notification notification = Notification.create(e.getMessage(), request.getEntry().getKey(), "EntryKey.creation");
             throw new SoapFaultException(message, notification);
+        }
+    }
+
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "GetEntryKeyResponse")
+    @ResponsePayload
+    public GetEntryKeyResponse getEntryKey(
+            @XPathParam("/key") String key,
+            @XPathParam("/IncludesStatistics") Boolean includesStatistics,
+            @SoapHeader("{" + NAME_SPACE_URI + "}PI-RequestingParticipant") String piRequestingParticipant,
+            @SoapHeader("{" + NAME_SPACE_URI + "}PI-PayerId") String piPayerId,
+            @SoapHeader("{" + NAME_SPACE_URI + "}PI-EndToEndId") String piEndToEndId
+    ) {
+        try {
+            ValidationEntryKeyRequest.validateHeaderGetKey(piRequestingParticipant, piPayerId, piEndToEndId);
+            var getUseCase = new GetEntryKeyUseCase(ownerRepository);
+            Either<Notification, Owner> result = getUseCase.getEntryKey(key, includesStatistics);
+            return result.fold(
+                    notification -> {
+                        throw new SoapFaultException("Could not get Key", notification);
+                    },
+                    EntryKeyResponseMapper::getEntryKeyResponse
+            );
+        } catch (Exception e) {
+            if (e instanceof SoapFaultException) {
+                throw e;
+            }
+            Notification notification = Notification.create("Could not process the request.", 400, "Unknow error while processing the request.");
+            throw new SoapFaultException("Failer", notification);
         }
     }
 }

@@ -24,8 +24,8 @@ public class Notification implements ValidationHandler {
         this.violations = violations;
     }
 
-    public static Notification create(final String type, final String title, final int status, final String detail) {
-        return new Notification(new ArrayList<>(), type, title, status, detail);
+    public static Notification create(final String title, final int status, final String detail) {
+        return new Notification(new ArrayList<>(), "https://pix.com/soap/contract", title, status, detail);
     }
 
     public static Notification create() {

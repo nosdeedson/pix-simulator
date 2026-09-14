@@ -2,6 +2,7 @@ package com.E3N.soap.mapper.entryKey;
 
 import com.E3N.pix.domain.modules.owner.owner.TypePerson;
 import com.E3N.pix.soap.contract.CreateEntryKeyResponse;
+import com.E3N.pix.soap.contract.GetEntryKeyResponse;
 import com.E3N.pix.soap.mapper.entryKey.EntryKeyResponseMapper;
 import com.E3N.shared.utils.DateHelper;
 import com.E3N.soap.UnitTest;
@@ -27,5 +28,16 @@ public class EntryKeyResponseMapperTest extends UnitTest {
         Assertions.assertInstanceOf(CreateEntryKeyResponse.class, response);
         Assertions.assertEquals(owner.getTaxIdNumber().getTaxIdNumber(), response.getEntry().getOwner().getTaxIdNumber());
         Assertions.assertEquals(DateHelper.fromInstant(owner.getAccounts().getLast().getEntryKeys().getLast().getResponseTime()), response.getResponseTime());
+    }
+
+    @Test
+    void givenValidOwner_whenCalling_EntryKeyResponse_getEntryKeyResponse_shouldReturnGeTEntryKeyResponse() {
+        var owner = OwnerMock.createOwner(TypePerson.NATURAL_PERSON);
+        var response = EntryKeyResponseMapper.getEntryKeyResponse(owner);
+        Assertions.assertInstanceOf(GetEntryKeyResponse.class, response);
+        Assertions.assertEquals(owner.getTaxIdNumber().getTaxIdNumber(), response.getEntry().getOwner().getTaxIdNumber());
+        Assertions.assertNotNull(response.getCorrelationId());
+        Assertions.assertNotNull(response.getResponseTime());
+        Assertions.assertNotNull(response.getSignature());
     }
 }

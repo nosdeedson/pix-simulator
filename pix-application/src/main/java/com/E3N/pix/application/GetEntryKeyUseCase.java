@@ -15,9 +15,14 @@ public class GetEntryKeyUseCase {
         this.ownerRepository = ownerRepository;
     }
 
-    public Either<Notification, Owner> getEntrykey(final String key){
+    public Either<Notification, Owner> getEntryKey(final String key, final Boolean includesStatistics) {
+        if (includesStatistics != null && includesStatistics) {
+            // TODO get entry key with statistics
+            Notification notification = Notification.create("Not implemented", 500, "Functionality not done yet.");
+            return Either.left(notification);
+        }
         Optional<Owner> optionalOwner = this.ownerRepository.findByKey(key);
-        if (optionalOwner.isPresent()){
+        if (optionalOwner.isPresent()) {
             var owner = optionalOwner.get();
             var keys = owner.getAccounts().getFirst().getEntryKeys();
             var keyRequested = keys.stream().filter(it -> it.getKey().getKey().equals(key)).findFirst().get();
@@ -25,6 +30,6 @@ public class GetEntryKeyUseCase {
             owner.getAccounts().getFirst().getEntryKeys().add(keyRequested);
             return Either.right(owner);
         }
-        return Either.left(Notification.create("https://pix.com/soap/contract", "Bad Request", 404, "Entry key does not exist"));
+        return Either.left(Notification.create("Bad Request", 404, "Entry key does not exist"));
     }
 }

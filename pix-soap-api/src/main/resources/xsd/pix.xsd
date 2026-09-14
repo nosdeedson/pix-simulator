@@ -5,4 +5,5 @@
            elementFormDefault="qualified">
     <xs:include schemaLocation="entryKey.xsd"/>
     <xs:include schemaLocation="problem.xsd"/>
+    <xs:include schemaLocation="getEntryKey.xsd"/>
 </xs:schema>

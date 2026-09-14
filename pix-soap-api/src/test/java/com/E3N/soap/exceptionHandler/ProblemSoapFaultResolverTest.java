@@ -67,7 +67,6 @@ public class ProblemSoapFaultResolverTest {
 
         // Mocking custom notification and violations
         Notification notification = Notification.create(
-                "https://pix.com/soap/contract",
                 "Entry is invalid",
                 400,
                 "Entry has invalid values");

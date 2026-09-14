@@ -1,4 +1,4 @@
-package com.E3N.soap.endpoints;
+package com.E3N.soap.endpoints.entryKey;
 
 import com.E3N.pix.infrastructure.modules.owner.OwnerRepositoryImpl;
 import com.E3N.pix.soap.contract.CreateEntryKeyResponse;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 // how to test https://claude.ai/share/f77e47fd-e041-449d-acc4-b53f3902d01d
 
 @ExtendWith(MockitoExtension.class)
-public class EntryKeyTest extends UnitTest {
+public class CreateEntryKeyTest extends UnitTest {
 
     @Mock
     private OwnerRepositoryImpl ownerRepository;
@@ -35,13 +35,13 @@ public class EntryKeyTest extends UnitTest {
     }
 
     @Test
-    public void shouldBeInstantiated() {
+    void shouldBeInstantiated() {
         Assertions.assertNotNull(ownerRepository);
         Assertions.assertNotNull(entryKey);
     }
 
     @Test
-    public void givenValidRequest_whenCalling_createEntryKey_shouldReturnCreateEntryKeyResponse() {
+    void givenValidRequest_whenCalling_createEntryKey_shouldReturnCreateEntryKeyResponse() {
         var request = CreateEntryKeyRequestMock.createRequest(false);
         var dto = OwnerDtoMapper.from(request);
         var owner = OwnerMock.createOwner(dto);
@@ -52,7 +52,7 @@ public class EntryKeyTest extends UnitTest {
     }
 
     @Test
-    public void givenInvalidRequest_whenCalling_createEntryKey_shouldReturnProblemType() {
+    void givenInvalidRequest_whenCalling_createEntryKey_shouldReturnProblemType() {
         var request = CreateEntryKeyRequestMock.createRequest(true);
         Assertions.assertThrows(SoapFaultException.class, () -> entryKey.createEntryKey(request));
     }
