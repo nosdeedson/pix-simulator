@@ -1,6 +1,6 @@
 package com.E3N.soap.mapper.entryKey;
 
-import com.E3N.pix.service.owner.dto.OwnerDto;
+import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.pix.soap.mapper.entryKey.OwnerDtoMapper;
 import com.E3N.soap.UnitTest;
 import com.E3N.soap.mapper.mocks.entryKey.CreateEntryKeyRequestMock;

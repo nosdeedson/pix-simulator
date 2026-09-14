@@ -1,6 +1,6 @@
 package com.E3N.soap.endpoints.entryKey;
 
-import com.E3N.pix.infrastructure.modules.owner.OwnerRepositoryImpl;
+import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.pix.soap.contract.CreateEntryKeyResponse;
 import com.E3N.pix.soap.endpoints.EntryKey;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;

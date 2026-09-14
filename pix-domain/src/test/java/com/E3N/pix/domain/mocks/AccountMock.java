@@ -1,8 +1,8 @@
 package com.E3N.pix.domain.mocks;
 
-import com.E3N.pix.domain.modules.owner.account.Account;
-import com.E3N.pix.domain.modules.owner.account.AccountType;
-import com.E3N.pix.domain.modules.owner.entryKey.EntryKey;
+import com.E3N.pix.domain.modules.ownership.account.Account;
+import com.E3N.pix.domain.modules.ownership.account.AccountType;
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.test.Owner.RandomAccountMock;
 import com.E3N.test.Owner.RandomDateMock;
 import com.E3N.test.Owner.RandomParticipant;

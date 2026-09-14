@@ -1,7 +1,7 @@
 package com.E3N.pix.soap.mapper.entryKey;
 
-import com.E3N.pix.domain.modules.owner.account.Account;
-import com.E3N.pix.domain.modules.owner.owner.Owner;
+import com.E3N.pix.domain.modules.ownership.account.Account;
+import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.soap.contract.*;
 import com.E3N.shared.utils.DateHelper;
 

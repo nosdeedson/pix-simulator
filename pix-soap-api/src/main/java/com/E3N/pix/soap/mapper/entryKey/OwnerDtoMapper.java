@@ -1,12 +1,12 @@
 package com.E3N.pix.soap.mapper.entryKey;
 
-import com.E3N.pix.domain.modules.owner.account.AccountType;
-import com.E3N.pix.domain.modules.owner.entryKey.Reason;
-import com.E3N.pix.domain.modules.owner.owner.TypePerson;
+import com.E3N.pix.domain.modules.ownership.account.AccountType;
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
+import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
 import com.E3N.pix.domain.valueObject.key.TypeKey;
-import com.E3N.pix.service.owner.dto.AccountDto;
-import com.E3N.pix.service.owner.dto.EntryKeyDto;
-import com.E3N.pix.service.owner.dto.OwnerDto;
+import com.E3N.pix.service.ownership.dto.AccountDto;
+import com.E3N.pix.service.ownership.dto.EntryKeyDto;
+import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.pix.soap.contract.CreateEntryKeyRequest;
 import com.E3N.shared.utils.DateHelper;
 

@@ -1,7 +1,7 @@
 package com.E3N.pix.domain.mocks;
 
-import com.E3N.pix.domain.modules.owner.entryKey.EntryKey;
-import com.E3N.pix.domain.modules.owner.entryKey.Reason;
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.valueObject.key.TypeKey;
 import com.E3N.test.Owner.RandomKeysMock;
 

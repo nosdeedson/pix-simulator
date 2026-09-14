@@ -1,10 +1,10 @@
 package com.E3N.pix.soap.endpoints;
 
-import com.E3N.pix.application.CreateEntryKeyUseCase;
-import com.E3N.pix.application.GetEntryKeyUseCase;
-import com.E3N.pix.domain.modules.owner.owner.Owner;
+import com.E3N.pix.application.ownership.CreateEntryKeyUseCase;
+import com.E3N.pix.application.ownership.GetEntryKeyUseCase;
+import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.pix.infrastructure.modules.owner.OwnerRepositoryImpl;
+import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.pix.service.Either;
 import com.E3N.pix.soap.contract.CreateEntryKeyRequest;
 import com.E3N.pix.soap.contract.CreateEntryKeyResponse;

@@ -1,13 +1,13 @@
 package com.E3N.soap.mapper.mocks.entryKey;
 
-import com.E3N.pix.domain.modules.owner.account.Account;
-import com.E3N.pix.domain.modules.owner.account.AccountType;
-import com.E3N.pix.domain.modules.owner.entryKey.EntryKey;
-import com.E3N.pix.domain.modules.owner.entryKey.Reason;
-import com.E3N.pix.domain.modules.owner.owner.Owner;
-import com.E3N.pix.domain.modules.owner.owner.TypePerson;
+import com.E3N.pix.domain.modules.ownership.account.Account;
+import com.E3N.pix.domain.modules.ownership.account.AccountType;
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
+import com.E3N.pix.domain.modules.ownership.owner.Owner;
+import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
 import com.E3N.pix.domain.valueObject.key.TypeKey;
-import com.E3N.pix.service.owner.dto.OwnerDto;
+import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.test.Owner.*;
 
 import java.util.UUID;

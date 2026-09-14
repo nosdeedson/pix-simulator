@@ -1,6 +1,6 @@
 package com.E3N.soap.mapper.entryKey;
 
-import com.E3N.pix.domain.modules.owner.owner.TypePerson;
+import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
 import com.E3N.pix.soap.contract.CreateEntryKeyResponse;
 import com.E3N.pix.soap.contract.GetEntryKeyResponse;
 import com.E3N.pix.soap.mapper.entryKey.EntryKeyResponseMapper;
