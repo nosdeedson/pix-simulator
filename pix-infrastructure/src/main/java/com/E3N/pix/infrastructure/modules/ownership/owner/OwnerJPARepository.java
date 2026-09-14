@@ -21,4 +21,12 @@ public interface OwnerJPARepository extends JpaRepository<OwnerJPAEntity, String
 
     @Query("SELECT DISTINCT ek FROM entry_key ek JOIN FETCH ek.account a JOIN FETCH a.owner WHERE ek.key = :key")
     Optional<EntryKeyJPAEntity> findFromKey(@Param("key") String key);
+
+    @Query("SELECT o from Owner o JOIN FETCH o.accounts a " +
+            " WHERE a.branch = :branch AND a.number  = :accountNumber AND a.participant = :participant AND o.taxIdNumber = :taxIdNumber")
+    Optional<OwnerJPAEntity> findByAccount(
+            @Param("accountNumber") String accountNumber,
+            @Param("branch") String branch,
+            @Param("participant") String participant,
+            @Param("taxIdNumber") String taxIdNumber);
 }

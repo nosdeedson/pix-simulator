@@ -35,12 +35,12 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    public void givenCorrectInjection_shouldRepositoryBeInstantiated() {
+    void givenCorrectInjection_shouldRepositoryBeInstantiated() {
         Assertions.assertNotNull(repository);
     }
 
     @Test
-    public void givenValidTaxIdNumber_whenCalling_findByTaxIdNumber_shouldFindOwner() {
+    void givenValidTaxIdNumber_whenCalling_findByTaxIdNumber_shouldFindOwner() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var expectedTaxIdNumber = owner.getTaxIdNumber();
         var ownerJpa = repository.save(owner);
@@ -81,7 +81,7 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    public void givenValidOwner_whenCalling_save_shouldReturnNaturalPerson() {
+    void givenValidOwner_whenCalling_save_shouldReturnNaturalPerson() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var expectedTaxIdNumber = owner.getTaxIdNumber().getTaxIdNumber();
         var result = repository.save(owner);
@@ -93,7 +93,7 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    public void givenValidOwner_whenCalling_save_shouldReturnLegalPerson() {
+    void givenValidOwner_whenCalling_save_shouldReturnLegalPerson() {
         var owner = getOwner(TypePerson.LEGAL_PERSON);
         var expectedTaxIdNumber = owner.getTaxIdNumber().getTaxIdNumber();
         var result = repository.save(owner);
@@ -105,7 +105,7 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    public void givenValidId_whenCalling_delete_shouldDelete() {
+    void givenValidId_whenCalling_delete_shouldDelete() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var expectedId = owner.getId();
         var result = repository.save(owner);
@@ -117,7 +117,7 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    public void shouldFindAll() {
+    void shouldFindAll() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var result = repository.save(owner);
         var owner1 = getOwner(TypePerson.NATURAL_PERSON);
@@ -130,7 +130,7 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    public void givenValidAccount_whenCalling_addingNewAccount_shouldReturnOwnerWithTwoAccounts() {
+    void givenValidAccount_whenCalling_addingNewAccount_shouldReturnOwnerWithTwoAccounts() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var result = repository.save(owner);
         Assertions.assertInstanceOf(Owner.class, result);
@@ -144,7 +144,7 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    public void givenValidKey_whenCalling_addingNewAccount_shouldJustAddNewKey() {
+    void givenValidKey_whenCalling_addingNewAccount_shouldJustAddNewKey() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var result = repository.save(owner);
         Assertions.assertInstanceOf(Owner.class, result);
@@ -156,4 +156,42 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
         var afterUpdate = repository.findById(result.getId());
         Assertions.assertEquals(2, afterUpdate.get().getAccounts().getFirst().getEntryKeys().size());
     }
+
+    @Test
+    void givenValidValues_whenCalling_findByAccount_shouldReturnOwner() {
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        var expectedBranch = owner.getAccounts().getFirst().getBranch().getBranch();
+        var expectedAccountNumber = owner.getAccounts().getFirst().getNumber().getNumber();
+        var expectedParticipant = owner.getAccounts().getFirst().getParticipant().getParticipant();
+        var expectedTaxIdNumber = owner.getTaxIdNumber().getTaxIdNumber();
+        repository.save(owner);
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var newAccount = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                RandomParticipant.getParticipant(), AccountType.SLRY, "2026-09-14 16:17:55", key);
+        owner.addNewAccountOrNewKey(newAccount);
+        var expectedOwner = repository.update(owner);
+        Assertions.assertEquals(2, expectedOwner.getAccounts().size());
+
+        var wantedOwner = repository.findByAccount(expectedAccountNumber, expectedBranch, expectedParticipant, expectedTaxIdNumber);
+
+        Assertions.assertInstanceOf(Owner.class, wantedOwner.get());
+        Assertions.assertEquals(expectedAccountNumber, wantedOwner.get().getAccounts().getFirst().getNumber().getNumber());
+        Assertions.assertEquals(expectedBranch, wantedOwner.get().getAccounts().getFirst().getBranch().getBranch());
+        Assertions.assertEquals(expectedParticipant, wantedOwner.get().getAccounts().getFirst().getParticipant().getParticipant());
+        Assertions.assertEquals(expectedOwner.getTaxIdNumber().getTaxIdNumber(), wantedOwner.get().getTaxIdNumber().getTaxIdNumber());
+    }
+
+    @Test
+    void givenValidValues_whenCalling_findByAccount_shouldReturnEmpty() {
+        var expectedBranch = "1234";
+        var expectedAccountNumber = "123456789";
+        var expectedParticipant = "88888888";
+        var expectedTaxIdNumber = RandomCpfMock.getRandomCFP();
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        repository.save(owner);
+        var wantedOwner = repository.findByAccount(expectedAccountNumber, expectedBranch, expectedParticipant, expectedTaxIdNumber);
+        Assertions.assertInstanceOf(Optional.class, wantedOwner);
+        Assertions.assertTrue(wantedOwner.isEmpty());
+    }
+
 }
