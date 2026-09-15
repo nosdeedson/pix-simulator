@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://pix.com/soap/contract"
+           targetNamespace="http://pix.com/soap/contract"
+           elementFormDefault="qualified">
+    <xs:include schemaLocation="entryKey.xsd"/>
+
+    <xs:complexType name="UpdateEntryRequest">
+        <xs:sequence>
+            <xs:element name="Signature" type="xs:string"/>
+            <xs:element name="Key" type="xs:string"/>
+            <xs:element name="Account" type="tns:AccountType"/>
+            <xs:element name="Owner" type="tns:OwnerType"/>
+            <xs:element name="Reason" type="tns:ReasonType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="UpdateEntryResponse">
+        <xs:sequence>
+            <xs:group ref="tns:ResponseCommon"/>
+            <xs:element name="Entry" type="tns:EntryType"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

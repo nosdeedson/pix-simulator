@@ -2,15 +2,13 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:tns="http://pix.com/soap/contract"
            targetNamespace="http://pix.com/soap/contract"
-           elementFormDefault="qualified"
-           attributeFormDefault="unqualified">
+           elementFormDefault="qualified">
+
     <xs:include schemaLocation="entryKey.xsd"/>
 
     <xs:complexType name="GetEntryKeyResponse">
         <xs:sequence>
-            <xs:element name="Signature" type="xs:string"/>
-            <xs:element name="ResponseTime" type="xs:dateTime"/>
-            <xs:element name="CorrelationId" type="xs:string"/>
+            <xs:group ref="tns:ResponseCommon"/>
             <xs:element name="Entry" type="tns:EntryResponseType"/>
             <xs:element name="OwnerStatistics" type="tns:OwnerStatisticsType"/>
             <xs:element name="KeyStatistics" type="tns:KeyStatisticsType"/>
@@ -38,8 +36,8 @@
     <xs:complexType name="EntriesType">
         <xs:sequence>
             <xs:element name="Watermark" type="xs:dateTime"/>
-            <xs:element name="RegisteredAccounts" minOccurs="0" maxOccurs="1" type="xs:int"/>
-            <xs:element name="DistinctAccounts" minOccurs="0" maxOccurs="1" type="xs:int"/>
+            <xs:element name="RegisteredAccounts" type="xs:int"/>
+            <xs:element name="DistinctAccounts" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 

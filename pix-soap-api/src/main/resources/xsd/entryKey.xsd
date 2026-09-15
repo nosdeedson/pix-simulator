@@ -19,13 +19,19 @@
     <xs:element name="CreateEntryKeyResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Signature" type="xs:string" minOccurs="0"/>
-                <xs:element name="ResponseTime" type="xs:dateTime"/>
-                <xs:element name="CorrelationId" type="xs:string"/>
+                <xs:group ref="tns:ResponseCommon"/>
                 <xs:element name="Entry" type="tns:EntryResponseType"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:group name="ResponseCommon">
+        <xs:sequence>
+            <xs:element name="Signature" type="xs:string"/>
+            <xs:element name="ResponseTime" type="xs:dateTime"/>
+            <xs:element name="CorrelationId" type="xs:string"/>
+        </xs:sequence>
+    </xs:group>
 
     <xs:complexType name="EntryResponseType">
         <xs:complexContent>
