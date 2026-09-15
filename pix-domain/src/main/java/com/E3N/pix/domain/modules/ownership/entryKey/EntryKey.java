@@ -88,6 +88,23 @@ public class EntryKey extends Entity {
         return new EntryKey(id, createdAt, updatedAt, deletedAt, key, type, creationDate, reason, requestId, correlationId, responseTime, keyOwnershipDate);
     }
 
+    public boolean isEqual(String key) {
+        return this.getKey().getKey().equals(key);
+    }
+
+    public boolean isInvalidUpdate(Reason reason) {
+        if (this.getKey().getType().equals(TypeKey.EVP)
+                && !(Reason.BRANCH_TRANSFER.equals(reason) || Reason.RECONCILIATION.equals(reason) || Reason.RFB_VALIDATION.equals(reason))
+        ) {
+            return true;
+        }
+        if (this.getKey().getType().equals(TypeKey.EVP)) return false;
+        return !(!TypeKey.EVP.equals(this.getKey().getType()) &&
+                (Reason.RFB_VALIDATION.equals(reason) || Reason.RECONCILIATION.equals(reason) || Reason.BRANCH_TRANSFER.equals(reason)
+                        || Reason.USER_REQUESTED.equals(reason))
+        );
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();

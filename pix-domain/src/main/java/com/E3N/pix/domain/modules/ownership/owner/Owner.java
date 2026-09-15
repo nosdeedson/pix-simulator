@@ -2,6 +2,8 @@ package com.E3N.pix.domain.modules.ownership.owner;
 
 import com.E3N.pix.domain.Entity;
 import com.E3N.pix.domain.modules.ownership.account.Account;
+import com.E3N.pix.domain.modules.ownership.dto.UpdateEntryKeyDto;
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.name.Name;
 import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;
@@ -117,7 +119,6 @@ public class Owner extends Entity {
         return qtdKeys > 5;
     }
 
-    // create the tests
     public void addNewAccountOrNewKey(final Account newAccount) {
         var newKey = newAccount.getEntryKeys().getFirst();
         Optional<Account> accountAlreadyExist = this.accounts.stream()
@@ -134,9 +135,29 @@ public class Owner extends Entity {
         }
     }
 
-    private void addAccount(final Account newAccount) {
-        this.accounts.add(newAccount);
-        this.validate();
+    public void update(UpdateEntryKeyDto dto) {
+        this.notification = Notification.create();
+        this.notification = (Notification) new OwnerValidator(this).validateUpdate(dto);
+        if (!this.notification.hasError()) {
+            EntryKey key = null;
+            for (Account acc : this.getAccounts()) {
+                var optionalEntryKey = acc.getEntryKeys().stream().filter(it -> it.isEqual(dto.key()))
+                        .findAny();
+                optionalEntryKey.ifPresent(entryKey -> acc.getEntryKeys().remove(entryKey));
+                if (optionalEntryKey.isPresent()) {
+                    key = optionalEntryKey.get();
+                }
+                if (acc.getEntryKeys().isEmpty()) {
+                    acc.setDeletedAt();
+                }
+            }
+            var newAccount = Account.getInstance(dto.accountDto().branch(), dto.accountDto().number(),
+                    dto.accountDto().participant(), dto.accountDto().type(), dto.accountDto().openingDate(),
+                    key);
+            this.setName(dto.name(), dto.typePerson());
+            if (this.type.equals(TypePerson.LEGAL_PERSON)) this.setTradeName(dto.tradeName(), dto.typePerson());
+            this.addAccount(newAccount);
+        }
     }
 
     @Override
@@ -150,12 +171,29 @@ public class Owner extends Entity {
         }
     }
 
+    private void addAccount(final Account newAccount) {
+        this.accounts.add(newAccount);
+        this.validate();
+    }
+
     public Name getName() {
         return name;
     }
 
+    private void setName(final String name, TypePerson type) {
+        if (!name.equals(this.name.getName())) {
+            this.name = Name.getInstance(name, type);
+        }
+    }
+
     public Name getTradeName() {
         return tradeName;
+    }
+
+    private void setTradeName(final String tradeName, TypePerson type) {
+        if (!tradeName.equals(this.tradeName.getName())) {
+            this.tradeName = Name.getInstance(tradeName, type);
+        }
     }
 
     public Instant getOpenClaimCreationDate() {

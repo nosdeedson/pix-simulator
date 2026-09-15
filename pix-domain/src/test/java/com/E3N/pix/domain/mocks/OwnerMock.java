@@ -1,12 +1,45 @@
 package com.E3N.pix.domain.mocks;
 
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.valueObject.key.TypeKey;
 import com.E3N.test.Owner.RandomCNPJMock;
 import com.E3N.test.Owner.RandomCpfMock;
 import com.E3N.test.Owner.RandomValidName;
 
 public abstract class OwnerMock {
+
+    private static EntryKey getKey(TypeKey typeKey) {
+        EntryKey key = null;
+        switch (typeKey) {
+            case EMAIL -> key = EntryKeyMock.getEntryKeyEmail();
+            case CPF -> key = EntryKeyMock.getEntryKeyCpf();
+            case CNPJ -> key = EntryKeyMock.getEntryKeyCnpj();
+            case PHONE -> key = EntryKeyMock.getEntryKeyPhone();
+            case EVP -> key = EntryKeyMock.getEntryKeyEVP();
+        }
+        return key;
+    }
+
+    public static Owner getOwner(TypePerson typePerson, String taxIdNumber, TypeKey typeKey) {
+        String tradeName = null;
+        String name = RandomValidName.randomValidName();
+        taxIdNumber = taxIdNumber != null ? taxIdNumber : RandomCpfMock.getRandomCFP();
+        var key = getKey(typeKey);
+        if (TypePerson.LEGAL_PERSON.equals(typePerson)) {
+            taxIdNumber = RandomCNPJMock.getRandomCNPJ();
+            name = RandomValidName.randomValidCompanyName();
+            tradeName = name;
+        }
+        return Owner.getInstance(
+                name,
+                tradeName,
+                taxIdNumber,
+                typePerson,
+                AccountMock.getRandomAccountWithSpecificEntryKey(key)
+        );
+    }
 
     public static Owner getOwner(TypePerson typePerson, String taxIdNumber) {
         String tradeName = null;

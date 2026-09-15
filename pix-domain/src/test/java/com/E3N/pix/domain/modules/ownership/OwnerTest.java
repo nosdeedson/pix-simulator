@@ -4,11 +4,14 @@ import com.E3N.pix.domain.UnitTest;
 import com.E3N.pix.domain.mocks.AccountMock;
 import com.E3N.pix.domain.mocks.EntryKeyMock;
 import com.E3N.pix.domain.mocks.OwnerMock;
+import com.E3N.pix.domain.mocks.UpdateEntryKeyDtoMock;
 import com.E3N.pix.domain.modules.ownership.account.Account;
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.validation.Violation;
+import com.E3N.pix.domain.valueObject.key.TypeKey;
 import com.E3N.test.Owner.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -351,5 +354,60 @@ public class OwnerTest extends UnitTest {
         Assertions.assertEquals(expectedTaxIdNumber, oldOwner.getTaxIdNumber().getTaxIdNumber());
         Assertions.assertEquals(TypePerson.LEGAL_PERSON, oldOwner.getType());
         Assertions.assertEquals(expectedAccount.getId().toString(), oldOwner.getAccounts().getFirst().getId().toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValidValuesUpdateKey")
+    void givenValidDto_whenCalling_update_shouldReturnWithoutNotification(Owner owner, String stringReason) {
+        var reason = Reason.valueOf(stringReason);
+        var oldName = owner.getName().getName();
+        var oldTradeName = owner.getTradeName().getName();
+        var account = owner.getAccounts().getFirst();
+        var key = account.getEntryKeys().getFirst();
+        var dto = UpdateEntryKeyDtoMock.getUpdateEntryKeyValid(account.getParticipant().getParticipant(), key,
+                owner.getTaxIdNumber().getTaxIdNumber(), reason);
+        owner.update(dto);
+        Assertions.assertFalse(owner.getNotification().hasError());
+        Assertions.assertEquals(dto.name(), owner.getName().getName());
+        Assertions.assertEquals(dto.tradeName(), owner.getTradeName().getName());
+        Assertions.assertNotEquals(oldName, owner.getName().getName());
+        Assertions.assertNotEquals(oldTradeName, owner.getTradeName().getName());
+        Assertions.assertNotNull(owner.getAccounts().getFirst().getDeletedAt());
+        Assertions.assertEquals(dto.accountDto().number(), owner.getAccounts().getLast().getNumber().getNumber());
+    }
+
+    static List<Arguments> provideValidValuesUpdateKey() {
+        return List.of(
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EMAIL), "RFB_VALIDATION"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.PHONE), "RECONCILIATION"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.CNPJ), "USER_REQUESTED"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EMAIL), "BRANCH_TRANSFER"),
+
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "RFB_VALIDATION"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "RECONCILIATION"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "BRANCH_TRANSFER")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidDtoUpdateKey")
+    void givenInvalidDto_whenCalling_update_shouldReturnWithoutNotification(Owner owner, String stringReason) {
+        var reason = Reason.valueOf(stringReason);
+        var dto = UpdateEntryKeyDtoMock.getInvalidDto(reason);
+        owner.update(dto);
+        Assertions.assertTrue(owner.getNotification().hasError());
+    }
+
+    static List<Arguments> provideInvalidDtoUpdateKey() {
+        return List.of(
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EMAIL), "ACCOUNT_CLOSURE"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.PHONE), "FRAUD"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.CNPJ), "PARTICIPANT_EXCLUSION"),
+
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "ACCOUNT_CLOSURE"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "FRAUD"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "PARTICIPANT_EXCLUSION"),
+                Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "USER_REQUESTED")
+        );
     }
 }

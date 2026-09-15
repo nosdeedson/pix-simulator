@@ -3,16 +3,14 @@ package com.E3N.pix.domain.modules.ownership;
 import com.E3N.pix.domain.UnitTest;
 import com.E3N.pix.domain.mocks.AccountMock;
 import com.E3N.pix.domain.mocks.EntryKeyMock;
+import com.E3N.pix.domain.mocks.UpdateEntryKeyDtoMock;
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.key.TypeKey;
-import com.E3N.test.Owner.RandomAccountMock;
-import com.E3N.test.Owner.RandomDateMock;
-import com.E3N.test.Owner.RandomKeysMock;
-import com.E3N.test.Owner.RandomParticipant;
+import com.E3N.test.Owner.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -191,5 +189,81 @@ public class AccountTest extends UnitTest {
         Assertions.assertEquals(createdAtExpected, oldAccount.getCreatedAt());
         Assertions.assertNull(oldAccount.getDeletedAt());
         Assertions.assertEquals(entryKeys.getId().toString(), oldAccount.getEntryKeys().getFirst().getId().toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValidDtoToUpdateEntryKey")
+    void givenValidUpdateDto_whenCalling_update_shouldReturnAccountWithoutNotificationError(EntryKey key, String stringReason) {
+        var reason = Reason.valueOf(stringReason);
+        var account = AccountMock.getRandomAccountWithSpecificEntryKey(key);
+        var dto = UpdateEntryKeyDtoMock.getUpdateEntryKeyValid(
+                account.getParticipant().getParticipant(),
+                key, RandomCpfMock.getRandomCFP(), reason);
+
+        account.update(dto);
+        Assertions.assertFalse(account.getNotification().hasError());
+    }
+
+    static List<Arguments> provideValidDtoToUpdateEntryKey() {
+        return List.of(
+                Arguments.of(EntryKeyMock.getEntryKeyEmail(), "RFB_VALIDATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyEmail(), "RECONCILIATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyEmail(), "USER_REQUESTED"),
+                Arguments.of(EntryKeyMock.getEntryKeyEmail(), "BRANCH_TRANSFER"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyPhone(), "RFB_VALIDATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyPhone(), "RECONCILIATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyPhone(), "USER_REQUESTED"),
+                Arguments.of(EntryKeyMock.getEntryKeyPhone(), "BRANCH_TRANSFER"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyCpf(), "RFB_VALIDATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyCpf(), "RECONCILIATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyCpf(), "USER_REQUESTED"),
+                Arguments.of(EntryKeyMock.getEntryKeyCpf(), "BRANCH_TRANSFER"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyCnpj(), "RFB_VALIDATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyCnpj(), "RECONCILIATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyCnpj(), "USER_REQUESTED"),
+                Arguments.of(EntryKeyMock.getEntryKeyCnpj(), "BRANCH_TRANSFER"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyEVP(), "BRANCH_TRANSFER"),
+                Arguments.of(EntryKeyMock.getEntryKeyEVP(), "RFB_VALIDATION"),
+                Arguments.of(EntryKeyMock.getEntryKeyEVP(), "RECONCILIATION")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidDtoToUpdateEntryKey")
+    void givenInvalidDto_whenCalling_update_shouldReturnAccountWithNotification(EntryKey key, String stringReason) {
+        var reason = Reason.valueOf(stringReason);
+        var account = AccountMock.getRandomAccountWithSpecificEntryKey(key);
+        var invalidDto = UpdateEntryKeyDtoMock.getInvalidDto(reason);
+        account.update(invalidDto);
+        Assertions.assertTrue(account.getNotification().hasError());
+    }
+
+    static List<Arguments> provideInvalidDtoToUpdateEntryKey() {
+        return List.of(
+                Arguments.of(EntryKeyMock.getEntryKeyEVP(), "ACCOUNT_CLOSURE"),
+                Arguments.of(EntryKeyMock.getEntryKeyEVP(), "FRAUD"),
+                Arguments.of(EntryKeyMock.getEntryKeyEVP(), "PARTICIPANT_EXCLUSION"),
+                Arguments.of(EntryKeyMock.getEntryKeyEVP(), "USER_REQUESTED"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyEmail(), "ACCOUNT_CLOSURE"),
+                Arguments.of(EntryKeyMock.getEntryKeyEmail(), "FRAUD"),
+                Arguments.of(EntryKeyMock.getEntryKeyEmail(), "PARTICIPANT_EXCLUSION"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyCnpj(), "ACCOUNT_CLOSURE"),
+                Arguments.of(EntryKeyMock.getEntryKeyCnpj(), "FRAUD"),
+                Arguments.of(EntryKeyMock.getEntryKeyCnpj(), "PARTICIPANT_EXCLUSION"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyCpf(), "ACCOUNT_CLOSURE"),
+                Arguments.of(EntryKeyMock.getEntryKeyCpf(), "FRAUD"),
+                Arguments.of(EntryKeyMock.getEntryKeyCpf(), "PARTICIPANT_EXCLUSION"),
+
+                Arguments.of(EntryKeyMock.getEntryKeyPhone(), "ACCOUNT_CLOSURE"),
+                Arguments.of(EntryKeyMock.getEntryKeyPhone(), "FRAUD"),
+                Arguments.of(EntryKeyMock.getEntryKeyPhone(), "PARTICIPANT_EXCLUSION")
+        );
     }
 }

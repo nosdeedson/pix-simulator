@@ -1,6 +1,7 @@
 package com.E3N.pix.domain.modules.ownership.account;
 
 import com.E3N.pix.domain.Entity;
+import com.E3N.pix.domain.modules.ownership.dto.UpdateEntryKeyDto;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.branch.Branch;
@@ -137,6 +138,11 @@ public class Account extends Entity {
                 && this.number.getNumber().equals(accountNumber);
     }
 
+    public void update(UpdateEntryKeyDto dto) {
+        this.notification = Notification.create();
+        this.notification = (Notification) new AccountValidator(this).validateUpdate(dto);
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();
@@ -180,6 +186,7 @@ public class Account extends Entity {
     public List<EntryKey> getEntryKeys() {
         return entryKeys;
     }
+
 
     @Override
     public String toString() {

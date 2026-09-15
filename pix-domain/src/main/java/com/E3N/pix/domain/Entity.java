@@ -6,8 +6,8 @@ import java.util.UUID;
 public abstract class Entity {
     private final UUID id;
     private final Instant createdAt;
-    private final Instant updatedAt;
-    private final Instant deletedAt;
+    private Instant updatedAt;
+    private Instant deletedAt;
 
     public Entity() {
         var today = Instant.now();
@@ -43,6 +43,11 @@ public abstract class Entity {
 
     public Instant getDeletedAt() {
         return deletedAt;
+    }
+
+    public void setDeletedAt() {
+        this.updatedAt = Instant.now();
+        this.deletedAt = Instant.now();
     }
 
     protected abstract void validate();
