@@ -4,9 +4,9 @@ import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.pix.soap.contract.CreateEntryKeyResponse;
 import com.E3N.pix.soap.endpoints.EntryKey;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
-import com.E3N.pix.soap.mapper.entryKey.OwnerDtoMapper;
+import com.E3N.pix.soap.mapper.entryKey.CreateEntryKeyRequestToDtoMapper;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.entryKey.CreateEntryKeyRequestMock;
+import com.E3N.soap.mapper.mocks.entryKey.EntryKeyRequestMock;
 import com.E3N.soap.mapper.mocks.entryKey.OwnerMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,8 +42,8 @@ public class CreateEntryKeyTest extends UnitTest {
 
     @Test
     void givenValidRequest_whenCalling_createEntryKey_shouldReturnCreateEntryKeyResponse() {
-        var request = CreateEntryKeyRequestMock.createRequest(false);
-        var dto = OwnerDtoMapper.from(request);
+        var request = EntryKeyRequestMock.createRequest(false);
+        var dto = CreateEntryKeyRequestToDtoMapper.from(request);
         var owner = OwnerMock.createOwner(dto);
         when(ownerRepository.save(any()))
                 .thenReturn(owner);
@@ -53,7 +53,7 @@ public class CreateEntryKeyTest extends UnitTest {
 
     @Test
     void givenInvalidRequest_whenCalling_createEntryKey_shouldReturnProblemType() {
-        var request = CreateEntryKeyRequestMock.createRequest(true);
+        var request = EntryKeyRequestMock.createRequest(true);
         Assertions.assertThrows(SoapFaultException.class, () -> entryKey.createEntryKey(request));
     }
 }

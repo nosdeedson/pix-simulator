@@ -1,13 +1,16 @@
 package com.E3N.soap.mapper.mocks.entryKey;
 
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
+import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.soap.contract.*;
 import com.E3N.shared.utils.DateHelper;
 import com.E3N.test.Owner.RandomCpfMock;
+import com.E3N.test.Owner.RandomKeysMock;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public abstract class CreateEntryKeyRequestMock {
+public abstract class EntryKeyRequestMock {
 
     public static CreateEntryKeyRequest createRequest(boolean invalidTaxIdNumber) {
         var request = new CreateEntryKeyRequest();
@@ -16,6 +19,37 @@ public abstract class CreateEntryKeyRequestMock {
         request.setReason(ReasonType.USER_REQUESTED);
         request.setRequestId(UUID.randomUUID().toString());
 
+        return request;
+    }
+
+    public static UpdateEntryKeyRequest createUpdateRequest(ReasonType reasonType) {
+        var request = new UpdateEntryKeyRequest();
+        request.setKey(RandomKeysMock.randomEmails());
+        request.setAccount(getAccount());
+        request.setOwner(getOwner(false));
+        request.setReason(reasonType);
+        return request;
+    }
+
+    public static UpdateEntryKeyRequest from(Reason reason, Owner owner) {
+        var request = new UpdateEntryKeyRequest();
+        request.setKey(owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey());
+        // account
+        var account = getAccount();
+        account.setParticipant(owner.getAccounts().getFirst().getParticipant().getParticipant());
+        request.setAccount(account);
+
+        // owner
+        var ownerReq = new OwnerType();
+        ownerReq.setType(OwnerTypeEnum.valueOf(owner.getType().name()));
+        ownerReq.setTaxIdNumber(owner.getTaxIdNumber().getTaxIdNumber());
+        ownerReq.setName(owner.getName().getName());
+        if (owner.getTradeName() != null) {
+            ownerReq.setTradeName(owner.getTradeName().getName());
+        }
+
+        request.setOwner(ownerReq);
+        request.setReason(ReasonType.valueOf(reason.name()));
         return request;
     }
 

@@ -14,8 +14,12 @@ public class UpdateEntryKeyUseCase {
         this.ownerRepository = ownerRepository;
     }
 
-    public Either<Notification, Owner> execute(UpdateEntryKeyDto dto) {
-        var optionalOwner = ownerRepository.findByTaxIdNumber(dto.taxIdNumber());
+    public Either<Notification, Owner> execute(UpdateEntryKeyDto dto, final String key) {
+        if (!dto.key().equals(key)) {
+            Notification notification = Notification.create("Not found", 409, "Key in URL does not match the key in body.");
+            return Either.left(notification);
+        }
+        var optionalOwner = ownerRepository.findByKeyAndTaxIdNumber(key, dto.taxIdNumber());
         if (optionalOwner.isEmpty()) {
             Notification notification = Notification.create("Not found", 404, "EntryKey does not exist.");
             return Either.left(notification);

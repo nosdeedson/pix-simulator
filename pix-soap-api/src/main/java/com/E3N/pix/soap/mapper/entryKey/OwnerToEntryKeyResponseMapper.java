@@ -8,7 +8,7 @@ import com.E3N.shared.utils.DateHelper;
 import java.time.Instant;
 import java.util.UUID;
 
-public abstract class EntryKeyResponseMapper {
+public abstract class OwnerToEntryKeyResponseMapper {
 
     private static OwnerType createOwnerType(Owner owner) {
         OwnerType owerType = new OwnerType();
@@ -82,6 +82,21 @@ public abstract class EntryKeyResponseMapper {
         // TODO add the statistics
 
         response.setEntry(entryType);
+        return response;
+    }
+
+    /**
+     * Convert an Owner to UpdateEntryKeyResponse
+     *
+     * @param owner @description Owner domain
+     * @return UpdateEntryKeyResponse
+     */
+    public static UpdateEntryKeyResponse getUpdateEntryKeyResponse(Owner owner) {
+        var response = new UpdateEntryKeyResponse();
+        response.setCorrelationId(UUID.randomUUID().toString().replace("-", ""));
+        response.setResponseTime(DateHelper.fromInstant(Instant.now()));
+        response.setSignature(UUID.randomUUID().toString());
+        response.setEntry(createEntryResponseType(owner));
         return response;
     }
 }

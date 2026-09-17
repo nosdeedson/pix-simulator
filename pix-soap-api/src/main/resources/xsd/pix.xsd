@@ -6,4 +6,5 @@
     <xs:include schemaLocation="entryKey.xsd"/>
     <xs:include schemaLocation="problem.xsd"/>
     <xs:include schemaLocation="getEntryKey.xsd"/>
+    <xs:include schemaLocation="updateEntryKey.xsd"/>
 </xs:schema>

@@ -101,8 +101,13 @@
 
     <xs:simpleType name="ReasonType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="USER_REQUESTED"/>
+            <xs:enumeration value="ACCOUNT_CLOSURE"/>
+            <xs:enumeration value="BRANCH_TRANSFER"/>
+            <xs:enumeration value="FRAUD"/>
+            <xs:enumeration value="PARTICIPANT_EXCLUSION"/>
+            <xs:enumeration value="RFB_VALIDATION"/>
             <xs:enumeration value="RECONCILIATION"/>
+            <xs:enumeration value="USER_REQUESTED"/>
         </xs:restriction>
     </xs:simpleType>
 

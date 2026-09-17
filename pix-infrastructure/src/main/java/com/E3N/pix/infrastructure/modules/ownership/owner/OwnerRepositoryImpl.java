@@ -30,8 +30,8 @@ public class OwnerRepositoryImpl implements OwnerRepositoryInterface {
     }
 
     @Override
-    public Optional<Owner> findByAccount(String accountNumber, String branch, String participant, String taxIdNumber) {
-        var ownerJPA = this.ownerRepository.findByAccount(accountNumber, branch, participant, taxIdNumber);
+    public Optional<Owner> findByKeyAndTaxIdNumber(String key, String taxIdNumber) {
+        var ownerJPA = this.ownerRepository.findByKeyAndTaxIdNumber(key, taxIdNumber);
         return ownerJPA.map(OwnerJPAEntity::from);
     }
 

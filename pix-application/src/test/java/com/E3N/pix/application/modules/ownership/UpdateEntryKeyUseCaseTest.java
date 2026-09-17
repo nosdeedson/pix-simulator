@@ -45,10 +45,29 @@ public class UpdateEntryKeyUseCaseTest extends UnitTest {
     @Test
     void givenValidDto_whenCallingWithNOExistentKey_shouldReturnEitherWithNotification() {
         var dto = UpdateEntryKeyDtoMock.getUpdateEntryKeyValid(RandomParticipant.getParticipant(), RandomKeysMock.randomEmails(), RandomCpfMock.getRandomCFP(), Reason.USER_REQUESTED);
-        Mockito.when(ownerRepository.findByTaxIdNumber(Mockito.any()))
+        Mockito.when(ownerRepository.findByKeyAndTaxIdNumber(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
         var expectedDetail = "EntryKey does not exist.";
-        var result = useCase.execute(dto);
+        var result = useCase.execute(dto, dto.key());
+        result.fold(
+                notification -> {
+                    Assertions.assertNotNull(notification);
+                    Assertions.assertEquals(expectedDetail, notification.getDetail());
+                    return notification;
+                },
+                owner -> {
+                    Assertions.assertNull(owner);
+                    return null;
+                }
+        );
+    }
+
+    @Test
+    void givenValidDtoWithUnrelatedKey_whenCallingUpdateKey_shouldReturnEitherWithNotification() {
+        var dto = UpdateEntryKeyDtoMock.getUpdateEntryKeyValid(RandomParticipant.getParticipant(), RandomKeysMock.randomEmails(), RandomCpfMock.getRandomCFP(), Reason.USER_REQUESTED);
+        var unrelatedKey = "doesNotMatchDto";
+        var expectedDetail = "Key in URL does not match the key in body.";
+        var result = useCase.execute(dto, unrelatedKey);
         result.fold(
                 notification -> {
                     Assertions.assertNotNull(notification);
@@ -66,9 +85,9 @@ public class UpdateEntryKeyUseCaseTest extends UnitTest {
     void givenInvalidDto_whenCallingWithNOExistentKey_shouldReturnEitherWithNotification() {
         var dto = UpdateEntryKeyDtoMock.getUpdateEntryKeyValid(RandomParticipant.getParticipant(), RandomKeysMock.randomEmails(), RandomCpfMock.getRandomCFP(), Reason.USER_REQUESTED);
         var owner = OwnerMock.getOwner(TypePerson.NATURAL_PERSON);
-        Mockito.when(ownerRepository.findByTaxIdNumber(Mockito.any()))
+        Mockito.when(ownerRepository.findByKeyAndTaxIdNumber(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.of(owner));
-        var result = useCase.execute(dto);
+        var result = useCase.execute(dto, dto.key());
         var expectedReasons = Arrays.asList("There is no key that matches the key passed", "Participants different, Open a claim or portability.");
         result.fold(
                 notification -> {
@@ -85,17 +104,17 @@ public class UpdateEntryKeyUseCaseTest extends UnitTest {
     }
 
     @Test
-    void givenValidDto_whenCallingWithNOExistentKey_shouldReturnEitherWithOwner() {
+    void givenValidDto_whenCallingUpdate_shouldReturnEitherWithOwner() {
         var owner = OwnerMock.getOwner(TypePerson.NATURAL_PERSON);
         var account = owner.getAccounts().getFirst();
         var key = account.getEntryKeys().getFirst();
         var dto = UpdateEntryKeyDtoMock.getUpdateEntryKeyValid(account.getParticipant().getParticipant(),
                 key.getKey().getKey(), owner.getTaxIdNumber().getTaxIdNumber(), Reason.BRANCH_TRANSFER);
-        Mockito.when(ownerRepository.findByTaxIdNumber(Mockito.any()))
+        Mockito.when(ownerRepository.findByKeyAndTaxIdNumber(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.of(owner));
         Mockito.when(ownerRepository.update(Mockito.any()))
                 .thenReturn(owner);
-        var result = useCase.execute(dto);
+        var result = useCase.execute(dto, dto.key());
         result.fold(
                 notification -> {
                     Assertions.assertNull(notification);

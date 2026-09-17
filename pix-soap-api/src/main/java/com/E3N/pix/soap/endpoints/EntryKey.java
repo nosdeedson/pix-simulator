@@ -2,16 +2,17 @@ package com.E3N.pix.soap.endpoints;
 
 import com.E3N.pix.application.ownership.CreateEntryKeyUseCase;
 import com.E3N.pix.application.ownership.GetEntryKeyUseCase;
+import com.E3N.pix.application.ownership.UpdateEntryKeyUseCase;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.pix.service.Either;
-import com.E3N.pix.soap.contract.CreateEntryKeyRequest;
-import com.E3N.pix.soap.contract.CreateEntryKeyResponse;
-import com.E3N.pix.soap.contract.GetEntryKeyResponse;
+import com.E3N.pix.soap.contract.*;
+import com.E3N.pix.soap.excptionHandler.HandleError;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
-import com.E3N.pix.soap.mapper.entryKey.EntryKeyResponseMapper;
-import com.E3N.pix.soap.mapper.entryKey.OwnerDtoMapper;
+import com.E3N.pix.soap.mapper.entryKey.CreateEntryKeyRequestToDtoMapper;
+import com.E3N.pix.soap.mapper.entryKey.OwnerToEntryKeyResponseMapper;
+import com.E3N.pix.soap.mapper.entryKey.UpdateEntryKeyRequestToDtoMapper;
 import com.E3N.pix.soap.validation.entryKey.ValidationEntryKeyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.*;
@@ -33,21 +34,16 @@ public class EntryKey {
     public CreateEntryKeyResponse createEntryKey(@RequestPayload CreateEntryKeyRequest request) {
         try {
             CreateEntryKeyUseCase useCase = new CreateEntryKeyUseCase(ownerRepository);
-            var dto = OwnerDtoMapper.from(request);
+            var dto = CreateEntryKeyRequestToDtoMapper.from(request);
             Either<Notification, Owner> result = useCase.createOrUpdateEntryKey(dto);
             return result.fold(
                     notification -> {
                         throw new SoapFaultException("Invalid request", notification);
                     },
-                    EntryKeyResponseMapper::from
+                    OwnerToEntryKeyResponseMapper::from
             );
         } catch (Exception e) {
-            if (e instanceof SoapFaultException) {
-                throw e;
-            }
-            var message = e.getMessage() != null ? e.getMessage() : e.getLocalizedMessage() != null ? e.getLocalizedMessage() : "Unknown error";
-            Notification notification = Notification.create(e.getMessage(), request.getEntry().getKey(), "EntryKey.creation");
-            throw new SoapFaultException(message, notification);
+            throw HandleError.handleError(e);
         }
     }
 
@@ -68,14 +64,33 @@ public class EntryKey {
                     notification -> {
                         throw new SoapFaultException("Could not get Key", notification);
                     },
-                    EntryKeyResponseMapper::getEntryKeyResponse
+                    OwnerToEntryKeyResponseMapper::getEntryKeyResponse
             );
         } catch (Exception e) {
-            if (e instanceof SoapFaultException) {
-                throw e;
-            }
-            Notification notification = Notification.create("Could not process the request.", 400, "Unknow error while processing the request.");
-            throw new SoapFaultException("Failer", notification);
+            throw HandleError.handleError(e);
         }
     }
+
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "UpdateEntryKeyRequest")
+    @ResponsePayload
+    public UpdateEntryKeyResponse updateEntryKey(
+            @XPathParam("/key") String key,
+            @RequestPayload UpdateEntryKeyRequest request
+    ) {
+        try {
+            UpdateEntryKeyUseCase useCase = new UpdateEntryKeyUseCase(ownerRepository);
+            var dto = UpdateEntryKeyRequestToDtoMapper.getDto(request);
+            Either<Notification, Owner> result = useCase.execute(dto, key);
+            return result.fold(
+                    notification -> {
+                        throw new SoapFaultException("Invalid request", notification);
+                    },
+                    OwnerToEntryKeyResponseMapper::getUpdateEntryKeyResponse
+            );
+        } catch (Exception e) {
+            throw HandleError.handleError(e);
+        }
+    }
+
+
 }

@@ -10,7 +10,7 @@ import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.pix.soap.contract.CreateEntryKeyRequest;
 import com.E3N.shared.utils.DateHelper;
 
-public class OwnerDtoMapper {
+public class CreateEntryKeyRequestToDtoMapper {
 
     public static OwnerDto from(CreateEntryKeyRequest request) {
         if (request.getEntry().getOwner().getType().name().equals(TypePerson.LEGAL_PERSON.name())) {
@@ -20,7 +20,7 @@ public class OwnerDtoMapper {
                     request.getEntry().getOwner().getTaxIdNumber(),
                     TypePerson.LEGAL_PERSON,
                     null,
-                    OwnerDtoMapper.createAccountDto(request)
+                    CreateEntryKeyRequestToDtoMapper.createAccountDto(request)
             );
         } else {
             return new OwnerDto(
@@ -29,7 +29,7 @@ public class OwnerDtoMapper {
                     request.getEntry().getOwner().getTaxIdNumber(),
                     TypePerson.NATURAL_PERSON,
                     null,
-                    OwnerDtoMapper.createAccountDto(request)
+                    CreateEntryKeyRequestToDtoMapper.createAccountDto(request)
             );
         }
     }

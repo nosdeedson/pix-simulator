@@ -21,21 +21,20 @@ public class TaxIdNumberValidator extends Validator {
             validationHandler().append("Type person is required.", taxIdNumber.getTaxIdNumber(), PROPERTY);
             return validationHandler();
         }
-        switch (this.taxIdNumber.getTypePerson()) {
-            case TypePerson.LEGAL_PERSON: {
+        return switch (this.taxIdNumber.getTypePerson()) {
+            case TypePerson.LEGAL_PERSON -> {
                 if (!ValidateCnpj.validate(this.taxIdNumber.getTaxIdNumber())) {
                     validationHandler().append("TaxIdNumber is invalid.", taxIdNumber.getTaxIdNumber(), PROPERTY);
                 }
-                return validationHandler();
+                yield validationHandler();
             }
-            case TypePerson.NATURAL_PERSON: {
+            case TypePerson.NATURAL_PERSON -> {
                 if (!ValidateCpf.validate(this.taxIdNumber.getTaxIdNumber())) {
                     validationHandler().append("TaxIdNumber is invalid.", taxIdNumber.getTaxIdNumber(), PROPERTY);
                 }
-                return validationHandler();
+                yield validationHandler();
             }
-            default:
-                return validationHandler().append("Invalid value.", taxIdNumber.getTaxIdNumber(), PROPERTY);
-        }
+            default -> validationHandler().append("Invalid value.", taxIdNumber.getTaxIdNumber(), PROPERTY);
+        };
     }
 }
