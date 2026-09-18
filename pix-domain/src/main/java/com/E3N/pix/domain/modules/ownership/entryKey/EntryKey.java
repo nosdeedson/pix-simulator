@@ -105,6 +105,11 @@ public class EntryKey extends Entity {
         );
     }
 
+    public void delete(Reason reason) {
+        this.setDeletedAt();
+        this.reason = reason;
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();

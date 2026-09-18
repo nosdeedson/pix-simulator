@@ -12,4 +12,6 @@ public interface OwnerRepositoryInterface extends CRUDRepositoryInterface<Owner>
 
     Optional<Owner> findByKeyAndTaxIdNumber(final String key, final String taxIdNumber);
 
+    Optional<Owner> findByKeyAndParticipant(final String key, final String participant);
+
 }

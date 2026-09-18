@@ -45,7 +45,7 @@ public abstract class Entity {
         return deletedAt;
     }
 
-    public void setDeletedAt() {
+    protected void setDeletedAt() {
         this.updatedAt = Instant.now();
         this.deletedAt = Instant.now();
     }

@@ -187,4 +187,12 @@ public class EntryKeyTest extends UnitTest {
                 Arguments.of("PARTICIPANT_EXCLUSION", EntryKeyMock.getEntryKeyPhone())
         );
     }
+
+    @Test
+    void givenAReason_whenCalling_deleteKey_shouldSetDeleteAt() {
+        var key = EntryKeyMock.getEntryKeyEmail();
+        key.delete(Reason.USER_REQUESTED);
+        Assertions.assertNotNull(key.getDeletedAt());
+        Assertions.assertEquals(Reason.USER_REQUESTED, key.getReason());
+    }
 }

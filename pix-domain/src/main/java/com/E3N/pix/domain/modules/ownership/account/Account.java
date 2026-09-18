@@ -143,6 +143,10 @@ public class Account extends Entity {
         this.notification = (Notification) new AccountValidator(this).validateUpdate(dto);
     }
 
+    public void delete() {
+        this.setDeletedAt();
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();
