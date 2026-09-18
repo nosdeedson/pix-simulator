@@ -148,7 +148,7 @@ public class Owner extends Entity {
                     key = optionalEntryKey.get();
                 }
                 if (acc.getEntryKeys().isEmpty()) {
-                    acc.setDeletedAt();
+                    acc.delete();
                 }
             }
             var newAccount = Account.getInstance(dto.accountDto().branch(), dto.accountDto().number(),
