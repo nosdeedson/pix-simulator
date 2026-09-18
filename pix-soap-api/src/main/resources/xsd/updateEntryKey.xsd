@@ -5,20 +5,24 @@
            elementFormDefault="qualified">
     <xs:include schemaLocation="entryKey.xsd"/>
 
-    <xs:complexType name="UpdateEntryKeyRequest">
-        <xs:sequence>
-            <xs:element name="Signature" type="xs:string"/>
-            <xs:element name="Key" type="xs:string"/>
-            <xs:element name="Account" type="tns:AccountType"/>
-            <xs:element name="Owner" type="tns:OwnerType"/>
-            <xs:element name="Reason" type="tns:ReasonType"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="UpdateEntryKeyRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Signature" type="xs:string"/>
+                <xs:element name="Key" type="xs:string"/>
+                <xs:element name="Account" type="tns:AccountType"/>
+                <xs:element name="Owner" type="tns:OwnerType"/>
+                <xs:element name="Reason" type="tns:ReasonType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:complexType name="UpdateEntryKeyResponse">
-        <xs:sequence>
-            <xs:group ref="tns:ResponseCommon"/>
-            <xs:element name="Entry" type="tns:EntryType"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="UpdateEntryKeyResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="tns:ResponseCommon"/>
+                <xs:element name="Entry" type="tns:EntryType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

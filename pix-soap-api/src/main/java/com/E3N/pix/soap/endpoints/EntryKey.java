@@ -16,12 +16,14 @@ import com.E3N.pix.soap.mapper.entryKey.UpdateEntryKeyRequestToDtoMapper;
 import com.E3N.pix.soap.validation.entryKey.ValidationEntryKeyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.*;
+import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
 
 @Endpoint("entries")
 public class EntryKey {
     private static final String NAME_SPACE_URI = "https://pix.com/soap/contract";
+    private static final String SOAP_ACTION_PREFIX = NAME_SPACE_URI + "/";
     private final OwnerRepositoryImpl ownerRepository;
 
     @Autowired
@@ -31,6 +33,7 @@ public class EntryKey {
 
     @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "CreateEntryKeyRequest")
     @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "CreateEntryKey")
     public CreateEntryKeyResponse createEntryKey(@RequestPayload CreateEntryKeyRequest request) {
         try {
             CreateEntryKeyUseCase useCase = new CreateEntryKeyUseCase(ownerRepository);
@@ -47,8 +50,9 @@ public class EntryKey {
         }
     }
 
-    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "GetEntryKeyResponse")
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "GetEntryKeyRequest")
     @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "GetEntryKey")
     public GetEntryKeyResponse getEntryKey(
             @XPathParam("/key") String key,
             @XPathParam("/IncludesStatistics") Boolean includesStatistics,
@@ -73,6 +77,7 @@ public class EntryKey {
 
     @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "UpdateEntryKeyRequest")
     @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "UpdateEntryKey")
     public UpdateEntryKeyResponse updateEntryKey(
             @XPathParam("/key") String key,
             @RequestPayload UpdateEntryKeyRequest request

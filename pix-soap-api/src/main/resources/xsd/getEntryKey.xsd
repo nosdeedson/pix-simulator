@@ -6,14 +6,26 @@
 
     <xs:include schemaLocation="entryKey.xsd"/>
 
-    <xs:complexType name="GetEntryKeyResponse">
-        <xs:sequence>
-            <xs:group ref="tns:ResponseCommon"/>
-            <xs:element name="Entry" type="tns:EntryResponseType"/>
-            <xs:element name="OwnerStatistics" type="tns:OwnerStatisticsType"/>
-            <xs:element name="KeyStatistics" type="tns:KeyStatisticsType"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="GetEntryKeyRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="key" type="xs:string"/>
+                <xs:element name="IncludesStatistics" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetEntryKeyResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="tns:ResponseCommon"/>
+                <xs:element name="Entry" type="tns:EntryResponseType"/>
+                <xs:element name="OwnerStatistics" type="tns:OwnerStatisticsType"/>
+                <xs:element name="KeyStatistics" type="tns:KeyStatisticsType"/>
+            </xs:sequence>
+        </xs:complexType>
+
+    </xs:element>
 
     <xs:complexType name="OwnerStatisticsType">
         <xs:sequence>
