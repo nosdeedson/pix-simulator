@@ -11,7 +11,7 @@
             <xs:element name="Signature" type="xs:string"/>
             <xs:element name="Key" type="xs:string"/>
             <xs:element name="Participant" type="xs:string"/>
-            <xs:element name="Reason" type="xs:string"/>
+            <xs:element name="Reason" type="tns:ReasonType"/>
         </xs:sequence>
     </xs:complexType>
 
