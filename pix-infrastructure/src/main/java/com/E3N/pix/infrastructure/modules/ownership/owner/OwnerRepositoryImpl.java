@@ -36,6 +36,12 @@ public class OwnerRepositoryImpl implements OwnerRepositoryInterface {
     }
 
     @Override
+    public Optional<Owner> findByKeyAndParticipant(String key, String participant) {
+        var ownerJPA = this.ownerRepository.findByKeyAndParticipant(key, participant);
+        return ownerJPA.map(OwnerJPAEntity::from);
+    }
+
+    @Override
     public Owner save(Owner owner) {
         OwnerJPAEntity entity = OwnerJPAEntity.from(owner);
         entity = this.ownerRepository.save(entity);

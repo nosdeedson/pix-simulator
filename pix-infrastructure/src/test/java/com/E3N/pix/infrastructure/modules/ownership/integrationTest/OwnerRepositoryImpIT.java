@@ -158,7 +158,7 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    void givenValidValues_whenCalling_findByAccount_shouldReturnOwner() {
+    void givenValidValues_whenCalling_findByKeyAndTaxIdNumber_shouldReturnOwner() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var expectedKey = owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
         var expectedTaxIdNumber = owner.getTaxIdNumber().getTaxIdNumber();
@@ -178,12 +178,39 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
     }
 
     @Test
-    void givenValidValues_whenCalling_findByAccount_shouldReturnEmpty() {
+    void givenValidValues_whenCalling_findByKeyAndTaxIdNumber_shouldReturnEmpty() {
         var expectedKey = RandomKeysMock.randomEmails();
         var expectedTaxIdNumber = RandomCpfMock.getRandomCFP();
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         repository.save(owner);
         var wantedOwner = repository.findByKeyAndTaxIdNumber(expectedKey, expectedTaxIdNumber);
+        Assertions.assertInstanceOf(Optional.class, wantedOwner);
+        Assertions.assertTrue(wantedOwner.isEmpty());
+    }
+
+    @Test
+    void givenValidValues_whenCalling_findByKeyAndParticipant_shouldReturnOwner() {
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        var expectedKey = owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var expectedParticipant = owner.getAccounts().getFirst().getParticipant().getParticipant();
+        repository.save(owner);
+
+        var wantedOwner = repository.findByKeyAndParticipant(expectedKey, expectedParticipant);
+
+        Assertions.assertInstanceOf(Owner.class, wantedOwner.get());
+        Assertions.assertEquals(expectedKey, wantedOwner.get().getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey());
+        Assertions.assertEquals(expectedParticipant, wantedOwner.get().getAccounts().getFirst().getParticipant().getParticipant());
+    }
+
+    @Test
+    void givenValidValues_whenCalling_findByKeyAndParticipant_shouldReturnOptionalEmpty() {
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        repository.save(owner);
+        var expectedKey = RandomKeysMock.randomEmails();
+        var expectedParticipant = RandomParticipant.getParticipant();
+
+        var wantedOwner = repository.findByKeyAndParticipant(expectedKey, expectedParticipant);
+
         Assertions.assertInstanceOf(Optional.class, wantedOwner);
         Assertions.assertTrue(wantedOwner.isEmpty());
     }
