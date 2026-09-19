@@ -25,7 +25,7 @@ public class Notification implements ValidationHandler {
     }
 
     public static Notification create(final String title, final int status, final String detail) {
-        return new Notification(new ArrayList<>(), "https://pix.com/soap/contract", title, status, detail);
+        return new Notification(new ArrayList<>(), "http://pix.com/soap/contract", title, status, detail);
     }
 
     public static Notification create() {

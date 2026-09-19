@@ -46,7 +46,7 @@ public class WebServiceConfig {
         DefaultWsdl11Definition defaultWsdl11Definition = new DefaultWsdl11Definition();
         defaultWsdl11Definition.setPortTypeName("PixPort");
         defaultWsdl11Definition.setLocationUri("/ws");
-        defaultWsdl11Definition.setTargetNamespace("https://pix.com/soap/contract");
+        defaultWsdl11Definition.setTargetNamespace("http://pix.com/soap/contract");
         defaultWsdl11Definition.setSchemaCollection(pixSchema);
         return defaultWsdl11Definition;
     }

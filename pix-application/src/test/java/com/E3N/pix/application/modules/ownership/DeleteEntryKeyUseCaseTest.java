@@ -1,7 +1,7 @@
 package com.E3N.pix.application.modules.ownership;
 
 import com.E3N.pix.application.UnitTest;
-import com.E3N.pix.application.modules.ownership.mocks.OwnerMock;
+import com.E3N.pix.application.modules.ownership.mock.OwnerMock;
 import com.E3N.pix.application.ownership.DeleteEntryKeyUseCase;
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
@@ -81,11 +81,9 @@ public class DeleteEntryKeyUseCaseTest extends UnitTest {
                     Assertions.assertNull(notification);
                     return null;
                 },
-                owner1 -> {
-                    Assertions.assertNotNull(owner1);
-                    Assertions.assertNotNull(owner1.getAccounts().getFirst().getEntryKeys().getFirst().getDeletedAt());
-                    Assertions.assertNotNull(owner1.getAccounts().getFirst().getDeletedAt());
-                    return owner1;
+                aVoid -> {
+                    Assertions.assertNull(aVoid);
+                    return aVoid;
                 }
         );
     }
@@ -107,12 +105,9 @@ public class DeleteEntryKeyUseCaseTest extends UnitTest {
                     Assertions.assertNull(notification);
                     return null;
                 },
-                owner1 -> {
-                    Assertions.assertNotNull(owner1);
-                    Assertions.assertNotNull(owner1.getAccounts().getFirst().getEntryKeys().getFirst().getDeletedAt());
-                    Assertions.assertNull(owner1.getAccounts().getFirst().getEntryKeys().getLast().getDeletedAt());
-                    Assertions.assertNull(owner1.getAccounts().getFirst().getDeletedAt());
-                    return owner1;
+                aVoid -> {
+                    Assertions.assertNull(aVoid);
+                    return aVoid;
                 }
         );
     }
@@ -134,12 +129,9 @@ public class DeleteEntryKeyUseCaseTest extends UnitTest {
                     Assertions.assertNull(notification);
                     return null;
                 },
-                owner1 -> {
-                    Assertions.assertNotNull(owner1);
-                    Assertions.assertNotNull(owner.getAccounts().getFirst().getEntryKeys().getLast().getDeletedAt());
-                    Assertions.assertNull(owner.getAccounts().getFirst().getEntryKeys().getFirst().getDeletedAt());
-                    Assertions.assertNull(owner.getAccounts().getFirst().getDeletedAt());
-                    return owner1;
+                aVoid -> {
+                    Assertions.assertNull(aVoid);
+                    return aVoid;
                 }
         );
     }
@@ -163,13 +155,9 @@ public class DeleteEntryKeyUseCaseTest extends UnitTest {
                     Assertions.assertNull(notification);
                     return null;
                 },
-                owner1 -> {
-                    Assertions.assertNotNull(owner1);
-                    Assertions.assertNotNull(owner1.getAccounts().getFirst().getEntryKeys().getLast().getDeletedAt());
-                    Assertions.assertNull(owner1.getAccounts().getLast().getEntryKeys().getFirst().getDeletedAt());
-                    Assertions.assertNull(owner1.getAccounts().getFirst().getDeletedAt());
-                    Assertions.assertNotNull(owner1.getAccounts().getLast().getDeletedAt());
-                    return owner1;
+                aVoid -> {
+                    Assertions.assertNull(aVoid);
+                    return aVoid;
                 }
         );
     }

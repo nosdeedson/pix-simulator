@@ -1,4 +1,4 @@
-package com.E3N.pix.application.modules.ownership.mocks;
+package com.E3N.pix.application.modules.ownership.mock;
 
 import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
 import com.E3N.pix.domain.valueObject.key.TypeKey;
@@ -11,7 +11,7 @@ import com.github.javafaker.Faker;
 public abstract class OwnerDtoMock {
     private static final Faker faker = new Faker();
 
-    public static OwnerDto getOwner(OwnerDto ownerDto) {
+    public static OwnerDto getOwnerDto(OwnerDto ownerDto) {
         return new OwnerDto(
                 ownerDto.name(),
                 ownerDto.tradeName(),
@@ -22,7 +22,7 @@ public abstract class OwnerDtoMock {
         );
     }
 
-    public static OwnerDto getOwner(TypePerson typePerson, TypeKey typeKey) {
+    public static OwnerDto getOwnerDto(TypePerson typePerson, TypeKey typeKey) {
         var name = "";
         if (TypePerson.LEGAL_PERSON.equals(typePerson)) {
             name = faker.company().name().replaceAll("[^a-zA-Z0-9\\-_]", "");

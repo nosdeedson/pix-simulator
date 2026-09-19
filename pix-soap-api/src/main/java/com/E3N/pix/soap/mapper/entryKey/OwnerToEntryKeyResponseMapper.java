@@ -99,4 +99,13 @@ public abstract class OwnerToEntryKeyResponseMapper {
         response.setEntry(createEntryResponseType(owner));
         return response;
     }
+
+    public static DeleteEntryKeyResponse getDeletedKeyResponse(final String key){
+        var response = new DeleteEntryKeyResponse();
+        response.setCorrelationId(UUID.randomUUID().toString().replace("-", ""));
+        response.setKey(key);
+        response.setResponseTime(DateHelper.fromInstant(Instant.now()));
+        response.setSignature(UUID.randomUUID().toString());
+        return response;
+    }
 }

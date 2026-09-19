@@ -27,7 +27,7 @@ public class ProblemSoapFaultResolver extends SoapFaultMappingExceptionResolver 
     private static Problem getDefaultProblem() {
         Problem problem = new Problem();
         problem.setTitle("Error while processing request.");
-        problem.setType("https://pix.com/soap/contract");
+        problem.setType("http://pix.com/soap/contract");
         problem.setStatus(500);
         problem.setDetail("Unknown error.");
         return problem;

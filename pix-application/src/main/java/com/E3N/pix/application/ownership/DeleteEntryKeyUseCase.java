@@ -8,17 +8,18 @@ import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.Either;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeleteEntryKeyUseCase {
 
-    private OwnerRepositoryInterface ownerRepository;
+    private final OwnerRepositoryInterface ownerRepository;
 
     public DeleteEntryKeyUseCase(OwnerRepositoryInterface ownerRepository) {
         this.ownerRepository = ownerRepository;
     }
 
-    public Either<Notification, Owner> deleteEntryKey(final String key, final String participant, Reason reason) {
+    public Either<Notification, Void> deleteEntryKey(final String key, final String participant, Reason reason) {
         var optionalOwner = this.ownerRepository.findByKeyAndParticipant(key, participant);
         if (optionalOwner.isEmpty()) {
             Notification notification = Notification.create("Not found", 404, "EntryKey not found");
@@ -37,7 +38,7 @@ public class DeleteEntryKeyUseCase {
                 acc.delete();
             }
         }
-        owner = ownerRepository.update(owner);
-        return Either.right(owner);
+        ownerRepository.update(owner);
+        return Either.right(null);
     }
 }

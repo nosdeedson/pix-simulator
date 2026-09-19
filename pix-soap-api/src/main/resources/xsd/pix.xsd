@@ -7,4 +7,5 @@
     <xs:include schemaLocation="problem.xsd"/>
     <xs:include schemaLocation="getEntryKey.xsd"/>
     <xs:include schemaLocation="updateEntryKey.xsd"/>
+    <xs:include schemaLocation="deleteEntryKey.xsd"/>
 </xs:schema>

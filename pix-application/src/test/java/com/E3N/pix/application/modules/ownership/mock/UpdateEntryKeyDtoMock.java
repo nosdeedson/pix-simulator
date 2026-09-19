@@ -1,4 +1,4 @@
-package com.E3N.pix.application.modules.ownership.mocks;
+package com.E3N.pix.application.modules.ownership.mock;
 
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.modules.ownership.dto.UpdateAccountDto;

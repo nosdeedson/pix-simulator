@@ -1,8 +1,8 @@
 package com.E3N.pix.application.modules.ownership;
 
 import com.E3N.pix.application.UnitTest;
-import com.E3N.pix.application.modules.ownership.mocks.OwnerMock;
-import com.E3N.pix.application.modules.ownership.mocks.UpdateEntryKeyDtoMock;
+import com.E3N.pix.application.modules.ownership.mock.OwnerMock;
+import com.E3N.pix.application.modules.ownership.mock.UpdateEntryKeyDtoMock;
 import com.E3N.pix.application.ownership.UpdateEntryKeyUseCase;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;

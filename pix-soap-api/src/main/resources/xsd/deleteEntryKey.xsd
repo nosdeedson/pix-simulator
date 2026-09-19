@@ -6,21 +6,25 @@
 
     <xs:include schemaLocation="entryKey.xsd"/>
 
-    <xs:complexType name="DeleteEntryKeyRequest">
-        <xs:sequence>
-            <xs:element name="Signature" type="xs:string"/>
-            <xs:element name="Key" type="xs:string"/>
-            <xs:element name="Participant" type="xs:string"/>
-            <xs:element name="Reason" type="tns:ReasonType"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="DeleteEntryKeyRequest" >
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Signature" type="xs:string"/>
+                <xs:element name="Key" type="xs:string"/>
+                <xs:element name="Participant" type="xs:string"/>
+                <xs:element name="Reason" type="tns:ReasonType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:complexType name="DeleteEntryKeyResponse">
-        <xs:sequence>
-            <xs:group ref="tns:ResponseCommon"/>
-            <xs:element name="Key" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="DeleteEntryKeyResponse">
+        <xs:complexType >
+            <xs:sequence>
+                <xs:group ref="tns:ResponseCommon"/>
+                <xs:element name="Key" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 
 </xs:schema>

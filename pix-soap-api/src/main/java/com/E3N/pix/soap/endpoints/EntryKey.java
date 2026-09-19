@@ -1,8 +1,10 @@
 package com.E3N.pix.soap.endpoints;
 
 import com.E3N.pix.application.ownership.CreateEntryKeyUseCase;
+import com.E3N.pix.application.ownership.DeleteEntryKeyUseCase;
 import com.E3N.pix.application.ownership.GetEntryKeyUseCase;
 import com.E3N.pix.application.ownership.UpdateEntryKeyUseCase;
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
@@ -22,7 +24,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
 @Endpoint("entries")
 public class EntryKey {
-    private static final String NAME_SPACE_URI = "https://pix.com/soap/contract";
+    private static final String NAME_SPACE_URI = "http://pix.com/soap/contract";
     private static final String SOAP_ACTION_PREFIX = NAME_SPACE_URI + "/";
     private final OwnerRepositoryImpl ownerRepository;
 
@@ -95,6 +97,32 @@ public class EntryKey {
         } catch (Exception e) {
             throw HandleError.handleError(e);
         }
+    }
+
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "DeleteEntryKeyRequest")
+    @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "DeleteEntryKey")
+    public DeleteEntryKeyResponse deleteEntryKey(
+            @XPathParam("/key") String key,
+            @RequestPayload DeleteEntryKeyRequest request
+    ) {
+        try {
+            var deleteKeyUseCase = new DeleteEntryKeyUseCase(ownerRepository);
+            if (!request.getKey().equals(key)){
+                var notification = Notification.create("Conflict", 400, "Key in the path does not match the key in body.");
+                throw new SoapFaultException("Invalid request", notification);
+            }
+            Either<Notification, Void>  result = deleteKeyUseCase.deleteEntryKey(request.getKey(), request.getParticipant(), Reason.valueOf(request.getReason().name()));
+            return result.fold(
+                    notification -> {
+                        throw new SoapFaultException("Invalid request", notification);
+                    },
+                    aVoid -> OwnerToEntryKeyResponseMapper.getDeletedKeyResponse(request.getKey())
+            );
+        } catch (Exception e) {
+            throw HandleError.handleError(e);
+        }
+
     }
 
 

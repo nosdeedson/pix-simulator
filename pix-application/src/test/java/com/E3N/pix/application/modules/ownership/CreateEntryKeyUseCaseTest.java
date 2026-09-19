@@ -1,7 +1,7 @@
 package com.E3N.pix.application.modules.ownership;
 
 import com.E3N.pix.application.UnitTest;
-import com.E3N.pix.application.modules.ownership.mocks.OwnerDtoMock;
+import com.E3N.pix.application.modules.ownership.mock.OwnerDtoMock;
 import com.E3N.pix.application.ownership.CreateEntryKeyUseCase;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
@@ -31,23 +31,24 @@ public class CreateEntryKeyUseCaseTest extends UnitTest {
     @InjectMocks
     private CreateEntryKeyUseCase useCase;
 
-    static List<Arguments> providerKeyExists() {
-        return List.of(
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.LEGAL_PERSON, TypeKey.CNPJ)),
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.LEGAL_PERSON, TypeKey.EVP)),
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.LEGAL_PERSON, TypeKey.EMAIL)),
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.LEGAL_PERSON, TypeKey.PHONE)),
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.CPF)),
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.EMAIL)),
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.EVP)),
-                Arguments.of(OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.PHONE))
-        );
-    }
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         Mockito.reset(ownerRepository);
+    }
+
+
+    static List<Arguments> providerKeyExists() {
+        return List.of(
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.LEGAL_PERSON, TypeKey.CNPJ)),
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.LEGAL_PERSON, TypeKey.EVP)),
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.LEGAL_PERSON, TypeKey.EMAIL)),
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.LEGAL_PERSON, TypeKey.PHONE)),
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.NATURAL_PERSON, TypeKey.CPF)),
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.NATURAL_PERSON, TypeKey.EMAIL)),
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.NATURAL_PERSON, TypeKey.EVP)),
+                Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.NATURAL_PERSON, TypeKey.PHONE))
+        );
     }
 
     @ParameterizedTest
@@ -83,7 +84,7 @@ public class CreateEntryKeyUseCaseTest extends UnitTest {
                 dto.name(), dto.tradeName(), dto.taxIdNumber(), dto.typePerson(),
                 dto.account().toEntity()
         );
-        var expectedDto = OwnerDtoMock.getOwner(dto);
+        var expectedDto = OwnerDtoMock.getOwnerDto(dto);
         Mockito.when(ownerRepository.findByKey(expectedDto.account().entryKeyDto().key()))
                 .thenReturn(Optional.of(expectedOwner));
         Either<Notification, Owner> result = this.useCase.createOrUpdateEntryKey(expectedDto);

@@ -1,7 +1,7 @@
 package com.E3N.pix.application.modules.ownership;
 
 import com.E3N.pix.application.UnitTest;
-import com.E3N.pix.application.modules.ownership.mocks.OwnerMock;
+import com.E3N.pix.application.modules.ownership.mock.OwnerMock;
 import com.E3N.pix.application.ownership.GetEntryKeyUseCase;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;

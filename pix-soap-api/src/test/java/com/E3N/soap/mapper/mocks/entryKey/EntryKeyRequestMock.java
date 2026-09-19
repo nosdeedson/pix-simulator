@@ -6,6 +6,7 @@ import com.E3N.pix.soap.contract.*;
 import com.E3N.shared.utils.DateHelper;
 import com.E3N.test.Owner.RandomCpfMock;
 import com.E3N.test.Owner.RandomKeysMock;
+import com.E3N.test.Owner.RandomParticipant;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -50,6 +51,23 @@ public abstract class EntryKeyRequestMock {
 
         request.setOwner(ownerReq);
         request.setReason(ReasonType.valueOf(reason.name()));
+        return request;
+    }
+
+    public static DeleteEntryKeyRequest getDeleteRequest(final String key, String participant) {
+        var request = new DeleteEntryKeyRequest();
+        if (key != null) {
+            request.setKey(key);
+        } else {
+            request.setKey(RandomKeysMock.randomEVP());
+        }
+        if (participant != null){
+            request.setParticipant(participant);
+        } else {
+            request.setParticipant(RandomParticipant.getParticipant());
+        }
+        request.setReason(ReasonType.ACCOUNT_CLOSURE);
+        request.setSignature(UUID.randomUUID().toString());
         return request;
     }
 

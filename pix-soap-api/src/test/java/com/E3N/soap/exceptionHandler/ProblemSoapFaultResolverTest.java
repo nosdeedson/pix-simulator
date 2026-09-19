@@ -94,7 +94,7 @@ public class ProblemSoapFaultResolverTest {
         Problem capturedProblem = problemCaptor.getValue();
         assertNotNull(capturedProblem);
         assertEquals("Entry is invalid", capturedProblem.getTitle());
-        assertEquals("https://pix.com/soap/contract", capturedProblem.getType());
+        assertEquals("http://pix.com/soap/contract", capturedProblem.getType());
         assertEquals(400, capturedProblem.getStatus());
         assertEquals("Entry has invalid values", capturedProblem.getDetail());
 
@@ -126,7 +126,7 @@ public class ProblemSoapFaultResolverTest {
         assertNull(capturedProblem.getViolations());
 
         assertEquals("Error while processing request.", capturedProblem.getTitle());
-        assertEquals("https://pix.com/soap/contract", capturedProblem.getType());
+        assertEquals("http://pix.com/soap/contract", capturedProblem.getType());
         assertEquals(500, capturedProblem.getStatus());
         assertEquals("Unknown error.", capturedProblem.getDetail());
     }
