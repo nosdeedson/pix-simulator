@@ -215,4 +215,44 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
         Assertions.assertTrue(wantedOwner.isEmpty());
     }
 
+    @Test
+    void givenInvalidKeys_whenCalling_findByKeys_shouldReturnEmptyList(){
+        var owner1 = getOwner(TypePerson.LEGAL_PERSON);
+        var owner2 = getOwner(TypePerson.NATURAL_PERSON);
+        repository.save(owner1);
+        repository.save(owner2);
+        var result = repository.findByKeys(List.of("doesNotExist", "unExistent"));
+        Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void givenValidKeys_whenCalling_findByKeys_shouldReturnTwoKeys(){
+        var owner1 = getOwner(TypePerson.LEGAL_PERSON);
+        var owner2 = getOwner(TypePerson.NATURAL_PERSON);
+        var expectedKey1 = owner1.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var expectedKey2 = owner2.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var keys = List.of(expectedKey1, expectedKey2);
+        repository.save(owner1);
+        repository.save(owner2);
+        var result = repository.findByKeys(keys);
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertTrue(result.contains(expectedKey1));
+        Assertions.assertTrue(result.contains(expectedKey2));
+    }
+
+    @Test
+    void givenOneValidKey_whenCalling_findByKeys_shouldReturnOneKey(){
+        var owner1 = getOwner(TypePerson.LEGAL_PERSON);
+        var owner2 = getOwner(TypePerson.NATURAL_PERSON);
+        var expectedKey1 = owner1.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var expectedKey2 = "not-exist";
+        var keys = List.of(expectedKey1, expectedKey2);
+        repository.save(owner1);
+        repository.save(owner2);
+        var result = repository.findByKeys(keys);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertTrue(result.contains(expectedKey1));
+        Assertions.assertFalse(result.contains(expectedKey2));
+    }
+
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,4 +29,7 @@ public interface OwnerJPARepository extends JpaRepository<OwnerJPAEntity, String
     @Query("SELECT o from Owner o JOIN FETCH o.accounts a JOIN a.keyJPAs ek " +
             " WHERE ek.key = :key AND a.participant = :participant")
     Optional<OwnerJPAEntity> findByKeyAndParticipant(@Param("key") String key, @Param("participant") String participant);
+
+    @Query("SELECT ek.key FROM Owner o JOIN o.accounts a JOIN a.keyJPAs ek WHERE ek.key IN :keys")
+    List<String> findByKeys(@Param("keys") List<String> keys);
 }

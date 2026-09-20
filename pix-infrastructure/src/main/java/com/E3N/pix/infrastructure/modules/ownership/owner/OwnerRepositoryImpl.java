@@ -42,6 +42,11 @@ public class OwnerRepositoryImpl implements OwnerRepositoryInterface {
     }
 
     @Override
+    public List<String> findByKeys(List<String> keys) {
+        return this.ownerRepository.findByKeys(keys);
+    }
+
+    @Override
     public Owner save(Owner owner) {
         OwnerJPAEntity entity = OwnerJPAEntity.from(owner);
         entity = this.ownerRepository.save(entity);

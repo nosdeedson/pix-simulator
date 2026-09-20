@@ -2,6 +2,7 @@ package com.E3N.pix.domain.modules.ownership.owner;
 
 import com.E3N.pix.domain.repository.CRUDRepositoryInterface;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OwnerRepositoryInterface extends CRUDRepositoryInterface<Owner> {
@@ -14,4 +15,5 @@ public interface OwnerRepositoryInterface extends CRUDRepositoryInterface<Owner>
 
     Optional<Owner> findByKeyAndParticipant(final String key, final String participant);
 
+    List<String> findByKeys(List<String> keys);
 }
