@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://pix.com/soap/contract"
+           targetNamespace="http://pix.com/soap/contract"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="checkKeys.xsd"/>
+    <xs:include schemaLocation="createEntryKey.xsd"/>
+    <xs:include schemaLocation="deleteEntryKey.xsd"/>
+    <xs:include schemaLocation="getEntryKey.xsd"/>
+    <xs:include schemaLocation="updateEntryKey.xsd"/>
+</xs:schema>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://pix.com/soap/contract"
+           targetNamespace="http://pix.com/soap/contract"
+           elementFormDefault="qualified">
+    
+    <xs:include schemaLocation="../generics/commonsType.xsd"/>
+
+    <xs:element name="CreateClaimRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Signature" type="xs:string"/>
+                <xs:element name="Claim" type="tns:ClaimType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreateClaimResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="tns:ResponseCommon"/>
+                <xs:element name="Claim" type="tns:ClaimType"/>
+                <xs:group ref="tns:ClaimDataType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ClaimType">
+        <xs:sequence>
+            <xs:element name="Type" type="tns:TypeClaims"/>
+            <xs:element name="Key" type="xs:string"/>
+            <xs:element name="KeyType" type="tns:KeyType"/>
+            <xs:element name="ClaimerAccount" type="tns:AccountType"/>
+            <xs:element name="Claimer" type="tns:OwnerType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="ClaimStatusType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="OPEN"/>
+            <xs:enumeration value="WAITING_RESOLUTION"/>
+            <xs:enumeration value="CONFIRMED"/>
+            <xs:enumeration value="CANCELLED"/>
+            <xs:enumeration value="COMPLETED"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:group name="ClaimDataType">
+        <xs:sequence>
+            <xs:element name="DonorParticipant" type="xs:string"/>
+            <xs:element name="Id" type="xs:string"/>
+            <xs:element name="Status" type="tns:ClaimStatusType"/>
+            <xs:element name="CompletionPeriodEnd" type="xs:dateTime"/>
+            <xs:element name="ResolutionPeriodEnd" type="xs:dateTime"/>
+            <xs:element name="LastModified" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:simpleType name="TypeClaims">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="OWNERSHIP"/>
+            <xs:enumeration value="PORTABILITY"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+</xs:schema>

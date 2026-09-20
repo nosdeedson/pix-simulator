@@ -3,10 +3,9 @@
            xmlns="http://pix.com/soap/contract"
            targetNamespace="http://pix.com/soap/contract"
            elementFormDefault="qualified">
-    <xs:include schemaLocation="entryKey.xsd"/>
+
     <xs:include schemaLocation="problem.xsd"/>
-    <xs:include schemaLocation="getEntryKey.xsd"/>
-    <xs:include schemaLocation="updateEntryKey.xsd"/>
-    <xs:include schemaLocation="deleteEntryKey.xsd"/>
-    <xs:include schemaLocation="checkKeys.xsd"/>
+    <xs:include schemaLocation="generics/commonsType.xsd"/>
+    <xs:include schemaLocation="entryKeys/AGroupEntrykeysFiles.xsd"/>
+    <xs:include schemaLocation="claims/create-claims.xsd"/>
 </xs:schema>

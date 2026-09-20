@@ -4,7 +4,7 @@
            targetNamespace="http://pix.com/soap/contract"
            elementFormDefault="qualified">
 
-    <xs:include schemaLocation="entryKey.xsd"/>
+    <xs:include schemaLocation="createEntryKey.xsd"/>
 
     <xs:element name="GetEntryKeyRequest">
         <xs:complexType>

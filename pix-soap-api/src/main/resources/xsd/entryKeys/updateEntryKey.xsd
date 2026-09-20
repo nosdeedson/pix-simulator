@@ -3,7 +3,7 @@
            xmlns:tns="http://pix.com/soap/contract"
            targetNamespace="http://pix.com/soap/contract"
            elementFormDefault="qualified">
-    <xs:include schemaLocation="entryKey.xsd"/>
+    <xs:include schemaLocation="createEntryKey.xsd"/>
 
     <xs:element name="UpdateEntryKeyRequest">
         <xs:complexType>
