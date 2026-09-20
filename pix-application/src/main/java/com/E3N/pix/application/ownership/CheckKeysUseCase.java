@@ -5,11 +5,11 @@ import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetKeysUseCase {
+public class CheckKeysUseCase {
 
     private final OwnerRepositoryInterface ownerRepository;
 
-    public GetKeysUseCase(OwnerRepositoryInterface ownerRepository) {
+    public CheckKeysUseCase(OwnerRepositoryInterface ownerRepository) {
         this.ownerRepository = ownerRepository;
     }
 

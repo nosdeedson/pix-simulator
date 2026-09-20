@@ -9,6 +9,7 @@ import com.E3N.test.Owner.RandomKeysMock;
 import com.E3N.test.Owner.RandomParticipant;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class EntryKeyRequestMock {
@@ -68,6 +69,14 @@ public abstract class EntryKeyRequestMock {
         }
         request.setReason(ReasonType.ACCOUNT_CLOSURE);
         request.setSignature(UUID.randomUUID().toString());
+        return request;
+    }
+
+    public static CheckKeysRequest getCheckKeysRequest(List<String> keys){
+        var request = new CheckKeysRequest();
+        var listRequest = new KeysType();
+        listRequest.getKey().addAll(keys);
+        request.setKeys(listRequest);
         return request;
     }
 

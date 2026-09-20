@@ -8,4 +8,5 @@
     <xs:include schemaLocation="getEntryKey.xsd"/>
     <xs:include schemaLocation="updateEntryKey.xsd"/>
     <xs:include schemaLocation="deleteEntryKey.xsd"/>
+    <xs:include schemaLocation="checkKeys.xsd"/>
 </xs:schema>

@@ -2,7 +2,7 @@ package com.E3N.pix.application.modules.ownership;
 
 import com.E3N.pix.application.UnitTest;
 import com.E3N.pix.application.ownership.ExistentKeysDto;
-import com.E3N.pix.application.ownership.GetKeysUseCase;
+import com.E3N.pix.application.ownership.CheckKeysUseCase;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
 import com.E3N.test.Owner.RandomKeysMock;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +23,7 @@ public class GetKeysUseCaseTest extends UnitTest {
 
 
     @InjectMocks
-    private GetKeysUseCase useCase;
+    private CheckKeysUseCase useCase;
 
     @BeforeEach
     void setUp(){

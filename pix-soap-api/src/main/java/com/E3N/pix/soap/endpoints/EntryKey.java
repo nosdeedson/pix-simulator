@@ -1,9 +1,6 @@
 package com.E3N.pix.soap.endpoints;
 
-import com.E3N.pix.application.ownership.CreateEntryKeyUseCase;
-import com.E3N.pix.application.ownership.DeleteEntryKeyUseCase;
-import com.E3N.pix.application.ownership.GetEntryKeyUseCase;
-import com.E3N.pix.application.ownership.UpdateEntryKeyUseCase;
+import com.E3N.pix.application.ownership.*;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.validation.Notification;
@@ -12,6 +9,7 @@ import com.E3N.pix.service.Either;
 import com.E3N.pix.soap.contract.*;
 import com.E3N.pix.soap.excptionHandler.HandleError;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
+import com.E3N.pix.soap.mapper.entryKey.CheckEntryKeysResponseMapper;
 import com.E3N.pix.soap.mapper.entryKey.CreateEntryKeyRequestToDtoMapper;
 import com.E3N.pix.soap.mapper.entryKey.OwnerToEntryKeyResponseMapper;
 import com.E3N.pix.soap.mapper.entryKey.UpdateEntryKeyRequestToDtoMapper;
@@ -122,7 +120,17 @@ public class EntryKey {
         } catch (Exception e) {
             throw HandleError.handleError(e);
         }
+    }
 
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "CheckKeysRequest")
+    @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "CheckKeys")
+    public CheckKeysResponse checkKeysExistence(
+            @RequestPayload CheckKeysRequest request
+    ){
+        var checkKeys = new CheckKeysUseCase(ownerRepository);
+        var result = checkKeys.execute(request.getKeys().getKey());
+        return CheckEntryKeysResponseMapper.getCheckKeysResponse(result);
     }
 
 
