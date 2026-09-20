@@ -37,7 +37,6 @@ public class CreateEntryKeyUseCaseTest extends UnitTest {
         Mockito.reset(ownerRepository);
     }
 
-
     static List<Arguments> providerKeyExists() {
         return List.of(
                 Arguments.of(OwnerDtoMock.getOwnerDto(TypePerson.LEGAL_PERSON, TypeKey.CNPJ)),
