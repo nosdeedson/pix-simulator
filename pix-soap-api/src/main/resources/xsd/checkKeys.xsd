@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://pix.com/soap/contract"
+        targetNamespace="http://pix.com/soap/contract"
+        elementFormDefault="qualified">
+
+    <xs:include schemaLocation="entryKey.xsd"/>
+    
+    <xs:element name="CheckKeysRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Keys" type="tns:KeysType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CheckKeysResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="tns:ResponseCommon"/>
+                <xs:element name="Keys" type="tns:ExistKeyType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="KeysType">
+        <xs:sequence maxOccurs="200">
+            <xs:element name="Key" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ExistKeyType">
+        <xs:sequence maxOccurs="200">
+            <xs:element name="key">
+                <xs:complexType>
+                    <xs:simpleContent >
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="hasEntry" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>
