@@ -255,4 +255,31 @@ public class OwnerRepositoryImpIT extends IntegrationTest {
         Assertions.assertFalse(result.contains(expectedKey2));
     }
 
+    @Test
+    void givenNoExistentValues_whenCalling_findByAccountNumberAndParticipantAndBranchAndTaxIdNumber_shouldReturnEmpty(){
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        repository.save(owner);
+        var expectedAccountNumber = "12345";
+        var expectedParticipant = "00000000";
+        var expectedBranch = "0001";
+        var expectedTaxIdNumber = "16611869719";
+        var expectedOwner = repository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(expectedAccountNumber, expectedParticipant, expectedBranch, expectedTaxIdNumber);
+        Assertions.assertInstanceOf(Optional.class, expectedOwner);
+        Assertions.assertTrue(expectedOwner.isEmpty());
+    }
+
+    @Test
+    void givenExistentValues_whenCalling_findByAccountNumberAndParticipantAndBranchAndTaxIdNumber_shouldOwner(){
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        repository.save(owner);
+        var expectedAccountNumber = owner.getAccounts().getFirst().getNumber().getNumber();
+        var expectedParticipant = owner.getAccounts().getFirst().getParticipant().getParticipant();
+        var expectedBranch = owner.getAccounts().getFirst().getBranch().getBranch();
+        var expectedTaxIdNumber = owner.getTaxIdNumber().getTaxIdNumber();
+        var expectedOwner = repository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(expectedAccountNumber, expectedParticipant, expectedBranch, expectedTaxIdNumber);
+        Assertions.assertInstanceOf(Optional.class, expectedOwner);
+        Assertions.assertTrue(expectedOwner.isPresent());
+        Assertions.assertEquals(owner.getTaxIdNumber().getTaxIdNumber(), expectedOwner.get().getTaxIdNumber().getTaxIdNumber());
+    }
+
 }

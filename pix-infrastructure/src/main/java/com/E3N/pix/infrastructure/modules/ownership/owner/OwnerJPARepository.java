@@ -32,4 +32,11 @@ public interface OwnerJPARepository extends JpaRepository<OwnerJPAEntity, String
 
     @Query("SELECT ek.key FROM Owner o JOIN o.accounts a JOIN a.keyJPAs ek WHERE ek.key IN :keys")
     List<String> findByKeys(@Param("keys") List<String> keys);
+
+    @Query("SELECT o FROM Owner o JOIN FETCH o.accounts a JOIN a.keyJPAs ek " +
+            " WHERE a.number = :accountNumber AND a.participant = :participant " +
+            " AND a.branch = :branch AND o.taxIdNumber = :taxIdNumber")
+    Optional<OwnerJPAEntity> findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(
+            @Param("accountNumber") String accountNumber, @Param("participant") String participant,
+            @Param("branch") String branch, @Param("taxIdNumber") String taxIdNumber);
 }
