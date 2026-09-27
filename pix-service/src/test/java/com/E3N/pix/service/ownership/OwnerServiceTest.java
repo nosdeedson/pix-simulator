@@ -6,13 +6,14 @@ import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.validation.Violation;
 import com.E3N.pix.domain.shared.TypeKey;
-import com.E3N.pix.service.Either;
 import com.E3N.pix.service.UniTest;
 import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.pix.service.ownership.mocks.MockOwner;
+import com.E3N.pix.service.ownership.mocks.OwnerMock;
 import com.E3N.pix.service.ownership.mocks.dto.OwnerDtoMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -45,17 +46,9 @@ public class OwnerServiceTest extends UniTest {
         Mockito.when(ownerRepository.save(Mockito.any(Owner.class)))
                 .thenReturn(expectedOwner);
 
-        Either<Notification, Owner> result = ownerService.create(dto);
-        Owner owner = null;
-        Notification notification = null;
-        if (result instanceof Either.Right<Notification, Owner>(Owner value1)) {
-            owner = value1;
-        } else if (result instanceof Either.Left<Notification, Owner>(Notification value)) {
-            notification = value;
-        }
-        Assertions.assertInstanceOf(Either.class, result);
-        Assertions.assertInstanceOf(Owner.class, owner);
-        Assertions.assertNull(notification);
+        Owner result = ownerService.create(dto);
+        Assertions.assertInstanceOf(Owner.class, result);
+        Assertions.assertFalse(result.getNotification().hasError());
     }
 
     static List<Arguments> provider() {
@@ -74,26 +67,14 @@ public class OwnerServiceTest extends UniTest {
     @ParameterizedTest
     @MethodSource("provideInvalidOwners")
     public void givenInvalidOwnerDto_shouldReturnNotification(OwnerDto dto) {
-
-        Either<Notification, Owner> result = ownerService.create(dto);
-        Owner owner = null;
-        Notification notification = null;
-        if (result instanceof Either.Right<Notification, Owner>(Owner value1)) {
-            owner = value1;
-        } else if (result instanceof Either.Left<Notification, Owner>(Notification value)) {
-            notification = value;
-        }
-        assert notification != null;
-        List<String> violations = notification.getViolations()
+        Owner result = ownerService.create(dto);
+        List<String> violations = result.getNotification().getViolations()
                 .stream()
                 .map(Violation::reason)
                 .toList();
-        Assertions.assertInstanceOf(Either.class, result);
-        Assertions.assertInstanceOf(Notification.class, notification);
-        Assertions.assertTrue(notification.hasError());
+        Assertions.assertInstanceOf(Owner.class, result);
+        Assertions.assertTrue(result.getNotification().hasError());
         Assertions.assertTrue(expectedErrors().containsAll(violations));
-        Assertions.assertNull(owner);
-        Mockito.verify(ownerRepository, Mockito.never()).save(Mockito.any(Owner.class));
     }
 
     static List<Arguments> provideInvalidOwners() {
@@ -120,4 +101,35 @@ public class OwnerServiceTest extends UniTest {
         );
     }
 
+    @Test
+    void givenExistentKeyValues_whenCalling_validateKeyExistence_shouldReturnNotification() {
+        var owner = OwnerMock.mockOwner();
+        var dto = OwnerDtoMock.from(owner);
+        var result = ownerService.validateKeyExistence(owner, dto);
+        Assertions.assertInstanceOf(Notification.class, result);
+        Assertions.assertEquals(1, result.getViolations().size());
+        Assertions.assertTrue(result.hasError());
+        Assertions.assertEquals("Key already exists.", result.getViolations().getFirst().reason());
+    }
+
+    @Test
+    void givenExistentKeyValues_whenCalling_validateKeyExistenceWithDifferentAccount_shouldReturnNotification() {
+        var owner = OwnerMock.mockOwner();
+        var dto = OwnerDtoMock.fromDifferentAccount(owner);
+        var result = ownerService.validateKeyExistence(owner, dto);
+        Assertions.assertInstanceOf(Notification.class, result);
+        Assertions.assertEquals(1, result.getViolations().size());
+        Assertions.assertTrue(result.hasError());
+        Assertions.assertEquals("Key is registered in another bank, create a portability or claims ownership.", result.getViolations().getFirst().reason());
+    }
+
+    @Test
+    void givenDifferentParticipants_whenCalling_validateKeyExistence_shouldReturnNotificationZeroError() {
+        var owner = OwnerMock.mockOwner();
+        var dto = OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.EVP);
+        var result = ownerService.validateKeyExistence(owner, dto);
+        Assertions.assertInstanceOf(Notification.class, result);
+        Assertions.assertEquals(0, result.getViolations().size());
+        Assertions.assertFalse(result.hasError());
+    }
 }

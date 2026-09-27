@@ -1,5 +1,6 @@
 package com.E3N.pix.service.ownership.mocks.dto;
 
+import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.service.ownership.dto.AccountDto;
 import com.E3N.test.Owner.RandomAccountMock;
@@ -16,6 +17,17 @@ public abstract class AccountDtoMock {
                 RandomParticipant.getParticipant(),
                 RandomAccountTypeMock.getAccountType(),
                 EntryKeyDtoMock.getEntryKeyDto(typeKey)
+        );
+    }
+
+    public static AccountDto fromAccount(Account account){
+        return new AccountDto(
+                account.getBranch().getBranch(),
+                account.getNumber().getNumber(),
+                RandomDateMock.getRandomStringDateWithoutTimeZone(),
+                account.getParticipant().getParticipant(),
+                account.getType(),
+                EntryKeyDtoMock.fromEntryKey(account.getEntryKeys().getFirst())
         );
     }
 }

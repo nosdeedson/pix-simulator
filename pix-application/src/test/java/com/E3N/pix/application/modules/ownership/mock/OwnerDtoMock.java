@@ -1,7 +1,9 @@
 package com.E3N.pix.application.modules.ownership.mock;
 
+import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.shared.TypeKey;
+import com.E3N.pix.service.ownership.dto.EntryKeyDto;
 import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.test.Owner.RandomCNPJMock;
 import com.E3N.test.Owner.RandomCpfMock;
@@ -10,6 +12,24 @@ import com.github.javafaker.Faker;
 
 public abstract class OwnerDtoMock {
     private static final Faker faker = new Faker();
+
+    public static OwnerDto fromOwner(Owner owner, EntryKeyDto keyDto){
+        var tradeName = owner.getTradeName() == null ? null : owner.getTradeName().getName();
+        return new OwnerDto(
+                owner.getName().getName(),
+                tradeName,
+                owner.getTaxIdNumber().getTaxIdNumber(),
+                owner.getType(),
+                null,
+                AccountDtoMock.from(owner.getAccounts().getFirst(), keyDto)
+        );
+    }
+
+    public static OwnerDto getOwnerDtoWithInvalidAccount(Owner owner){
+        var tradeName = owner.getTradeName() == null ? null : owner.getTradeName().getName();
+        return new OwnerDto(owner.getName().getName(), tradeName, owner.getTaxIdNumber().getTaxIdNumber(),
+                owner.getType(), null, AccountDtoMock.getInvalid());
+    }
 
     public static OwnerDto getOwnerDto(OwnerDto ownerDto) {
         return new OwnerDto(

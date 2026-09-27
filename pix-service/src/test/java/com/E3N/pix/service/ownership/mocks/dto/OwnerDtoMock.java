@@ -1,7 +1,9 @@
 package com.E3N.pix.service.ownership.mocks.dto;
 
+import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.shared.TypeKey;
+import com.E3N.pix.service.ownership.dto.EntryKeyDto;
 import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.test.Owner.RandomCNPJMock;
 import com.E3N.test.Owner.RandomCpfMock;
@@ -50,6 +52,42 @@ public abstract class OwnerDtoMock {
                 .taxIdNumber(RandomCpfMock.getRandomInvalidCPF())
                 .account(AccountDtoMock.mockAccountDto(typeKey))
                 .typePerson(typePerson)
+                .build();
+    }
+
+    public static OwnerDto from(Owner owner){
+        if (owner.getType().equals(TypePerson.NATURAL_PERSON)){
+            return new OwnerDto.Builder()
+                    .name(owner.getName().getName())
+                    .taxIdNumber(owner.getTaxIdNumber().getTaxIdNumber())
+                    .account(AccountDtoMock.fromAccount(owner.getAccounts().getFirst()))
+                    .typePerson(owner.getType())
+                    .build();
+        }
+        return new OwnerDto.Builder()
+                .name(owner.getName().getName())
+                .tradeName(owner.getTradeName().getName())
+                .taxIdNumber(owner.getTaxIdNumber().getTaxIdNumber())
+                .account(AccountDtoMock.fromAccount(owner.getAccounts().getFirst()))
+                .typePerson(owner.getType())
+                .build();
+    }
+
+    public static OwnerDto fromDifferentAccount(Owner owner){
+        if (owner.getType().equals(TypePerson.NATURAL_PERSON)){
+            return new OwnerDto.Builder()
+                    .name(owner.getName().getName())
+                    .taxIdNumber(owner.getTaxIdNumber().getTaxIdNumber())
+                    .account(AccountDtoMock.mockAccountDto(TypeKey.EMAIL))
+                    .typePerson(owner.getType())
+                    .build();
+        }
+        return new OwnerDto.Builder()
+                .name(owner.getName().getName())
+                .tradeName(owner.getTradeName().getName())
+                .taxIdNumber(owner.getTaxIdNumber().getTaxIdNumber())
+                .account(AccountDtoMock.mockAccountDto(TypeKey.EMAIL))
+                .typePerson(owner.getType())
                 .build();
     }
 

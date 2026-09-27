@@ -1,5 +1,6 @@
 package com.E3N.pix.service.ownership.mocks.dto;
 
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.service.ownership.dto.EntryKeyDto;
@@ -8,13 +9,6 @@ import com.E3N.test.Owner.RandomKeysMock;
 import java.util.UUID;
 
 public abstract class EntryKeyDtoMock {
-
-    private static EntryKeyDto getEntryKey(
-            final String key,
-            final TypeKey typeKey
-    ) {
-        return new EntryKeyDto(key, typeKey, Reason.USER_REQUESTED, UUID.randomUUID().toString());
-    }
 
     public static EntryKeyDto getEntryKeyDto(final TypeKey typeKey) {
         switch (typeKey) {
@@ -35,6 +29,10 @@ public abstract class EntryKeyDtoMock {
             }
         }
         return getEntryKeyEmailDto();
+    }
+
+    public static EntryKeyDto fromEntryKey(EntryKey entryKey){
+        return new EntryKeyDto(entryKey.getKey().getKey(), entryKey.getKey().getType(), entryKey.getReason(), entryKey.getRequestId().toString());
     }
 
     private static EntryKeyDto getEntryKeyEmailDto() {
@@ -70,5 +68,12 @@ public abstract class EntryKeyDtoMock {
                 UUID.randomUUID().toString(),
                 TypeKey.EVP
         );
+    }
+
+    private static EntryKeyDto getEntryKey(
+            final String key,
+            final TypeKey typeKey
+    ) {
+        return new EntryKeyDto(key, typeKey, Reason.USER_REQUESTED, UUID.randomUUID().toString());
     }
 }
