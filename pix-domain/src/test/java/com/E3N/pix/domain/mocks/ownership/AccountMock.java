@@ -1,4 +1,4 @@
-package com.E3N.pix.domain.mocks;
+package com.E3N.pix.domain.mocks.ownership;
 
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;

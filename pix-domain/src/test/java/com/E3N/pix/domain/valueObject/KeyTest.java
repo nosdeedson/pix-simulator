@@ -3,7 +3,7 @@ package com.E3N.pix.domain.valueObject;
 import com.E3N.pix.domain.UnitTest;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.key.Key;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypeKey;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

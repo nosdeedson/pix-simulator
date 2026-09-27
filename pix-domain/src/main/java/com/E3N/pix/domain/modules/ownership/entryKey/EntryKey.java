@@ -3,7 +3,7 @@ package com.E3N.pix.domain.modules.ownership.entryKey;
 import com.E3N.pix.domain.Entity;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.key.Key;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.shared.utils.ValidateUUID;
 
 import java.time.Instant;

@@ -1,6 +1,7 @@
 package com.E3N.pix.domain.valueObject.key;
 
 import com.E3N.pix.domain.ValueObject;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.validation.Notification;
 
 @SuppressWarnings("all")

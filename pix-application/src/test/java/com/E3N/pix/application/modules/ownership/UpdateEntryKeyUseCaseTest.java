@@ -6,7 +6,7 @@ import com.E3N.pix.application.modules.ownership.mock.UpdateEntryKeyDtoMock;
 import com.E3N.pix.application.ownership.UpdateEntryKeyUseCase;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Violation;
 import com.E3N.test.Owner.RandomCpfMock;
 import com.E3N.test.Owner.RandomKeysMock;

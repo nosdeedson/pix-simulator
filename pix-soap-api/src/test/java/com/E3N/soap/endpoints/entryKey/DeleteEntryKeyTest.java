@@ -1,9 +1,7 @@
 package com.E3N.soap.endpoints.entryKey;
 
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
-import com.E3N.pix.domain.validation.Notification;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
-import com.E3N.pix.service.Either;
 import com.E3N.pix.soap.contract.DeleteEntryKeyResponse;
 import com.E3N.pix.soap.endpoints.EntryKey;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
@@ -19,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.management.MalformedObjectNameException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)

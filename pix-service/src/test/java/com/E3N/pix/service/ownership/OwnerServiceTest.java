@@ -2,10 +2,10 @@ package com.E3N.pix.service.ownership;
 
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.validation.Violation;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.service.Either;
 import com.E3N.pix.service.UniTest;
 import com.E3N.pix.service.ownership.dto.OwnerDto;

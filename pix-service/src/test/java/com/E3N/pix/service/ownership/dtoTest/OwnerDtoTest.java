@@ -1,7 +1,7 @@
 package com.E3N.pix.service.ownership.dtoTest;
 
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypePerson;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.service.UniTest;
 import com.E3N.pix.service.ownership.dto.AccountDto;
 import com.E3N.pix.service.ownership.dto.OwnerDto;

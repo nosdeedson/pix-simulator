@@ -1,6 +1,6 @@
 package com.E3N.pix.service.ownership.dto;
 
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.shared.TypePerson;
 
 public record OwnerDto(
         String name,

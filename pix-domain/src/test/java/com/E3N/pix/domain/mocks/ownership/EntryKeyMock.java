@@ -1,8 +1,8 @@
-package com.E3N.pix.domain.mocks;
+package com.E3N.pix.domain.mocks.ownership;
 
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.test.Owner.RandomKeysMock;
 
 import java.util.UUID;

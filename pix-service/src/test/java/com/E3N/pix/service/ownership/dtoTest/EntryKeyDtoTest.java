@@ -2,7 +2,7 @@ package com.E3N.pix.service.ownership.dtoTest;
 
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.service.UniTest;
 import com.E3N.pix.service.ownership.dto.EntryKeyDto;
 import com.E3N.test.Owner.RandomKeysMock;

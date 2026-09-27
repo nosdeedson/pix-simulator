@@ -1,9 +1,9 @@
-package com.E3N.pix.domain.mocks;
+package com.E3N.pix.domain.mocks.ownership;
 
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypePerson;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.test.Owner.RandomCNPJMock;
 import com.E3N.test.Owner.RandomCpfMock;
 import com.E3N.test.Owner.RandomValidName;

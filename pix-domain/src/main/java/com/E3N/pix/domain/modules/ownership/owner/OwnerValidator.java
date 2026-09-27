@@ -2,6 +2,7 @@ package com.E3N.pix.domain.modules.ownership.owner;
 
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.dto.UpdateEntryKeyDto;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.ValidationHandler;
 import com.E3N.pix.domain.validation.Validator;
 

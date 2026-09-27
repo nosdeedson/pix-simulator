@@ -5,7 +5,7 @@ import com.E3N.pix.application.modules.ownership.mock.OwnerMock;
 import com.E3N.pix.application.ownership.GetEntryKeyUseCase;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.Either;
 import org.junit.jupiter.api.Assertions;

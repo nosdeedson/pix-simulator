@@ -2,7 +2,7 @@ package com.E3N.pix.infrastructure.modules.ownership.owner;
 
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.infrastructure.GenericEntity;
 import com.E3N.pix.infrastructure.modules.ownership.account.AccountJPAEntity;
 import jakarta.persistence.*;

@@ -1,15 +1,15 @@
 package com.E3N.pix.domain.modules.ownership;
 
 import com.E3N.pix.domain.UnitTest;
-import com.E3N.pix.domain.mocks.AccountMock;
-import com.E3N.pix.domain.mocks.EntryKeyMock;
-import com.E3N.pix.domain.mocks.UpdateEntryKeyDtoMock;
+import com.E3N.pix.domain.mocks.ownership.AccountMock;
+import com.E3N.pix.domain.mocks.ownership.EntryKeyMock;
+import com.E3N.pix.domain.mocks.ownership.UpdateEntryKeyDtoMock;
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.pix.domain.valueObject.key.TypeKey;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.test.Owner.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

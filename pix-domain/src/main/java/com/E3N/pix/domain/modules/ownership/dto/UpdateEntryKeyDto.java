@@ -1,7 +1,7 @@
 package com.E3N.pix.domain.modules.ownership.dto;
 
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.shared.TypePerson;
 
 public record UpdateEntryKeyDto(String key,
                                 String name,

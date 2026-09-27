@@ -1,4 +1,4 @@
-package com.E3N.pix.domain.modules.ownership.owner;
+package com.E3N.pix.domain.shared;
 
 public enum TypePerson {
     NATURAL_PERSON(0), LEGAL_PERSON(1);

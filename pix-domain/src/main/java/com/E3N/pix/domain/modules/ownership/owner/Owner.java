@@ -4,6 +4,7 @@ import com.E3N.pix.domain.Entity;
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.dto.UpdateEntryKeyDto;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.name.Name;
 import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;

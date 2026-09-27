@@ -4,7 +4,7 @@ import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.modules.ownership.dto.UpdateAccountDto;
 import com.E3N.pix.domain.modules.ownership.dto.UpdateEntryKeyDto;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
-import com.E3N.pix.domain.modules.ownership.owner.TypePerson;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.test.Owner.*;
 
 public abstract class UpdateEntryKeyDtoMock {
