@@ -1,14 +1,12 @@
 package com.E3N.pix.service.ownership;
 
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
-import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
+import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.validation.Violation;
-import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.service.UniTest;
 import com.E3N.pix.service.ownership.dto.OwnerDto;
-import com.E3N.pix.service.ownership.mocks.MockOwner;
 import com.E3N.pix.service.ownership.mocks.OwnerMock;
 import com.E3N.pix.service.ownership.mocks.dto.OwnerDtoMock;
 import org.junit.jupiter.api.Assertions;
@@ -18,8 +16,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
@@ -27,25 +23,17 @@ import java.util.List;
 
 public class OwnerServiceTest extends UniTest {
 
-    @Mock
-    private OwnerRepositoryInterface ownerRepository;
-
     @InjectMocks
     private OwnerService ownerService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        Mockito.reset(ownerRepository);
     }
 
     @ParameterizedTest
     @MethodSource("provider")
     public void givenAValidOwnerDto_shouldCreateOwner(OwnerDto dto) {
-        var expectedOwner = MockOwner.get(dto);
-        Mockito.when(ownerRepository.save(Mockito.any(Owner.class)))
-                .thenReturn(expectedOwner);
-
         Owner result = ownerService.create(dto);
         Assertions.assertInstanceOf(Owner.class, result);
         Assertions.assertFalse(result.getNotification().hasError());
