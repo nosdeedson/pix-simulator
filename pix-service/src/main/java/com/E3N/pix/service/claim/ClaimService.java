@@ -5,6 +5,7 @@ import com.E3N.pix.domain.modules.claim.TypeClaim;
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
+import com.E3N.pix.domain.validation.Notification;
 
 public class ClaimService {
 
@@ -27,7 +28,13 @@ public class ClaimService {
         );
     }
 
-    public void validate(Owner claimer, Owner donor) {
-
+    public static Notification validateTypeClaim(Owner claimer, Owner donor, TypeClaim typeClaim, String claimerParticipant) {
+        if (TypeClaim.PORTABILITY.equals(typeClaim)
+                && claimer.equals(donor)
+                && !claimerParticipant.equals(donor.getAccounts().getFirst().getParticipant().getParticipant())
+        ){
+            return Notification.create("Conflict", 400, "Type of claim must be Ownership");
+        }
+        return null;
     }
 }

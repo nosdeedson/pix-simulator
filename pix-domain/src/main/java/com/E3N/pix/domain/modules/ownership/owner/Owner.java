@@ -10,10 +10,7 @@ import com.E3N.pix.domain.valueObject.name.Name;
 import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class Owner extends Entity {
 
@@ -215,5 +212,17 @@ public class Owner extends Entity {
 
     public Notification getNotification() {
         return notification;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Owner owner = (Owner) o;
+        return Objects.equals(taxIdNumber, owner.taxIdNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(taxIdNumber);
     }
 }

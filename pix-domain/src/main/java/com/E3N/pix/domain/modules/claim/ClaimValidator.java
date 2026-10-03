@@ -16,9 +16,6 @@ public class ClaimValidator extends Validator {
 
     @Override
     public ValidationHandler validate() {
-        if (!claim.getTypeKeyClaimed().equals(TypeKey.PHONE) && claim.getType().equals(TypeClaim.OWNERSHIP)){
-            validationHandler().append("Claim must be opened as OWNERSHIP", claim.getKeyClaimed(), "key");
-        }
         if (claim.getTypeKeyClaimed().equals(TypeKey.EVP)){
             validationHandler().append("Is not allowed to create a claim for a key if type EVP", claim.getKeyClaimed(), "key");
         }
