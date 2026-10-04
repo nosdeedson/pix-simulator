@@ -14,7 +14,29 @@ import java.util.UUID;
 public abstract class OwnerMock {
     public static Owner getOwner(TypePerson typePerson) {
         var key = EntryKey.getInstance(
-                RandomKeysMock.randomEVP(), TypeKey.EVP,
+                RandomKeysMock.randomEmails(), TypeKey.EMAIL,
+                Reason.USER_REQUESTED, UUID.randomUUID().toString()
+        );
+        var account = Account.getInstance(
+                RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                RandomParticipant.getParticipant(), AccountType.CACC,
+                "2026-09-10 12:00:00", key
+        );
+        if (TypePerson.LEGAL_PERSON.equals(typePerson)) {
+            return Owner.getInstance(
+                    RandomValidName.randomValidCompanyName(), RandomValidName.randomValidCompanyName(),
+                    RandomCNPJMock.getRandomCNPJ(), TypePerson.LEGAL_PERSON, account
+            );
+        }
+        return Owner.getInstance(
+                RandomValidName.randomValidName(), null,
+                RandomCpfMock.getRandomCFP(), TypePerson.NATURAL_PERSON, account
+        );
+    }
+
+    public static Owner getOwnerWithPhoneKey(TypePerson typePerson) {
+        var key = EntryKey.getInstance(
+                RandomKeysMock.randomPhone(), TypeKey.PHONE,
                 Reason.USER_REQUESTED, UUID.randomUUID().toString()
         );
         var account = Account.getInstance(

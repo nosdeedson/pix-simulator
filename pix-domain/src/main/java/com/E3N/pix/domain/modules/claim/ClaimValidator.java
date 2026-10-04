@@ -17,35 +17,24 @@ public class ClaimValidator extends Validator {
     @Override
     public ValidationHandler validate() {
         if (claim.getTypeKeyClaimed().equals(TypeKey.EVP)){
-            validationHandler().append("Is not allowed to create a claim for a key if type EVP", claim.getKeyClaimed(), "key");
+            validationHandler().append("Is not allowed to create a claim for a key if type is EVP", claim.getKeyClaimed(), "key");
         }
         if (claim.getTaxIdNumberClaimer().getNotification().hasError()){
             validationHandler().relateNotificationToMe("taxIdNumber", claim.getTaxIdNumberClaimer().getNotification().getViolations());
         }
-        if (validKeyForPortability(claim.getTypeKeyClaimed()) && claim.getType().equals(TypeClaim.OWNERSHIP)){
-            validationHandler().append("This kind of Key must open a portability", claim.getKeyClaimed(), "key");
-        }
         if (
-                claim.getTypeKeyClaimed().equals(TypeKey.CNPJ)
-                && !claim.getKeyClaimed().equals(claim.getTaxIdNumberClaimer().getTaxIdNumber())
+                (claim.getTypeKeyClaimed().equals(TypeKey.CNPJ) || claim.getTypeKeyClaimed().equals(TypeKey.CPF))
+                    && !claim.getKeyClaimed().equals(claim.getTaxIdNumberClaimer().getTaxIdNumber())
         ){
             validationHandler().append("This kind of portability need to have key equals to taxIdNumber", claim.getKeyClaimed(), "key");
         }
-        if (
-                claim.getTypeKeyClaimed().equals(TypeKey.CPF)
-                        && !claim.getKeyClaimed().equals(claim.getTaxIdNumberClaimer().getTaxIdNumber())
+        if (!claim.getClaimerParticipant().equals(claim.getDonorParticipant())
+                && TypeClaim.OWNERSHIP.equals(claim.getType())
+                && !TypeKey.PHONE.equals(claim.getTypeKeyClaimed())
         ){
-            validationHandler().append("This kind of portability need to have key equals to taxIdNumber", claim.getKeyClaimed(), "key");
-        }
-        if (!claim.getKeyClaimed().equals(claim.getTaxIdNumberClaimer().getTaxIdNumber())
-            && claim.getTypeKeyClaimed().equals(TypeKey.CPF)
-        ){
-            validationHandler().append("The type of key must be CPF", claim.getKeyClaimed(), "key");
+            validationHandler().append("The type of claim must be Portability", claim.getKeyClaimed(), "Claim.key");
         }
         return validationHandler();
     }
 
-    public boolean validKeyForPortability(TypeKey typeKey){
-        return !TypeKey.EVP.equals(typeKey);
-    }
 }

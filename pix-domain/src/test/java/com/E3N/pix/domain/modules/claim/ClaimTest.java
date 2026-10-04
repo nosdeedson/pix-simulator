@@ -61,31 +61,25 @@ public class ClaimTest extends UnitTest {
         var expectedErrors = List.of(
                 "TaxIdNumber is invalid.",
                 "Claim must be opened as OWNERSHIP",
-                "Is not allowed to create a claim for a key if type EVP",
+                "Is not allowed to create a claim for a key if type is EVP",
                 "This kind of Key must open a portability",
                 "This kind of portability need to have key equals to taxIdNumber",
                 "The type of key must be CPF"
         );
         Assertions.assertInstanceOf(Claim.class, claim);
         Assertions.assertTrue(claim.getNotification().hasError());
-        Assertions.assertTrue(expectedErrors.contains(claim.getNotification().getViolations().stream().map(Violation::reason).findFirst().get()));
+        Assertions.assertTrue(expectedErrors.contains(claim.getNotification().getViolations().getFirst().reason() ));
     }
 
     static List<Arguments> providerInvalidValues(){
         return List.of(
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.CPF, TypePerson.NATURAL_PERSON, "88756715838", "88756715838"),
                 Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.CPF, TypePerson.NATURAL_PERSON, "88756715838", "32632502306"),
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EMAIL, TypePerson.NATURAL_PERSON, RandomKeysMock.randomEmails(), "88756715838"),
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.PHONE, TypePerson.NATURAL_PERSON, RandomKeysMock.randomPhone(), "88756715838"),
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EVP, TypePerson.NATURAL_PERSON, RandomKeysMock.randomPhone(), "88756715838"),
+                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EVP, TypePerson.NATURAL_PERSON, RandomKeysMock.randomEVP(), "88756715838"),
                 Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EMAIL, TypePerson.NATURAL_PERSON, RandomKeysMock.randomPhone(), "11111111111"),
 
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.CNPJ, TypePerson.LEGAL_PERSON, "41977322000172", "41977322000172"),
                 Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.CNPJ, TypePerson.LEGAL_PERSON, "41977322000172", "25597632000105"),
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EMAIL, TypePerson.LEGAL_PERSON, RandomKeysMock.randomEmails(), "41977322000172"),
                 Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EVP, TypePerson.LEGAL_PERSON, RandomKeysMock.randomEmails(), "41977322000172"),
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EVP, TypePerson.LEGAL_PERSON, RandomKeysMock.randomEmails(), "11111111111111"),
-                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.PHONE, TypePerson.LEGAL_PERSON, RandomKeysMock.randomPhone(), "41977322000172")
+                Arguments.arguments(TypeClaim.OWNERSHIP, TypeKey.EVP, TypePerson.LEGAL_PERSON, RandomKeysMock.randomEmails(), "11111111111111")
         );
     }
 }

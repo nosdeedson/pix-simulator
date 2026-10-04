@@ -10,10 +10,13 @@ import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.Either;
 import com.E3N.pix.service.claim.ClaimService;
 
+import java.util.Objects;
+import java.util.Optional;
+
 public class CreateClaimUseCase {
 
-    private ClaimRepositoryInterface claimRepository;
-    private OwnerRepositoryInterface ownerRepository;
+    private final ClaimRepositoryInterface claimRepository;
+    private final OwnerRepositoryInterface ownerRepository;
 
     public CreateClaimUseCase(
             ClaimRepositoryInterface claimRepository,
@@ -29,29 +32,42 @@ public class CreateClaimUseCase {
                 dto.claimerAccountDto().branch(), dto.claimerDto().taxIdNumber()
         );
         if (claimer.isEmpty()) {
-            Notification notification = Notification.create("Not found", 404, "Claimer not found");
+            Notification notification = Notification.create("Not found", 404, "Claimer not found.");
             return Either.left(notification);
         }
-        Account acc = claimer.get().getAccounts().stream()
+        Optional<Account> acc = claimer.get().getAccounts().stream()
                 .filter(it -> it.getNumber().getNumber().equals(dto.claimerAccountDto().accountNumber()))
-                .findAny().orElse(null);
-        EntryKey key = null;
-        if (acc != null) {
-            key = acc.getEntryKeys().stream().filter(it -> it.getKey().getKey().equals(dto.key())).findAny()
-                    .orElse(null);
+                .findAny();
+        if (acc.isEmpty()) {
+            return Either.left(Notification.create("Not found", 404, "Claimer account not found."));
+        }
+        Optional<EntryKey> key = acc.get().getEntryKeys().stream()
+                .filter(it -> it.getKey().getKey().equals(dto.key())).findAny();
+        if (key.isEmpty()){
+            return Either.left(Notification.create("Not found", 404, "Key not found."));
         }
         var donor = ownerRepository.findByKey(dto.key());
         if (donor.isEmpty()) {
             Notification notification = Notification.create("Not found", 404, "Donor not found");
             return Either.left(notification);
         }
-        var claim = ClaimService.create(
-                acc,
-                key,
-                donor.get().getAccounts().getFirst().getParticipant().getParticipant(),
-                dto.typeClaim(),
-                claimer.get()
-        );
-        return null;
+        var notAllowed = ClaimService.validateTypeClaim(claimer.get(), donor.get(), dto.typeClaim(), acc.get().getParticipant().getParticipant());
+        if (notAllowed == null) {
+            var claim = ClaimService.create(
+                    acc.get().getId().toString(),
+                    acc.get().getParticipant().getParticipant(),
+                    key.get().getKey().getKey(),
+                    key.get().getKey().getType(),
+                    donor.get().getAccounts().getFirst().getParticipant().getParticipant(),
+                    dto.typeClaim(),
+                    claimer.get().getTaxIdNumber().getTaxIdNumber(),
+                    claimer.get().getType()
+            );
+            if (claim.getNotification().hasError()){
+                return Either.left(claim.getNotification());
+            }
+            return Either.right(claimRepository.save(claim));
+        }
+        return Either.left(notAllowed);
     }
 }
