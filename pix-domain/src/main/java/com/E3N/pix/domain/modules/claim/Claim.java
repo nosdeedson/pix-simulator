@@ -5,7 +5,6 @@ import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.domain.valueObject.taxIdNumber.TaxIdNumber;
-import com.E3N.shared.utils.DateHelper;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -42,13 +41,14 @@ public class Claim extends Entity {
         super();
         this.claimerAccountId = claimerAccountId;
         this.claimerParticipant = claimerParticipant;
-        if (TypeClaim.OWNERSHIP.equals(type)){
-            this.completionPeriodEnd =  Instant.now().plus(7, ChronoUnit.DAYS);
+        if (TypeClaim.OWNERSHIP.equals(type)) {
+            this.completionPeriodEnd = Instant.now().plus(7, ChronoUnit.DAYS);
         }
         this.donorParticipant = donorParticipant;
         this.keyClaimed = keyClaimed;
         this.lastModified = Instant.now();
         this.resolutionPeriodEnd = Instant.now().plus(7, ChronoUnit.DAYS);
+        this.completionPeriodEnd = Instant.now();
         this.status = StatusClaim.OPEN;
         this.taxIdNumberClaimer = TaxIdNumber.getInstance(typePerson, taxIdNumberClaimer);
         this.type = type;
@@ -83,7 +83,7 @@ public class Claim extends Entity {
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new ClaimValidator(this).validate();
-        if (this.notification.hasError()){
+        if (this.notification.hasError()) {
             this.id = null;
             this.claimerAccountId = null;
             this.completionPeriodEnd = null;

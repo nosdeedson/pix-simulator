@@ -2,10 +2,10 @@ package com.E3N.pix.application.modules.claim;
 
 import com.E3N.pix.application.UnitTest;
 import com.E3N.pix.application.claim.CreateClaimUseCase;
+import com.E3N.pix.application.claim.dto.ClaimOutputDto;
 import com.E3N.pix.application.modules.claim.mocks.ClaimDtoMock;
 import com.E3N.pix.application.modules.claim.mocks.ClaimMock;
 import com.E3N.pix.application.modules.ownership.mock.OwnerMock;
-import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.ClaimRepositoryInterface;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
@@ -14,6 +14,7 @@ import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.Either;
 import com.E3N.pix.service.claim.ClaimService;
+import com.E3N.test.Owner.RandomCpfMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,13 +44,13 @@ public class CreateClaimUseCaseTest extends UnitTest {
         Mockito.when(ownerRepository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()
         )).thenReturn(Optional.empty());
-        var dto = ClaimDtoMock.getClaimDto(TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.EMAIL, null, null);
+        var dto = ClaimDtoMock.getClaimDto(TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.EMAIL, null, null, RandomCpfMock.getRandomCFP());
         var result = useCase.execute(dto);
         Notification notification = null;
-        Claim claim = null;
-        if (result instanceof Either.Left<Notification, Claim>(Notification value)) {
+        ClaimOutputDto claim = null;
+        if (result instanceof Either.Left<Notification, ClaimOutputDto>(Notification value)) {
             notification = value;
-        } else if (result instanceof Either.Right<Notification, Claim>(Claim value)) {
+        } else if (result instanceof Either.Right<Notification, ClaimOutputDto>(ClaimOutputDto value)) {
             claim = value;
         }
         Assertions.assertNull(claim);
@@ -69,14 +70,15 @@ public class CreateClaimUseCaseTest extends UnitTest {
         Mockito.when(ownerRepository.findByKey(Mockito.anyString()))
                 .thenReturn(Optional.empty());
         var dto = ClaimDtoMock.getClaimDto(TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.EMAIL,
-                claimer.getAccounts().getFirst().getNumber().getNumber(), claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey()
+                claimer.getAccounts().getFirst().getNumber().getNumber(),
+                claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(), RandomCpfMock.getRandomCFP()
         );
         var result = useCase.execute(dto);
         Notification notification = null;
-        Claim claim = null;
-        if (result instanceof Either.Left<Notification, Claim>(Notification value)) {
+        ClaimOutputDto claim = null;
+        if (result instanceof Either.Left<Notification, ClaimOutputDto>(Notification value)) {
             notification = value;
-        } else if (result instanceof Either.Right<Notification, Claim>(Claim value)) {
+        } else if (result instanceof Either.Right<Notification, ClaimOutputDto>(ClaimOutputDto value)) {
             claim = value;
         }
         Assertions.assertNull(claim);
@@ -100,14 +102,15 @@ public class CreateClaimUseCaseTest extends UnitTest {
                     () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, expectedParticipant)
             ).thenReturn(Notification.create("Conflict", 400, "Type of claim must be Ownership"));
             var dto = ClaimDtoMock.getClaimDto(TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.EMAIL,
-                    claimer.getAccounts().getFirst().getNumber().getNumber(), claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey()
+                    claimer.getAccounts().getFirst().getNumber().getNumber(),
+                    claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(), RandomCpfMock.getRandomCFP()
             );
             var result = useCase.execute(dto);
             Notification notification = null;
-            Claim claim = null;
-            if (result instanceof Either.Left<Notification, Claim>(Notification value)) {
+            ClaimOutputDto claim = null;
+            if (result instanceof Either.Left<Notification, ClaimOutputDto>(Notification value)) {
                 notification = value;
-            } else if (result instanceof Either.Right<Notification, Claim>(Claim value)) {
+            } else if (result instanceof Either.Right<Notification, ClaimOutputDto>(ClaimOutputDto value)) {
                 claim = value;
             }
             Assertions.assertNull(claim);
@@ -149,19 +152,20 @@ public class CreateClaimUseCaseTest extends UnitTest {
             ).thenReturn(claimToSave);
             var dto = ClaimDtoMock.getClaimDto(
                     TypePerson.NATURAL_PERSON, TypeClaim.PORTABILITY, TypeKey.EMAIL,
-                    claimer.getAccounts().getFirst().getNumber().getNumber(), expectedKey
+                    claimer.getAccounts().getFirst().getNumber().getNumber(), expectedKey, claimer.getTaxIdNumber().getTaxIdNumber()
             );
             var result = useCase.execute(dto);
             Notification notification = null;
-            Claim claim = null;
-            if (result instanceof Either.Left<Notification, Claim>(Notification value)) {
+            ClaimOutputDto claim = null;
+            if (result instanceof Either.Left<Notification, ClaimOutputDto>(Notification value)) {
                 notification = value;
-            } else if (result instanceof Either.Right<Notification, Claim>(Claim value)) {
+            } else if (result instanceof Either.Right<Notification, ClaimOutputDto>(ClaimOutputDto value)) {
                 claim = value;
             }
             Assertions.assertNull(notification);
             Assertions.assertNotNull(claim);
-            Assertions.assertFalse(claim.getNotification().hasError());
+            Assertions.assertNotNull(claim.id());
+            Assertions.assertEquals(dto.claimerDto().taxIdNumber(), claim.claimerDto().taxIdNumber());
         }
     }
 
@@ -197,19 +201,20 @@ public class CreateClaimUseCaseTest extends UnitTest {
             ).thenReturn(claimToSave);
             var dto = ClaimDtoMock.getClaimDto(
                     TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.PHONE,
-                    claimer.getAccounts().getFirst().getNumber().getNumber(), expectedKey
+                    claimer.getAccounts().getFirst().getNumber().getNumber(), expectedKey, claimer.getTaxIdNumber().getTaxIdNumber()
             );
             var result = useCase.execute(dto);
             Notification notification = null;
-            Claim claim = null;
-            if (result instanceof Either.Left<Notification, Claim>(Notification value)) {
+            ClaimOutputDto claim = null;
+            if (result instanceof Either.Left<Notification, ClaimOutputDto>(Notification value)) {
                 notification = value;
-            } else if (result instanceof Either.Right<Notification, Claim>(Claim value)) {
+            } else if (result instanceof Either.Right<Notification, ClaimOutputDto>(ClaimOutputDto value)) {
                 claim = value;
             }
             Assertions.assertNull(notification);
             Assertions.assertNotNull(claim);
-            Assertions.assertFalse(claim.getNotification().hasError());
+            Assertions.assertNotNull(claim.id());
+            Assertions.assertEquals(dto.claimerDto().taxIdNumber(), claim.claimerDto().taxIdNumber());
         }
     }
 }

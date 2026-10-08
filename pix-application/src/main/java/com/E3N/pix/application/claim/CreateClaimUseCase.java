@@ -1,7 +1,7 @@
 package com.E3N.pix.application.claim;
 
 import com.E3N.pix.application.claim.dto.ClaimDto;
-import com.E3N.pix.domain.modules.claim.Claim;
+import com.E3N.pix.application.claim.dto.ClaimOutputDto;
 import com.E3N.pix.domain.modules.claim.ClaimRepositoryInterface;
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
@@ -10,7 +10,6 @@ import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.Either;
 import com.E3N.pix.service.claim.ClaimService;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class CreateClaimUseCase {
@@ -26,7 +25,7 @@ public class CreateClaimUseCase {
         this.ownerRepository = ownerRepository;
     }
 
-    public Either<Notification, Claim> execute(final ClaimDto dto) {
+    public Either<Notification, ClaimOutputDto> execute(final ClaimDto dto) {
         var claimer = ownerRepository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(
                 dto.claimerAccountDto().accountNumber(), dto.claimerAccountDto().participant(),
                 dto.claimerAccountDto().branch(), dto.claimerDto().taxIdNumber()
@@ -43,7 +42,7 @@ public class CreateClaimUseCase {
         }
         Optional<EntryKey> key = acc.get().getEntryKeys().stream()
                 .filter(it -> it.getKey().getKey().equals(dto.key())).findAny();
-        if (key.isEmpty()){
+        if (key.isEmpty()) {
             return Either.left(Notification.create("Not found", 404, "Key not found."));
         }
         var donor = ownerRepository.findByKey(dto.key());
@@ -63,10 +62,12 @@ public class CreateClaimUseCase {
                     claimer.get().getTaxIdNumber().getTaxIdNumber(),
                     claimer.get().getType()
             );
-            if (claim.getNotification().hasError()){
+            if (claim.getNotification().hasError()) {
                 return Either.left(claim.getNotification());
             }
-            return Either.right(claimRepository.save(claim));
+            claim = this.claimRepository.save(claim);
+            var out = ClaimOutputDto.from(acc.get(), key.get(), claim, claimer.get());
+            return Either.right(out);
         }
         return Either.left(notAllowed);
     }

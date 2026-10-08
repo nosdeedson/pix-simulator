@@ -21,19 +21,19 @@ public abstract class ClaimDtoMock {
         );
     }
 
-    public static ClaimerDto getClaimer(TypePerson typePerson) {
+    public static ClaimerDto getClaimer(TypePerson typePerson, String taxIdNumber) {
         if (TypePerson.LEGAL_PERSON.equals(typePerson)) {
             var name = RandomValidName.randomValidCompanyName();
             return new ClaimerDto(
                     typePerson,
-                    RandomCNPJMock.getRandomCNPJ(),
+                    taxIdNumber,
                     name,
                     name
             );
         }
         return new ClaimerDto(
                 TypePerson.NATURAL_PERSON,
-                RandomCpfMock.getRandomCFP(),
+                taxIdNumber,
                 RandomValidName.randomValidName(),
                 null
         );
@@ -44,25 +44,26 @@ public abstract class ClaimDtoMock {
             TypeClaim typeClaim,
             TypeKey typeKey,
             String accountNumber,
-            String key
+            String key,
+            String taxIdNumber
     ) {
         return new ClaimDto(
                 typeClaim,
                 key == null ? getTypeKey(typeKey) : key,
                 typeKey,
                 getAcc(accountNumber),
-                getClaimer(typePerson)
+                getClaimer(typePerson, taxIdNumber)
         );
     }
 
-    private static String getTypeKey(TypeKey typeKey){
+    private static String getTypeKey(TypeKey typeKey) {
         String key = null;
-        switch (typeKey){
-            case CPF -> key =  RandomKeysMock.randomNaturalPersonDocument();
-            case EVP -> key =  RandomKeysMock.randomEVP();
-            case CNPJ -> key =  RandomKeysMock.randomLegalPersonDocument();
-            case EMAIL -> key =  RandomKeysMock.randomEmails();
-            case PHONE -> key =  RandomKeysMock.randomPhone();
+        switch (typeKey) {
+            case CPF -> key = RandomKeysMock.randomNaturalPersonDocument();
+            case EVP -> key = RandomKeysMock.randomEVP();
+            case CNPJ -> key = RandomKeysMock.randomLegalPersonDocument();
+            case EMAIL -> key = RandomKeysMock.randomEmails();
+            case PHONE -> key = RandomKeysMock.randomPhone();
         }
         return key;
     }

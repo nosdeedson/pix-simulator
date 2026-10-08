@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record ClaimOutputDto(
-        String responseTime,
+        Instant responseTime,
         String correlationId,
         TypeClaim typeClaim,
         String key,
@@ -22,30 +22,31 @@ public record ClaimOutputDto(
         String donorParticipant,
         String id,
         StatusClaim statusClaim,
-        String completionPeriodEnd,
-        String resolutionPeriodEnd,
-        String lastModified
+        Instant completionPeriodEnd,
+        Instant resolutionPeriodEnd,
+        Instant lastModified
 ) {
 
     public static ClaimOutputDto from(
-            Account account, EntryKey key, Claim claim, Owner owner
-    ){
+            Account account, EntryKey key, Claim claim, Owner claimer
+    ) {
         var acc = new ClaimerAccountDto(account.getParticipant().getParticipant(), account.getBranch().getBranch(), account.getNumber().getNumber(), account.getType(), account.getOpeningDate().toString());
-        var claimer = new ClaimerDto(owner.getType(), owner.getTaxIdNumber().getTaxIdNumber(), owner.getName().getName(), owner.getTradeName().getName());
+        var tradeName = claimer.getTradeName() == null ? null : claimer.getTradeName().getName();
+        var claimerResponse = new ClaimerDto(claimer.getType(), claimer.getTaxIdNumber().getTaxIdNumber(), claimer.getName().getName(), tradeName);
         return new ClaimOutputDto(
-                Instant.now().toString(),
-                UUID.randomUUID().toString().replace("-" , ""),
+                Instant.now(),
+                UUID.randomUUID().toString().replace("-", ""),
                 claim.getType(),
                 key.getKey().getKey(),
                 key.getKey().getType(),
                 acc,
-                claimer,
+                claimerResponse,
                 claim.getDonorParticipant(),
                 claim.getId().toString(),
                 claim.getStatus(),
-                claim.getCompletionPeriodEnd().toString(),
-                claim.getResolutionPeriodEnd().toString(),
-                claim.getLastModified().toString()
+                claim.getCompletionPeriodEnd(),
+                claim.getResolutionPeriodEnd(),
+                claim.getLastModified()
         );
     }
 }

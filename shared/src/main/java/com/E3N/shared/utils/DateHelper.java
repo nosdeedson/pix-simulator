@@ -4,8 +4,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.GregorianCalendar;
 
 public final class DateHelper {
@@ -37,6 +35,16 @@ public final class DateHelper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
         return formatter.format(instant);
+    }
+
+    public static XMLGregorianCalendar fromString(final String isoString) {
+        XMLGregorianCalendar calendar = null;
+        try {
+            calendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(isoString);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return calendar;
     }
 
 }
