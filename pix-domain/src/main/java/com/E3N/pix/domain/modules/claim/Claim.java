@@ -12,7 +12,6 @@ import java.util.UUID;
 
 public class Claim extends Entity {
 
-    private UUID id;
     private String claimerAccountId;
     private final String claimerParticipant;
     private Instant completionPeriodEnd;
@@ -79,12 +78,69 @@ public class Claim extends Entity {
         );
     }
 
+    private Claim(UUID id, Instant createdAt, Instant updatedAt, Instant deletedAt, String claimerAccountId, String claimerParticipant, Instant completionPeriodEnd, String donorParticipant, String keyClaimed, Instant lastModified, Instant resolutionPeriodEnd, StatusClaim status, String taxIdNumberClaimer, TypeClaim type, TypeKey typeKeyClaimed, TypePerson typePerson) {
+        super(id, createdAt, updatedAt, deletedAt);
+        this.claimerAccountId = claimerAccountId;
+        this.claimerParticipant = claimerParticipant;
+        this.completionPeriodEnd = completionPeriodEnd;
+        this.donorParticipant = donorParticipant;
+        this.keyClaimed = keyClaimed;
+        this.lastModified = lastModified;
+        this.resolutionPeriodEnd = resolutionPeriodEnd;
+        this.status = status;
+        this.taxIdNumberClaimer = TaxIdNumber.getInstance(typePerson, taxIdNumberClaimer);
+        this.type = type;
+        this.typeKeyClaimed = typeKeyClaimed;
+        this.typePerson = typePerson;
+    }
+
+    public static Claim getInstance(
+            String id,
+            Instant createdAt,
+            Instant updatedAt,
+            Instant deletedAt,
+            String claimerAccountId,
+            String claimerParticipant,
+            Instant completionPeriodEnd,
+            String donorParticipant,
+            String keyClaimed,
+            Instant lastModified,
+            Instant resolutionPeriodEnd,
+            StatusClaim status,
+            String taxIdNumberClaimer,
+            TypeClaim type,
+            TypeKey typeKeyClaimed,
+            TypePerson typePerson
+    ) {
+        return new Claim(
+                UUID.fromString(id),
+                createdAt,
+                updatedAt,
+                deletedAt,
+                claimerAccountId,
+                claimerParticipant,
+                completionPeriodEnd,
+                donorParticipant,
+                keyClaimed,
+                lastModified,
+                resolutionPeriodEnd,
+                status,
+                taxIdNumberClaimer,
+                type,
+                typeKeyClaimed,
+                typePerson
+        );
+    }
+
+    public void updateStatus(StatusClaim status){
+        this.status = status;
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();
         this.notification = (Notification) new ClaimValidator(this).validate();
         if (this.notification.hasError()) {
-            this.id = null;
             this.claimerAccountId = null;
             this.completionPeriodEnd = null;
             this.donorParticipant = null;

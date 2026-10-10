@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class OwnerRepositoryImpIT extends IntegrationTest {
+public class OwnerRepositoryImplIT extends IntegrationTest {
 
     @Autowired
     private OwnerRepositoryImpl repository;
