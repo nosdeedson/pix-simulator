@@ -7,5 +7,5 @@
     <xs:include schemaLocation="problem.xsd"/>
     <xs:include schemaLocation="generics/commonsType.xsd"/>
     <xs:include schemaLocation="entryKeys/AGroupEntrykeysFiles.xsd"/>
-    <xs:include schemaLocation="claims/create-claims.xsd"/>
+    <xs:include schemaLocation="claims/AGroupClaimsFile.xsd"/>
 </xs:schema>

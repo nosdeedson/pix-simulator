@@ -34,6 +34,7 @@ public class ClaimJPAEntity extends GenericEntity {
     private Instant resolutionPeriodEnd;
 
     @Column(nullable = false, name = "status")
+    @Enumerated(EnumType.STRING)
     private StatusClaim status;
 
     @Column(nullable = false, name = "tax_id_number_claimer", length = 14)

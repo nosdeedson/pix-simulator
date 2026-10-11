@@ -2,12 +2,13 @@ package com.E3N.pix.service.claim;
 
 import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
-import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
+
+import java.util.Optional;
 
 public class ClaimService {
 
@@ -42,11 +43,18 @@ public class ClaimService {
      */
     public static Notification validateTypeClaim(Owner claimer, Owner donor, TypeClaim typeClaim, String claimerParticipant) {
         if (TypeClaim.PORTABILITY.equals(typeClaim)
-                && claimer.equals(donor)
+                && claimer.getTaxIdNumber().getTaxIdNumber().equals(donor.getTaxIdNumber().getTaxIdNumber())
                 && !claimerParticipant.equals(donor.getAccounts().getFirst().getParticipant().getParticipant())
         ){
             return Notification.create("Conflict", 400, "Type of claim must be Ownership");
         }
         return null;
+    }
+
+    public static Optional<EntryKey> getEntryToDonate(Owner donor, final String entryKey){
+        return donor.getAccounts().getFirst()
+                .getEntryKeys().stream()
+                .filter(it -> it.getKey().getKey().equals(entryKey))
+                .findFirst();
     }
 }

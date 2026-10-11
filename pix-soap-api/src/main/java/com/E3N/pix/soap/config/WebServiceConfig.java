@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
@@ -54,9 +56,17 @@ public class WebServiceConfig {
 
     @Bean
     public XsdSchemaCollection pixSchema() {
-        CommonsXsdSchemaCollection commonsXsdSchemaCollection = new CommonsXsdSchemaCollection(new ClassPathResource("xsd/pix.xsd"));
-        commonsXsdSchemaCollection.setInline(true);
-        return commonsXsdSchemaCollection;
+        CommonsXsdSchemaCollection collection =
+                new CommonsXsdSchemaCollection(new ClassPathResource("xsd/pix.xsd")) {
+                    @Override
+                    public void setResourceLoader(ResourceLoader ignored) {
+                        // Avoid ServletContextResource: Tomcat 11 throws on "../" paths
+                        super.setResourceLoader(new DefaultResourceLoader(getClass().getClassLoader()));
+                    }
+                };
+        collection.setInline(true); // keep whatever you had before
+        return collection;
     }
+
 
 }

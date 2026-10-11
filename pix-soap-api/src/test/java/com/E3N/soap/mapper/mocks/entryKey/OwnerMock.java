@@ -5,8 +5,8 @@ import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
-import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.shared.TypeKey;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.test.Owner.*;
 
@@ -56,6 +56,26 @@ public abstract class OwnerMock {
                 dto.taxIdNumber(),
                 dto.typePerson(),
                 dto.account().toEntity()
+        );
+    }
+
+    public static Owner withDifferentParticipant(Owner owner) {
+        Account acc = Account.getInstance(
+                RandomAccountMock.randomBranch(),
+                RandomAccountMock.randomAccountNumber(),
+                RandomParticipant.getParticipant(),
+                AccountType.CACC,
+                RandomDateMock.getRandomStringDateWithoutTimeZone(),
+                EntryKey.getInstance(
+                        RandomKeysMock.randomPhone(), TypeKey.PHONE, Reason.USER_REQUESTED, UUID.randomUUID().toString()
+                )
+        );
+        return Owner.getInstance(
+                owner.getName().getName(),
+                owner.getTradeName().getName(),
+                owner.getTaxIdNumber().getTaxIdNumber(),
+                owner.getType(),
+                acc
         );
     }
 }

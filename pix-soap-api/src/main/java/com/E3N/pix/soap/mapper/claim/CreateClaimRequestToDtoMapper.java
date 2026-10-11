@@ -18,7 +18,7 @@ public abstract class CreateClaimRequestToDtoMapper {
         return new ClaimerAccountDto(
                 acc.getParticipant(),
                 acc.getBranch(),
-                acc.getParticipant(),
+                acc.getAccountNumber(),
                 com.E3N.pix.domain.modules.ownership.account.AccountType.valueOf(acc.getAccountType().name()),
                 DateHelper.fromGregorianCalendar(acc.getOpeningDate())
         );

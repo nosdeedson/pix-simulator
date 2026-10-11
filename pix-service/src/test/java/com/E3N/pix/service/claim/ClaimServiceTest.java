@@ -2,6 +2,7 @@ package com.E3N.pix.service.claim;
 
 import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
@@ -154,9 +155,25 @@ public class ClaimServiceTest extends UniTest {
     @Test
     void givenWrongTypeClaim_whenCalling_validateTypeClaim_shouldReturnNull() {
         var claimer = OwnerMock.mockOwner();
-        var claimerParticipant = RandomParticipant.getParticipant();
-        var result = ClaimService.validateTypeClaim(claimer, claimer, TypeClaim.PORTABILITY, claimerParticipant);
+        var result = ClaimService.validateTypeClaim(claimer, claimer, TypeClaim.PORTABILITY, RandomParticipant.getParticipant());
         Assertions.assertInstanceOf(Notification.class, result);
         Assertions.assertEquals("Type of claim must be Ownership", result.getDetail());
+    }
+
+    @Test
+    void givenValidValues_whenCalling_getEntryToDonate_shouldReturnEntryKey(){
+        var donor = OwnerMock.mockOwner();
+        var expectedKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var result = ClaimService.getEntryToDonate(donor,  expectedKey);
+        Assertions.assertInstanceOf(EntryKey.class, result.get());
+        Assertions.assertEquals(expectedKey, result.get().getKey().getKey());
+    }
+
+    @Test
+    void givenInvalidValues_whenCalling_getEntryToDonate_shouldReturnEmptyOptional(){
+        var donor = OwnerMock.mockOwner();
+        var expectedKey = "any-key";
+        var result = ClaimService.getEntryToDonate(donor,  expectedKey);
+        Assertions.assertTrue(result.isEmpty());
     }
 }

@@ -282,4 +282,27 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
         Assertions.assertEquals(owner.getTaxIdNumber().getTaxIdNumber(), expectedOwner.get().getTaxIdNumber().getTaxIdNumber());
     }
 
+    @Test
+    void givenExistentKey_whenCalling_findEntryKey_shouldReturnEntryKey(){
+        var donor = getOwner(TypePerson.NATURAL_PERSON);
+        repository.save(donor);
+        var expectedKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var expectedNumberAccount = donor.getAccounts().getFirst().getNumber().getNumber();
+        var expectedIdTaxNumber = donor.getTaxIdNumber().getTaxIdNumber();
+        var result = repository.findEntryKey(expectedKey, expectedNumberAccount, expectedIdTaxNumber);
+        Assertions.assertInstanceOf(EntryKey.class, result.get());
+        Assertions.assertEquals(expectedKey, result.get().getKey().getKey());
+    }
+
+    @Test
+    void givenExistentKey_whenCalling_findEntryKey_shouldReturnOptionalEmpty(){
+        var donor = getOwner(TypePerson.NATURAL_PERSON);
+        repository.save(donor);
+        var expectedKey = "any-key";
+        var expectedNumberAccount = "any-number";
+        var expectedIdTaxNumber = "any-taxIdNumber";
+        var result = repository.findEntryKey(expectedKey, expectedNumberAccount, expectedIdTaxNumber);
+        Assertions.assertTrue(result.isEmpty());
+    }
+
 }

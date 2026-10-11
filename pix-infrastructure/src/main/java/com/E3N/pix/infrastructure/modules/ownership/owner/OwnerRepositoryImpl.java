@@ -1,7 +1,9 @@
 package com.E3N.pix.infrastructure.modules.ownership.owner;
 
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
+import com.E3N.pix.infrastructure.modules.ownership.entryKey.EntryKeyJPAEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,6 +29,12 @@ public class OwnerRepositoryImpl implements OwnerRepositoryInterface {
     public Optional<Owner> findByKey(String key) {
         var ownerJPA = this.ownerRepository.findByKey(key);
         return ownerJPA.map(OwnerJPAEntity::from);
+    }
+
+    @Override
+    public Optional<EntryKey> findEntryKey(String key, String numberAccount, String taxIdNumber) {
+        var entryKey = this.ownerRepository.findEntryKey(key, numberAccount, taxIdNumber);
+        return entryKey.map(EntryKeyJPAEntity::from);
     }
 
     @Override

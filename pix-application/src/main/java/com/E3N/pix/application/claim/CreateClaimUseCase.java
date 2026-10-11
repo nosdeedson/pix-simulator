@@ -40,15 +40,14 @@ public class CreateClaimUseCase {
         if (acc.isEmpty()) {
             return Either.left(Notification.create("Not found", 404, "Claimer account not found."));
         }
-        Optional<EntryKey> key = acc.get().getEntryKeys().stream()
-                .filter(it -> it.getKey().getKey().equals(dto.key())).findAny();
-        if (key.isEmpty()) {
-            return Either.left(Notification.create("Not found", 404, "Key not found."));
-        }
         var donor = ownerRepository.findByKey(dto.key());
         if (donor.isEmpty()) {
             Notification notification = Notification.create("Not found", 404, "Donor not found");
             return Either.left(notification);
+        }
+        Optional<EntryKey> key = ClaimService.getEntryToDonate(donor.get(), dto.key());
+        if (key.isEmpty()) {
+            return Either.left(Notification.create("Not found", 404, "Key not found."));
         }
         var notAllowed = ClaimService.validateTypeClaim(claimer.get(), donor.get(), dto.typeClaim(), acc.get().getParticipant().getParticipant());
         if (notAllowed == null) {
