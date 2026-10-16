@@ -22,6 +22,7 @@ import org.mockito.*;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 public class CreateClaimUseCaseTest extends UnitTest {
@@ -97,6 +98,7 @@ public class CreateClaimUseCaseTest extends UnitTest {
         )).thenReturn(Optional.of(claimer));
         var donor = OwnerMock.getOwner(TypePerson.LEGAL_PERSON);
         var expectedEntryKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var expectedTypeKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType();
         var expectClaimerParticipant = donor.getAccounts().getFirst().getParticipant().getParticipant();
         Mockito.when(ownerRepository.findByKey(anyString()))
                 .thenReturn(Optional.of(donor));
@@ -105,7 +107,8 @@ public class CreateClaimUseCaseTest extends UnitTest {
                     () -> ClaimService.getEntryToDonate(donor, expectedEntryKey)
             ).thenReturn(Optional.of(donor.getAccounts().getFirst().getEntryKeys().getFirst()));
             service.when(
-                    () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.PORTABILITY, expectClaimerParticipant)
+                    () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.PORTABILITY, expectClaimerParticipant,
+                            expectedTypeKey)
             ).thenReturn(null);
             var dto = ClaimDtoMock.getClaimDto(TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.EMAIL,
                     claimer.getAccounts().getFirst().getNumber().getNumber(),
@@ -142,7 +145,7 @@ public class CreateClaimUseCaseTest extends UnitTest {
                     () -> ClaimService.getEntryToDonate(donor, expectedEntryKey.getKey().getKey())
             ).thenReturn(Optional.of(expectedEntryKey));
             service.when(
-                    () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, expectedParticipant)
+                    () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, expectedParticipant, expectedEntryKey.getKey().getType())
             ).thenReturn(Notification.create("Conflict", 400, "Type of claim must be Ownership"));
             var dto = ClaimDtoMock.getClaimDto(TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.EMAIL,
                     claimer.getAccounts().getFirst().getNumber().getNumber(),
@@ -182,7 +185,7 @@ public class CreateClaimUseCaseTest extends UnitTest {
                     () -> ClaimService.getEntryToDonate(donor, expectedKey.getKey().getKey())
             ).thenReturn(Optional.of(expectedKey));
             service.when(
-                    () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.PORTABILITY, expectedParticipant)
+                    () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.PORTABILITY, expectedParticipant, expectedKey.getKey().getType())
             ).thenReturn(null);
             service.when(
                     () -> ClaimService.create(
@@ -217,6 +220,53 @@ public class CreateClaimUseCaseTest extends UnitTest {
 
     @Test
     void givenValidDto_whenCallingExecute_shouldSaveClaimAsOwnership() {
-        // TODO CREATE THE TEST
+        var claimer = OwnerMock.getOwner(TypePerson.NATURAL_PERSON);
+        Mockito.when(ownerRepository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(
+                anyString(), anyString(), anyString(), anyString()
+        )).thenReturn(Optional.of(claimer));
+        var expectedParticipant = claimer.getAccounts().getFirst().getParticipant().getParticipant();
+        var donor = OwnerMock.getOwner(TypePerson.LEGAL_PERSON);
+        var expectedKey = donor.getAccounts().getFirst().getEntryKeys().getFirst();
+        Mockito.when(ownerRepository.findByKey(anyString()))
+                .thenReturn(Optional.of(donor));
+        var claimToSave = ClaimMock.mockClaim(claimer, donor, TypeClaim.OWNERSHIP);
+        Mockito.when(claimRepository.save(any()))
+                .thenReturn(claimToSave);
+        try (MockedStatic<ClaimService> service = Mockito.mockStatic(ClaimService.class)) {
+            service.when(
+                    () -> ClaimService.getEntryToDonate(donor, expectedKey.getKey().getKey())
+            ).thenReturn(Optional.of(expectedKey));
+            service.when(
+                    () -> ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, expectedParticipant, expectedKey.getKey().getType())
+            ).thenReturn(null);
+            service.when(
+                    () -> ClaimService.create(
+                            claimer.getAccounts().getFirst().getId().toString(),
+                            claimer.getAccounts().getFirst().getParticipant().getParticipant(),
+                            expectedKey.getKey().getKey(),
+                            claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType(),
+                            donor.getAccounts().getFirst().getParticipant().getParticipant(),
+                            TypeClaim.OWNERSHIP,
+                            claimer.getTaxIdNumber().getTaxIdNumber(),
+                            claimer.getType()
+                    )
+            ).thenReturn(claimToSave);
+            var dto = ClaimDtoMock.getClaimDto(
+                    TypePerson.NATURAL_PERSON, TypeClaim.OWNERSHIP, TypeKey.EMAIL,
+                    claimer.getAccounts().getFirst().getNumber().getNumber(), expectedKey.getKey().getKey(), claimer.getTaxIdNumber().getTaxIdNumber()
+            );
+            var result = useCase.execute(dto);
+            Notification notification = null;
+            ClaimOutputDto claim = null;
+            if (result instanceof Either.Left<Notification, ClaimOutputDto>(Notification value)) {
+                notification = value;
+            } else if (result instanceof Either.Right<Notification, ClaimOutputDto>(ClaimOutputDto value)) {
+                claim = value;
+            }
+            Assertions.assertNull(notification);
+            Assertions.assertNotNull(claim);
+            Assertions.assertNotNull(claim.id());
+            Assertions.assertEquals(dto.claimerDto().taxIdNumber(), claim.claimerDto().taxIdNumber());
+        }
     }
 }

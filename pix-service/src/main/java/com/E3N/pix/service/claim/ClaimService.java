@@ -37,21 +37,26 @@ public class ClaimService {
     /**
      * Receive claimerParticipant because claimer can have more than one participant
      * must be the same of the request
+     *
      * @param claimer @description is an owner
-     * @param donor @description is an owner
+     * @param donor   @description is an owner
      * @return null or Notification
      */
-    public static Notification validateTypeClaim(Owner claimer, Owner donor, TypeClaim typeClaim, String claimerParticipant) {
+    public static Notification validateTypeClaim(
+            Owner claimer, Owner donor, TypeClaim typeClaim,
+            String claimerParticipant, TypeKey claimedTypeKey
+    ) {
         if (TypeClaim.PORTABILITY.equals(typeClaim)
                 && claimer.getTaxIdNumber().getTaxIdNumber().equals(donor.getTaxIdNumber().getTaxIdNumber())
                 && !claimerParticipant.equals(donor.getAccounts().getFirst().getParticipant().getParticipant())
-        ){
+                && TypeKey.PHONE.equals(claimedTypeKey)
+        ) {
             return Notification.create("Conflict", 400, "Type of claim must be Ownership");
         }
         return null;
     }
 
-    public static Optional<EntryKey> getEntryToDonate(Owner donor, final String entryKey){
+    public static Optional<EntryKey> getEntryToDonate(Owner donor, final String entryKey) {
         return donor.getAccounts().getFirst()
                 .getEntryKeys().stream()
                 .filter(it -> it.getKey().getKey().equals(entryKey))

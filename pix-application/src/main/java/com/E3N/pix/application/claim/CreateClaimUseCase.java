@@ -49,7 +49,7 @@ public class CreateClaimUseCase {
         if (key.isEmpty()) {
             return Either.left(Notification.create("Not found", 404, "Key not found."));
         }
-        var notAllowed = ClaimService.validateTypeClaim(claimer.get(), donor.get(), dto.typeClaim(), acc.get().getParticipant().getParticipant());
+        var notAllowed = ClaimService.validateTypeClaim(claimer.get(), donor.get(), dto.typeClaim(), acc.get().getParticipant().getParticipant(), key.get().getKey().getType());
         if (notAllowed == null) {
             var claim = ClaimService.create(
                     acc.get().getId().toString(),

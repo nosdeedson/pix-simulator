@@ -10,7 +10,7 @@ public abstract class ClaimMock {
         return Claim.getInstance(
                 claimer.getAccounts().getFirst().getId().toString(),
                 claimer.getAccounts().getFirst().getParticipant().getParticipant(),
-                claimer.getAccounts().getFirst().getParticipant().getParticipant(),
+                donor.getAccounts().getFirst().getParticipant().getParticipant(),
                 claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(),
                 claimer.getTaxIdNumber().getTaxIdNumber(),
                 typeClaim,
