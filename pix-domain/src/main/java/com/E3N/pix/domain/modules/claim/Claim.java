@@ -66,7 +66,7 @@ public class Claim extends Entity {
             TypeKey typeKeyClaimed,
             TypePerson typePerson
     ) {
-        return new Claim(
+            return new Claim(
                 claimerAccountId,
                 claimerParticipant,
                 donorParticipant,

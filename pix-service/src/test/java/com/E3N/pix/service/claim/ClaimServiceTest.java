@@ -19,6 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class ClaimServiceTest extends UniTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        Mockito.reset();
     }
 
 
@@ -148,14 +150,15 @@ public class ClaimServiceTest extends UniTest {
         var claimer = OwnerMock.mockOwner();
         var donor = OwnerMock.mockOwner();
         var claimerParticipant = claimer.getAccounts().getFirst().getParticipant().getParticipant();
-        var result = ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, claimerParticipant);
+        var typeOfKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType();
+        var result = ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, claimerParticipant, typeOfKey);
         Assertions.assertNull(result);
     }
 
     @Test
     void givenWrongTypeClaim_whenCalling_validateTypeClaim_shouldReturnNull() {
         var claimer = OwnerMock.mockOwner();
-        var result = ClaimService.validateTypeClaim(claimer, claimer, TypeClaim.PORTABILITY, RandomParticipant.getParticipant());
+        var result = ClaimService.validateTypeClaim(claimer, claimer, TypeClaim.PORTABILITY, RandomParticipant.getParticipant(), TypeKey.PHONE);
         Assertions.assertInstanceOf(Notification.class, result);
         Assertions.assertEquals("Type of claim must be Ownership", result.getDetail());
     }

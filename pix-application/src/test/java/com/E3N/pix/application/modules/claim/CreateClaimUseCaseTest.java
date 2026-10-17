@@ -263,10 +263,8 @@ public class CreateClaimUseCaseTest extends UnitTest {
             } else if (result instanceof Either.Right<Notification, ClaimOutputDto>(ClaimOutputDto value)) {
                 claim = value;
             }
-            Assertions.assertNull(notification);
-            Assertions.assertNotNull(claim);
-            Assertions.assertNotNull(claim.id());
-            Assertions.assertEquals(dto.claimerDto().taxIdNumber(), claim.claimerDto().taxIdNumber());
+            Assertions.assertNotNull(notification);
+            Assertions.assertEquals("The type of claim must be Portability", notification.getViolations().getFirst().reason());
         }
     }
 }

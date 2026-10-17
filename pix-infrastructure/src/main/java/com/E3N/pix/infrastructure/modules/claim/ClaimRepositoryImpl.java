@@ -2,8 +2,12 @@ package com.E3N.pix.infrastructure.modules.claim;
 
 import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.ClaimRepositoryInterface;
+import com.E3N.pix.domain.modules.claim.StatusClaim;
+import com.E3N.pix.domain.modules.claim.TypeClaim;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,5 +51,17 @@ public class ClaimRepositoryImpl implements ClaimRepositoryInterface {
     public Claim update(Claim entity) {
         var claimJPA = ClaimJPAEntity.from(entity);
         return ClaimJPAEntity.from(this.claimRepository.save(claimJPA));
+    }
+
+    @Override
+    public List<Claim> findClaimsAsClaimer(String participant, StatusClaim statusClaim, TypeClaim typeClaim, Instant modifiedAfter, Instant modifiedBefore, int limit) {
+        return claimRepository.findClaimsAsDonor(participant, statusClaim, typeClaim, modifiedAfter, modifiedBefore, PageRequest.of(0, limit))
+            .stream().map(ClaimJPAEntity::from).toList();
+    }
+
+    @Override
+    public List<Claim> findClaimsAsDonor(String participant, StatusClaim statusClaim, TypeClaim typeClaim, Instant modifiedAfter, Instant modifiedBefore, int limit) {
+        return claimRepository.findClaimsAsDonor(participant, statusClaim, typeClaim, modifiedAfter, modifiedBefore, PageRequest.of(0, limit))
+                .stream().map(ClaimJPAEntity::from).toList();
     }
 }

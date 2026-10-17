@@ -9,7 +9,6 @@ import com.E3N.pix.infrastructure.GenericEntity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.util.List;
 
 @Entity(name = "Claim")
 @Table(name = "claim")
