@@ -11,11 +11,13 @@ import com.E3N.pix.service.ownership.mocks.OwnerMock;
 import com.E3N.pix.service.ownership.mocks.dto.OwnerDtoMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
@@ -29,6 +31,7 @@ public class OwnerServiceTest extends UniTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        Mockito.reset();
     }
 
     @ParameterizedTest
@@ -89,7 +92,7 @@ public class OwnerServiceTest extends UniTest {
         );
     }
 
-    @Test
+    @RepeatedTest(100)
     void givenExistentKeyValues_whenCalling_validateKeyExistence_shouldReturnNotification() {
         var owner = OwnerMock.mockOwner();
         var dto = OwnerDtoMock.from(owner);

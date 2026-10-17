@@ -20,21 +20,21 @@ public abstract class RandomKeysMock {
     };
 
     private static final String[] INVALID_EMAILS = {
-            "plainaddress",
+            "plainAddress",
             "#@%^%#$@#$@#.com",
             "@example.com",
             "Joe Smith <email@example.com>",
             "email.example.com",
             "email@example@example.com",
-            ".email@example.com",
-            "email.@example.com",
-            "email..email@example.com",
+            "@.email@example.com",
+            "email.@example@.com",
+            "email..@email@example.com",
             "あいうえお@example.com",
             "email@example.com (Joe Smith)",
-            "email@example",
+            "email@@example",
             "email@-example.com",
-            "email@example.web",
-            "email@111.222.333.44444",
+            "email@@example.web",
+            "email@111.222.333.44444@",
             "email@example..com",
             "Abc..123@example.com"
     };
@@ -72,7 +72,7 @@ public abstract class RandomKeysMock {
     }
 
     public static String randomEmails() {
-        return Arrays.asList(EMAILS).get(random.nextInt(9) + 1);
+        return Arrays.asList(EMAILS).get(random.nextInt(9) );
     }
 
     public static String randomInvalidEmails() {

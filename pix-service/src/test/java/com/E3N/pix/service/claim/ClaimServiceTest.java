@@ -36,7 +36,6 @@ public class ClaimServiceTest extends UniTest {
         Mockito.reset();
     }
 
-
     static List<Arguments> providerValidValues() {
         var keyForPortabilityCPF = RandomCpfMock.getRandomCFP();
         var keyForPortabilityCNPJ = RandomCNPJMock.getRandomCNPJ();

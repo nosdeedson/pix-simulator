@@ -112,8 +112,8 @@ public class AccountTest extends UnitTest {
                 .contains(result.getNotification().getViolations().getFirst().reason()));
     }
 
-    static Stream<Arguments> invalidProvider() {
-        return Stream.of(
+    static List<Arguments> invalidProvider() {
+        return List.of(
                 Arguments.of("100000", "1234", "00000000", AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), EntryKeyMock.getEntryKeyPhone()),
                 Arguments.of("2", "qqqq", "04332281", AccountType.OTHR, "32/08/1980", EntryKeyMock.getEntryKeyPhone()),
                 Arguments.of("01", "1234", "08357240", AccountType.SLRY, "12/13/1990", EntryKeyMock.getEntryKeyPhone()),

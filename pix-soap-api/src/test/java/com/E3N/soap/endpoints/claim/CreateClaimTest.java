@@ -89,7 +89,7 @@ public class CreateClaimTest extends UnitTest {
         when(ownerRepository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(anyString(), anyString(),
                 anyString(), anyString()))
                 .thenReturn(Optional.of(owner));
-        var donor = OwnerMock.withDifferentParticipant(owner);
+        var donor = OwnerMock.withDifferentParticipant(owner, RandomKeysMock.randomPhone(), TypeKey.PHONE);
         when(ownerRepository.findByKey(anyString()))
                 .thenReturn(Optional.of(donor));
 
@@ -108,7 +108,7 @@ public class CreateClaimTest extends UnitTest {
         var owner = OwnerMock.createOwner(TypePerson.LEGAL_PERSON, Reason.USER_REQUESTED, TypeKey.PHONE);
         when(ownerRepository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(Optional.of(owner));
-        var donor = OwnerMock.withDifferentParticipant(owner);
+        var donor = OwnerMock.withDifferentParticipant(owner, RandomKeysMock.randomPhone(), TypeKey.PHONE);
         when(ownerRepository.findByKey(anyString())).thenReturn(Optional.of(donor));
         var claimSaved = mockClaim(owner, donor, TypeClaim.OWNERSHIP);
         when(claimRepository.save(any())).thenReturn(claimSaved);
@@ -125,7 +125,7 @@ public class CreateClaimTest extends UnitTest {
         var owner = OwnerMock.createOwner(TypePerson.LEGAL_PERSON, Reason.USER_REQUESTED, TypeKey.EMAIL);
         when(ownerRepository.findByAccountNumberAndParticipantAndBranchAndTaxIdNumber(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(Optional.of(owner));
-        var donor = OwnerMock.withDifferentParticipant(owner);
+        var donor = OwnerMock.withDifferentParticipant(owner, RandomKeysMock.randomEmails(), TypeKey.EMAIL);
         when(ownerRepository.findByKey(anyString())).thenReturn(Optional.of(donor));
         var claimSaved = mockClaim(owner, donor, TypeClaim.PORTABILITY);
         when(claimRepository.save(any())).thenReturn(claimSaved);

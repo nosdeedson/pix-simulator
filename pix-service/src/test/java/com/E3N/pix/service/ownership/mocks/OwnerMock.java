@@ -10,6 +10,7 @@ import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.test.Owner.*;
 import com.github.javafaker.Faker;
 
+import java.text.Normalizer;
 import java.util.UUID;
 
 public abstract class OwnerMock {
@@ -17,7 +18,12 @@ public abstract class OwnerMock {
     private static final Faker faker = new Faker();
 
     public static Owner mockOwner(){
-        var name = faker.name().fullName();
+        var name = faker.name().firstName() + " " + faker.name().lastName();
+        name = Normalizer.normalize(name, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")         // remove accents
+                .replaceAll("[^a-zA-Z ]", "")     // remove ', -, .
+                .replaceAll("\\s+", " ")
+                .trim();
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
         var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);
         return Owner.getInstance(name, name, RandomCpfMock.getRandomCFP(), TypePerson.NATURAL_PERSON, account);

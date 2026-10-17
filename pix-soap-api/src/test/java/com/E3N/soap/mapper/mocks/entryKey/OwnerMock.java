@@ -59,7 +59,7 @@ public abstract class OwnerMock {
         );
     }
 
-    public static Owner withDifferentParticipant(Owner owner) {
+    public static Owner withDifferentParticipant(Owner owner, String key, TypeKey typeKey) {
         Account acc = Account.getInstance(
                 RandomAccountMock.randomBranch(),
                 RandomAccountMock.randomAccountNumber(),
@@ -67,7 +67,7 @@ public abstract class OwnerMock {
                 AccountType.CACC,
                 RandomDateMock.getRandomStringDateWithoutTimeZone(),
                 EntryKey.getInstance(
-                        RandomKeysMock.randomPhone(), TypeKey.PHONE, Reason.USER_REQUESTED, UUID.randomUUID().toString()
+                        key, typeKey, Reason.USER_REQUESTED, UUID.randomUUID().toString()
                 )
         );
         return Owner.getInstance(
