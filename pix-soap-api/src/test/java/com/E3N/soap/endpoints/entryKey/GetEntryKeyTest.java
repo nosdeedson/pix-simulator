@@ -2,6 +2,7 @@ package com.E3N.soap.endpoints.entryKey;
 
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
+import com.E3N.pix.soap.contract.GetEntryKeyRequest;
 import com.E3N.pix.soap.contract.GetEntryKeyResponse;
 import com.E3N.pix.soap.endpoints.EntryKey;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
@@ -40,8 +41,11 @@ public class GetEntryKeyTest extends UnitTest {
 
     @Test
     void givenRequestWithoutHeaders_whenCallingGetEntryKey_shouldReturnNotification() {
+        var getEntries = new GetEntryKeyRequest();
+        getEntries.setIncludesStatistics(true);
+        getEntries.setKey("does-not-matter");
         Assertions.assertThrows(SoapFaultException.class, () ->
-                entryKey.getEntryKey("doesNotMatter", false, null, null, null)
+                entryKey.getEntryKey(null, null, null, getEntries)
         );
     }
 
@@ -65,7 +69,10 @@ public class GetEntryKeyTest extends UnitTest {
         var expectedKey = owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
         Mockito.when(ownerRepository.findByKey(expectedKey))
                 .thenReturn(Optional.of(owner));
-        GetEntryKeyResponse result = entryKey.getEntryKey(expectedKey, statistics, piRequestingParticipant, piPayerId, piE2E);
+        var getEntries = new GetEntryKeyRequest();
+        getEntries.setIncludesStatistics(statistics);
+        getEntries.setKey(expectedKey);
+        GetEntryKeyResponse result = entryKey.getEntryKey(piRequestingParticipant, piPayerId, piE2E, getEntries);
         Assertions.assertInstanceOf(GetEntryKeyResponse.class, result);
         Assertions.assertEquals(expectedKey, result.getEntry().getKey());
         Assertions.assertNotNull(result.getCorrelationId());
@@ -89,9 +96,12 @@ public class GetEntryKeyTest extends UnitTest {
             String key, Boolean statistics, String piRequestingParticipant,
             String piPayerId, String piE2E
     ) {
+        var getEntries = new GetEntryKeyRequest();
+        getEntries.setIncludesStatistics(statistics);
+        getEntries.setKey(key);
         Mockito.when(ownerRepository.findByKey(key))
                 .thenReturn(Optional.empty());
-        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.getEntryKey(key, statistics, piRequestingParticipant, piPayerId, piE2E));
+        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.getEntryKey(piRequestingParticipant, piPayerId, piE2E, getEntries));
     }
 
     @ParameterizedTest
@@ -110,8 +120,11 @@ public class GetEntryKeyTest extends UnitTest {
             String piPayerId, String piE2E
     ) {
         var expectedKey = "doesNotMatter";
+        var getEntries = new GetEntryKeyRequest();
+        getEntries.setIncludesStatistics(statistics);
+        getEntries.setKey(expectedKey);
         Assertions.assertThrows(SoapFaultException.class, () ->
-                entryKey.getEntryKey(expectedKey, statistics, piRequestingParticipant, piPayerId, piE2E));
+                entryKey.getEntryKey(piRequestingParticipant, piPayerId, piE2E, getEntries));
     }
 
 
@@ -120,12 +133,11 @@ public class GetEntryKeyTest extends UnitTest {
             nullValues = "NULL",
             delimiter = '|',
             value = {
-                    "NULL | 00000000 | 49051557205 | E00000000202609141200abc1234567x",
+                    "false | 00000000 | 49051557205 | E00000000202609141200abc1234567x",
                     "false | NULL | 05217333839 | E12345678202609141530xyz98765432",
                     "false | 00556603 | NULL | E99999999202601010000test0000E2E",
                     "false | 01073966 | 04542909930 | NULL",
                     "false | 01658426 | NULL | E710278662026083023591234567891P",
-                    "NULL | NULL | NULL | NULL",
             }
     )
     void givenInvalidValues_whenCallingGetEntryWithValidKey_shouldReturnNotification(
@@ -133,7 +145,10 @@ public class GetEntryKeyTest extends UnitTest {
             String piPayerId, String piE2E
     ) {
         var expectedKey = "doesNotMatter";
+        var getEntries = new GetEntryKeyRequest();
+        getEntries.setIncludesStatistics(statistics);
+        getEntries.setKey(expectedKey);
         Assertions.assertThrows(SoapFaultException.class, () ->
-                entryKey.getEntryKey(expectedKey, statistics, piRequestingParticipant, piPayerId, piE2E));
+                entryKey.getEntryKey( piRequestingParticipant, piPayerId, piE2E, getEntries));
     }
 }

@@ -46,18 +46,11 @@ public class UpdateEntryKeyTest extends UnitTest {
     }
 
     @Test
-    void givenKeyDifferentFromBodyKey_whenCalling_updateEntryKey_shouldThrowSoapFaultException() {
-        var request = EntryKeyRequestMock.createUpdateRequest(ReasonType.USER_REQUESTED);
-        var differentKey = "does-not-matter";
-        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.updateEntryKey(differentKey, request));
-    }
-
-    @Test
     void givenNoExistentKey_whenCalling_updateEntryKey_shouldThrowSoapFaultException() {
         Mockito.when(ownerRepository.findByKeyAndTaxIdNumber(Mockito.anyString(), Mockito.any()))
                 .thenReturn(Optional.empty());
         var request = EntryKeyRequestMock.createUpdateRequest(ReasonType.USER_REQUESTED);
-        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.updateEntryKey(request.getKey(), request));
+        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.updateEntryKey(request));
     }
 
     @Test
@@ -66,7 +59,7 @@ public class UpdateEntryKeyTest extends UnitTest {
         Mockito.when(ownerRepository.findByKeyAndTaxIdNumber(Mockito.anyString(), Mockito.any()))
                 .thenReturn(Optional.of(owner));
         var request = EntryKeyRequestMock.createUpdateRequest(ReasonType.USER_REQUESTED);
-        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.updateEntryKey(request.getKey(), request));
+        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.updateEntryKey(request));
     }
 
     @ParameterizedTest
@@ -77,7 +70,7 @@ public class UpdateEntryKeyTest extends UnitTest {
                 .thenReturn(Optional.of(owner));
         Mockito.when(ownerRepository.update(Mockito.any()))
                 .thenReturn(owner);
-        UpdateEntryKeyResponse result = entryKey.updateEntryKey(request.getKey(), request);
+        UpdateEntryKeyResponse result = entryKey.updateEntryKey(request);
         Assertions.assertInstanceOf(UpdateEntryKeyResponse.class, result);
     }
 
@@ -109,7 +102,7 @@ public class UpdateEntryKeyTest extends UnitTest {
         Mockito.when(ownerRepository.findByKeyAndTaxIdNumber(Mockito.anyString(), Mockito.any()))
                 .thenReturn(Optional.of(owner));
         var request = EntryKeyRequestMock.from(reason, owner);
-        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.updateEntryKey(request.getKey(), request));
+        Assertions.assertThrows(SoapFaultException.class, () -> entryKey.updateEntryKey(request));
     }
 
     static List<Arguments> provideInvalidValues() {

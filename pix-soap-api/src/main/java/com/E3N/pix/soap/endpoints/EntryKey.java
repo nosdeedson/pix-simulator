@@ -54,16 +54,15 @@ public class EntryKey {
     @ResponsePayload
     @SoapAction(SOAP_ACTION_PREFIX + "GetEntryKey")
     public GetEntryKeyResponse getEntryKey(
-            @XPathParam("/key") String key,
-            @XPathParam("/IncludesStatistics") Boolean includesStatistics,
             @SoapHeader("{" + NAME_SPACE_URI + "}PI-RequestingParticipant") String piRequestingParticipant,
             @SoapHeader("{" + NAME_SPACE_URI + "}PI-PayerId") String piPayerId,
-            @SoapHeader("{" + NAME_SPACE_URI + "}PI-EndToEndId") String piEndToEndId
+            @SoapHeader("{" + NAME_SPACE_URI + "}PI-EndToEndId") String piEndToEndId,
+            @RequestPayload GetEntryKeyRequest getEntryKeys
     ) {
         try {
             ValidationEntryKeyRequest.validateHeaderGetKey(piRequestingParticipant, piPayerId, piEndToEndId);
             var getUseCase = new GetEntryKeyUseCase(ownerRepository);
-            Either<Notification, Owner> result = getUseCase.getEntryKey(key, includesStatistics);
+            Either<Notification, Owner> result = getUseCase.getEntryKey(getEntryKeys.getKey(), getEntryKeys.isIncludesStatistics());
             return result.fold(
                     notification -> {
                         throw new SoapFaultException("Could not get Key", notification);
@@ -79,13 +78,12 @@ public class EntryKey {
     @ResponsePayload
     @SoapAction(SOAP_ACTION_PREFIX + "UpdateEntryKey")
     public UpdateEntryKeyResponse updateEntryKey(
-            @XPathParam("/key") String key,
             @RequestPayload UpdateEntryKeyRequest request
     ) {
         try {
             UpdateEntryKeyUseCase useCase = new UpdateEntryKeyUseCase(ownerRepository);
             var dto = UpdateEntryKeyRequestToDtoMapper.getDto(request);
-            Either<Notification, Owner> result = useCase.execute(dto, key);
+            Either<Notification, Owner> result = useCase.execute(dto, dto.key());
             return result.fold(
                     notification -> {
                         throw new SoapFaultException("Invalid request", notification);
