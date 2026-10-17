@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://pix.com/soap/contract"
+           targetNamespace="http://pix.com/soap/contract"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="create-claims.xsd"/>
+
+    <xs:element name="ListClaimsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Participant" type="xs:string"/>
+                <xs:element name="IncludeIndirectParticipants" type="xs:boolean"/>
+                <xs:element name="IsDonor" type="xs:boolean"/>
+                <xs:element name="IsClaimer" type="tns:ClaimStatusType"/>
+                <xs:element name="Type" type="tns:TypeClaims"/>
+                <xs:element name="ModifiedAfter" type="xs:dateTime"/>
+                <xs:element name="ModifiedBefore" type="xs:dateTime"/>
+                <xs:element name="Limit" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListClaimsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="tns:ResponseCommon"/>
+                <xs:element name="HasMoreElements" type="xs:string"/>
+                <xs:element name="Claims" type="tns:ClaimsType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ClaimsType">
+        <xs:sequence maxOccurs="200">
+            <xs:element name="Claim" type="tns:ClaimType"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

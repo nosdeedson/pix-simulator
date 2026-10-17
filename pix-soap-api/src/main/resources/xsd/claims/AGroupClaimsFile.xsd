@@ -5,4 +5,6 @@
            elementFormDefault="qualified">
 
     <xs:include schemaLocation="create-claims.xsd"/>
+    <xs:include schemaLocation="list-claims.xsd"/>
+
 </xs:schema>
