@@ -1,5 +1,7 @@
 package com.E3N.pix.infrastructure.modules.ownership.owner;
 
+import com.E3N.pix.domain.modules.ownership.account.Account;
+import com.E3N.pix.infrastructure.modules.ownership.account.AccountJPAEntity;
 import com.E3N.pix.infrastructure.modules.ownership.entryKey.EntryKeyJPAEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface OwnerJPARepository extends JpaRepository<OwnerJPAEntity, String> {
+
+    @Query("SELECT a FROM Owner o JOIN o.accounts a JOIN FETCH a.keyJPAs ek " +
+            " WHERE ek.key = :key AND a.id = :accountId")
+    Optional<AccountJPAEntity> findAccount(@Param("accountId") String accountId, @Param("key") String key);
+
     @Query("SELECT o FROM Owner o " +
             "JOIN FETCH o.accounts " +
             "WHERE o.taxIdNumber = :taxIdNumber")

@@ -2,7 +2,7 @@ package com.E3N.pix.application.modules.claim;
 
 import com.E3N.pix.application.UnitTest;
 import com.E3N.pix.application.claim.CreateClaimUseCase;
-import com.E3N.pix.application.claim.dto.ClaimOutputDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
 import com.E3N.pix.application.modules.claim.mocks.ClaimDtoMock;
 import com.E3N.pix.application.modules.claim.mocks.ClaimMock;
 import com.E3N.pix.application.modules.ownership.mock.OwnerMock;

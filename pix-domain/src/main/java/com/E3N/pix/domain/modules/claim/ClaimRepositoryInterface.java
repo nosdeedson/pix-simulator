@@ -6,21 +6,15 @@ import java.time.Instant;
 import java.util.List;
 
 public interface ClaimRepositoryInterface extends CRUDRepositoryInterface<Claim> {
-    List<Claim> findClaimsAsClaimer(
+    List<Claim> findClaims(
             final String participant,
+            boolean isDonor,
+            boolean isClaimer,
             StatusClaim statusClaim,
             TypeClaim typeClaim,
-            final Instant modifiedAfter,
-            final Instant modifiedBefore,
-            final int limit
+            Instant modifiedAfter,
+            Instant modifiedBefore,
+            int limit
     );
 
-    List<Claim> findClaimsAsDonor(
-            final String participant,
-            StatusClaim statusClaim,
-            TypeClaim typeClaim,
-            final Instant modifiedAfter,
-            final Instant modifiedBefore,
-            final int limit
-    );
 }

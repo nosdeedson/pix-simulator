@@ -54,14 +54,9 @@ public class ClaimRepositoryImpl implements ClaimRepositoryInterface {
     }
 
     @Override
-    public List<Claim> findClaimsAsClaimer(String participant, StatusClaim statusClaim, TypeClaim typeClaim, Instant modifiedAfter, Instant modifiedBefore, int limit) {
-        return claimRepository.findClaimsAsDonor(participant, statusClaim, typeClaim, modifiedAfter, modifiedBefore, PageRequest.of(0, limit))
+    public List<Claim> findClaims(String participant, boolean isDonor, boolean isClaimer, StatusClaim statusClaim, TypeClaim typeClaim, Instant modifiedAfter, Instant modifiedBefore, int limit) {
+        return claimRepository.findClaims(participant, isDonor, isClaimer, statusClaim, typeClaim, modifiedAfter, modifiedBefore, PageRequest.of(0, limit))
             .stream().map(ClaimJPAEntity::from).toList();
     }
 
-    @Override
-    public List<Claim> findClaimsAsDonor(String participant, StatusClaim statusClaim, TypeClaim typeClaim, Instant modifiedAfter, Instant modifiedBefore, int limit) {
-        return claimRepository.findClaimsAsDonor(participant, statusClaim, typeClaim, modifiedAfter, modifiedBefore, PageRequest.of(0, limit))
-                .stream().map(ClaimJPAEntity::from).toList();
-    }
 }

@@ -1,8 +1,8 @@
 package com.E3N.pix.application.modules.claim.mocks;
 
-import com.E3N.pix.application.claim.dto.ClaimDto;
-import com.E3N.pix.application.claim.dto.ClaimerAccountDto;
-import com.E3N.pix.application.claim.dto.ClaimerDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimerAccountDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimerDto;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.shared.TypeKey;

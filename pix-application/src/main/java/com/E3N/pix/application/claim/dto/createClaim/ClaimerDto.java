@@ -1,4 +1,4 @@
-package com.E3N.pix.application.claim.dto;
+package com.E3N.pix.application.claim.dto.createClaim;
 
 import com.E3N.pix.domain.shared.TypePerson;
 

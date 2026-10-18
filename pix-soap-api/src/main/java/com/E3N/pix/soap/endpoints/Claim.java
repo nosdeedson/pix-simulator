@@ -1,7 +1,7 @@
 package com.E3N.pix.soap.endpoints;
 
 import com.E3N.pix.application.claim.CreateClaimUseCase;
-import com.E3N.pix.application.claim.dto.ClaimOutputDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.infrastructure.modules.claim.ClaimRepositoryImpl;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;

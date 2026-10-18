@@ -1,7 +1,6 @@
 package com.E3N.soap.mapper.claim;
 
-import com.E3N.pix.application.claim.dto.ClaimDto;
-import com.E3N.pix.domain.modules.claim.TypeClaim;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimDto;
 import com.E3N.pix.soap.contract.KeyType;
 import com.E3N.pix.soap.contract.TypeClaims;
 import com.E3N.pix.soap.mapper.claim.CreateClaimRequestToDtoMapper;

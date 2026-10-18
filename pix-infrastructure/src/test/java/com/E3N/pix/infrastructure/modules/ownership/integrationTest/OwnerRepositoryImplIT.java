@@ -305,4 +305,17 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
         Assertions.assertTrue(result.isEmpty());
     }
 
+    @Test
+    void givenExistentAccount_whenCalling_findAccount_shouldReturnAccount(){
+        var owner = getOwner(TypePerson.NATURAL_PERSON);
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var acc = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), owner.getAccounts().getFirst().getParticipant().getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);
+        owner.addNewAccountOrNewKey(acc);
+        repository.save(owner);
+        var expectedAccount = owner.getAccounts().getFirst().getId().toString();
+        var expectedKey = owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+        var account = repository.findAccount(expectedAccount, expectedKey);
+        Assertions.assertTrue(account.isPresent());
+    }
+
 }

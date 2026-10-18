@@ -10,9 +10,9 @@ spring:
       path: /h2-console
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
     properties:
       hibernate:
         format_sql: true

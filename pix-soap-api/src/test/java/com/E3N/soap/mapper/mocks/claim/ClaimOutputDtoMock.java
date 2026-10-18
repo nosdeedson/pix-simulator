@@ -1,8 +1,8 @@
 package com.E3N.soap.mapper.mocks.claim;
 
-import com.E3N.pix.application.claim.dto.ClaimOutputDto;
-import com.E3N.pix.application.claim.dto.ClaimerAccountDto;
-import com.E3N.pix.application.claim.dto.ClaimerDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimerAccountDto;
+import com.E3N.pix.application.claim.dto.createClaim.ClaimerDto;
 import com.E3N.pix.domain.modules.claim.StatusClaim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
