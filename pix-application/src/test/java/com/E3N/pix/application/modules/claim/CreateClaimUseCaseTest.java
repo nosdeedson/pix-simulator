@@ -40,6 +40,7 @@ public class CreateClaimUseCaseTest extends UnitTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         Mockito.reset(claimRepository);
+        Mockito.reset(ownerRepository);
     }
 
     @Test

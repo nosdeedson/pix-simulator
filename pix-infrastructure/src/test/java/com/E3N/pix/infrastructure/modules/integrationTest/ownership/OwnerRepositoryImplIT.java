@@ -1,12 +1,12 @@
-package com.E3N.pix.infrastructure.modules.ownership.integrationTest;
+package com.E3N.pix.infrastructure.modules.integrationTest.ownership;
 
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
-import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.shared.TypeKey;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.infrastructure.IntegrationTest;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.test.Owner.*;
@@ -216,7 +216,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenInvalidKeys_whenCalling_findByKeys_shouldReturnEmptyList(){
+    void givenInvalidKeys_whenCalling_findByKeys_shouldReturnEmptyList() {
         var owner1 = getOwner(TypePerson.LEGAL_PERSON);
         var owner2 = getOwner(TypePerson.NATURAL_PERSON);
         repository.save(owner1);
@@ -226,7 +226,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenValidKeys_whenCalling_findByKeys_shouldReturnTwoKeys(){
+    void givenValidKeys_whenCalling_findByKeys_shouldReturnTwoKeys() {
         var owner1 = getOwner(TypePerson.LEGAL_PERSON);
         var owner2 = getOwner(TypePerson.NATURAL_PERSON);
         var expectedKey1 = owner1.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
@@ -241,7 +241,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenOneValidKey_whenCalling_findByKeys_shouldReturnOneKey(){
+    void givenOneValidKey_whenCalling_findByKeys_shouldReturnOneKey() {
         var owner1 = getOwner(TypePerson.LEGAL_PERSON);
         var owner2 = getOwner(TypePerson.NATURAL_PERSON);
         var expectedKey1 = owner1.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
@@ -256,7 +256,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenNoExistentValues_whenCalling_findByAccountNumberAndParticipantAndBranchAndTaxIdNumber_shouldReturnEmpty(){
+    void givenNoExistentValues_whenCalling_findByAccountNumberAndParticipantAndBranchAndTaxIdNumber_shouldReturnEmpty() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         repository.save(owner);
         var expectedAccountNumber = "12345";
@@ -269,7 +269,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenExistentValues_whenCalling_findByAccountNumberAndParticipantAndBranchAndTaxIdNumber_shouldOwner(){
+    void givenExistentValues_whenCalling_findByAccountNumberAndParticipantAndBranchAndTaxIdNumber_shouldOwner() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         repository.save(owner);
         var expectedAccountNumber = owner.getAccounts().getFirst().getNumber().getNumber();
@@ -283,7 +283,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenExistentKey_whenCalling_findEntryKey_shouldReturnEntryKey(){
+    void givenExistentKey_whenCalling_findEntryKey_shouldReturnEntryKey() {
         var donor = getOwner(TypePerson.NATURAL_PERSON);
         repository.save(donor);
         var expectedKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
@@ -295,7 +295,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenExistentKey_whenCalling_findEntryKey_shouldReturnOptionalEmpty(){
+    void givenExistentKey_whenCalling_findEntryKey_shouldReturnOptionalEmpty() {
         var donor = getOwner(TypePerson.NATURAL_PERSON);
         repository.save(donor);
         var expectedKey = "any-key";
@@ -306,7 +306,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenExistentAccount_whenCalling_findAccount_shouldReturnAccount(){
+    void givenExistentAccount_whenCalling_findAccount_shouldReturnAccount() {
         var owner = getOwner(TypePerson.NATURAL_PERSON);
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
         var acc = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(), owner.getAccounts().getFirst().getParticipant().getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);

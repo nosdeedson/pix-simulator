@@ -1,4 +1,4 @@
-package com.E3N.pix.infrastructure.modules.ownership.unitTest;
+package com.E3N.pix.infrastructure.modules.unitTest;
 
 import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
@@ -28,7 +28,7 @@ public class ClaimJPAEntityTest extends UnitTest {
     );
 
     @Test
-    void givenValidClaim_whenCalling_from_shouldReturnClaimJPA(){
+    void givenValidClaim_whenCalling_from_shouldReturnClaimJPA() {
         var result = ClaimJPAEntity.from(claim);
         Assertions.assertInstanceOf(ClaimJPAEntity.class, result);
         Assertions.assertNotNull(result.getId());
@@ -37,7 +37,7 @@ public class ClaimJPAEntityTest extends UnitTest {
     }
 
     @Test
-    void givenValidClaimJPA_whenCalling_from_shouldReturnClaim(){
+    void givenValidClaimJPA_whenCalling_from_shouldReturnClaim() {
         ClaimJPAEntity claimJPA = ClaimJPAEntity.from(claim);
         var result = ClaimJPAEntity.from(claimJPA);
         Assertions.assertInstanceOf(Claim.class, result);

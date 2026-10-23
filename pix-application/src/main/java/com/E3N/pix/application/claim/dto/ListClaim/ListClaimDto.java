@@ -7,9 +7,9 @@ import java.time.Instant;
 
 public record ListClaimDto(
         String participant,
-        boolean includeIndirectParticipant,
-        boolean isDonor,
-        boolean isClaimer,
+        Boolean includeIndirectParticipant,
+        Boolean isDonor,
+        Boolean isClaimer,
         StatusClaim statusClaim,
         TypeClaim typeClaim,
         Instant modifiedAfter,

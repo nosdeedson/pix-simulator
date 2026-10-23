@@ -1,4 +1,4 @@
-package com.E3N.pix.infrastructure.modules.ownership.integrationTest;
+package com.E3N.pix.infrastructure.modules.integrationTest.claim;
 
 import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.StatusClaim;
@@ -11,7 +11,6 @@ import com.E3N.shared.utils.DateHelper;
 import com.E3N.test.Owner.RandomCNPJMock;
 import com.E3N.test.Owner.RandomDateMock;
 import com.E3N.test.Owner.RandomKeysMock;
-import com.E3N.test.Owner.RandomParticipant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,28 +21,20 @@ import java.util.UUID;
 public class ClaimRepositoryImplIT extends IntegrationTest {
 
     final String donorParticipant = "8HTVVWKM";
+    final String claimerParticipant = "M9ML8NWE";
 
-    Claim claim = Claim.getInstance(
-            UUID.randomUUID().toString(),
-            RandomParticipant.getParticipant(),
-            RandomParticipant.getParticipant(),
-            RandomKeysMock.randomEmails(),
-            RandomCNPJMock.getRandomCNPJ(),
-            TypeClaim.PORTABILITY,
-            TypeKey.EMAIL,
-            TypePerson.LEGAL_PERSON
-    );
-
-    Claim claimDonorSituation = Claim.getInstance(
-            UUID.randomUUID().toString(),
-            RandomParticipant.getParticipant(),
-            donorParticipant,
-            RandomKeysMock.randomEmails(),
-            RandomCNPJMock.getRandomCNPJ(),
-            TypeClaim.PORTABILITY,
-            TypeKey.EMAIL,
-            TypePerson.LEGAL_PERSON
-    );
+    static Claim getClaim(String claimerParticipant, String donorParticipant, TypeClaim typeClaim) {
+        return Claim.getInstance(
+                UUID.randomUUID().toString(),
+                claimerParticipant,
+                donorParticipant,
+                RandomKeysMock.randomEmails(),
+                RandomCNPJMock.getRandomCNPJ(),
+                typeClaim,
+                TypeKey.EMAIL,
+                TypePerson.LEGAL_PERSON
+        );
+    }
 
     @Autowired
     private ClaimRepositoryImpl repository;
@@ -55,13 +46,13 @@ public class ClaimRepositoryImplIT extends IntegrationTest {
 
     @Test
     void givenValidClaim_whenCallingSave_shouldReturnClaimJPA() {
-        var result = repository.save(claim);
+        var result = repository.save(getClaim(claimerParticipant, claimerParticipant, TypeClaim.PORTABILITY));
         Assertions.assertInstanceOf(Claim.class, result);
     }
 
     @Test
     void givenValidId_whenCalling_delete_shouldDelete() {
-        var result = repository.save(claim);
+        var result = repository.save(getClaim(claimerParticipant, claimerParticipant, TypeClaim.PORTABILITY));
         var found = repository.findById(result.getId()).get();
         Assertions.assertInstanceOf(Claim.class, found);
         repository.delete(found.getId());
@@ -73,7 +64,7 @@ public class ClaimRepositoryImplIT extends IntegrationTest {
     void shouldFindAllClaims() {
         var all = repository.findAll();
         Assertions.assertTrue(all.isEmpty());
-        repository.save(claim);
+        repository.save(getClaim(claimerParticipant, claimerParticipant, TypeClaim.PORTABILITY));
         all = repository.findAll();
         Assertions.assertFalse(all.isEmpty());
         Assertions.assertEquals(1, all.size());
@@ -82,7 +73,7 @@ public class ClaimRepositoryImplIT extends IntegrationTest {
     @Test
     void givenValidClaim_whenCalling_update_shouldUpdate() {
         var expectedStatus = StatusClaim.CANCELLED;
-        Claim c = claim;
+        Claim c = getClaim(claimerParticipant, claimerParticipant, TypeClaim.PORTABILITY);
         repository.save(c);
         Claim found = repository.findById(c.getId()).get();
         found.updateStatus(expectedStatus);
@@ -91,8 +82,8 @@ public class ClaimRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenNoExistentValues_whenCalling_findClaims_shouldReturnEmpty(){
-        repository.save(claim);
+    void givenNoExistentValues_whenCalling_findClaims_shouldReturnEmpty() {
+        repository.save(getClaim(claimerParticipant, claimerParticipant, TypeClaim.PORTABILITY));
         var expectedParticipant = "ANY-PARTICIPANT";
         var expectedStatusClaim = StatusClaim.OPEN;
         var expectedType = TypeClaim.PORTABILITY;
@@ -103,7 +94,8 @@ public class ClaimRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenExistentValues_whenCalling_findClaims_shouldReturnAsClaimer(){
+    void givenExistentValues_whenCalling_findClaims_shouldReturnAsClaimer() {
+        var claim = getClaim(claimerParticipant, claimerParticipant, TypeClaim.PORTABILITY);
         repository.save(claim);
         var expectedParticipant = claim.getClaimerParticipant();
         var expectedStatusClaim = claim.getStatus();
@@ -116,7 +108,8 @@ public class ClaimRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenExistentValues_whenCalling_findClaims_shouldReturnListAsDonor(){
+    void givenExistentValues_whenCalling_findClaims_shouldReturnListAsDonor() {
+        var claimDonorSituation = getClaim(claimerParticipant, donorParticipant, TypeClaim.PORTABILITY);
         repository.save(claimDonorSituation);
         var expectedParticipant = donorParticipant;
         var expectedStatusClaim = claimDonorSituation.getStatus();
@@ -129,7 +122,18 @@ public class ClaimRepositoryImplIT extends IntegrationTest {
     }
 
     @Test
-    void givenNullValuesWithJustParticipant_whenCalling_findClaims_shouldReturnListClaims(){
+    void givenParticipantAsDonorAndClaimer_whenCalling_findClaims_shouldReturnTwoClaims() {
+        var donor = getClaim(claimerParticipant, donorParticipant, TypeClaim.PORTABILITY);
+        var claimer = getClaim(donorParticipant, claimerParticipant, TypeClaim.PORTABILITY);
+        repository.save(donor);
+        repository.save(claimer);
+        var results = repository.findClaims(claimerParticipant, true, true, null, null, null, null, 10);
+        Assertions.assertEquals(2, results.size());
+    }
+
+    @Test
+    void givenNullValuesWithJustParticipant_whenCalling_findClaims_shouldReturnListClaims() {
+        var claim = getClaim(claimerParticipant, claimerParticipant, TypeClaim.PORTABILITY);
         repository.save(claim);
         var expectedParticipant = claim.getClaimerParticipant();
         var results = repository.findClaims(expectedParticipant, false, false, null, null, null, null, 20);

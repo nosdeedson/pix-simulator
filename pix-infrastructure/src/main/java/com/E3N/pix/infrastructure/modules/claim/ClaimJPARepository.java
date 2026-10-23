@@ -1,6 +1,5 @@
 package com.E3N.pix.infrastructure.modules.claim;
 
-import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.StatusClaim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
 import org.springframework.data.domain.Pageable;
@@ -14,14 +13,15 @@ import java.util.List;
 public interface ClaimJPARepository extends JpaRepository<ClaimJPAEntity, String> {
 
     // List<Payment> payments = repository.findByStatus("PENDING", PageRequest.of(0, limit)); how to call
-
-    @Query("SELECT c FROM Claim c " +
-            " WHERE ( c.claimerParticipant = ( CASE WHEN :isClaimer = false THEN c.claimerParticipant ELSE :participant END )" +
-            " OR c.donorParticipant = (CASE WHEN :isDonor = false THEN c.donorParticipant ELSE :participant END) )" +
-            " AND c.status = (CASE WHEN :statusClaim IS NULL THEN c.status ELSE :statusClaim END )  " +
-            " AND c.type = (CASE WHEN :typeClaim IS NULL THEN c.type ELSE :typeClaim END ) "
-//            " AND c.updatedAt <= (CASE WHEN :modifiedAfter IS NULL THEN c.updatedAt ELSE :modifiedAfter END )" +
-//            " AND c.updatedAt >= (CASE WHEN :modifiedBefore IS NULL THEN c.updatedAt ELSE :modifiedBefore END )"
+    @Query("SELECT c FROM Claim c WHERE " +
+            "(:isClaimer = true AND :isDonor = false AND c.claimerParticipant = :participant) OR " +
+            "(:isClaimer = true AND :isDonor = true AND (c.claimerParticipant = :participant OR c.donorParticipant = :participant)) OR " +
+            "(:isClaimer = false AND :isDonor = true AND c.donorParticipant = :participant) OR " +
+            "(:isClaimer = false AND :isDonor = false AND c.claimerParticipant = :participant) " +
+            " AND (:statusClaim IS NULL OR c.status = :statusClaim) " +
+            " AND (:typeClaim IS NULL OR c.type = :typeClaim) " +
+            " AND (:modifiedAfter IS NULL OR c.updatedAt <= :modifiedAfter) " +
+            " AND (:modifiedBefore IS NULL OR c.updatedAt >= :modifiedAfter) "
     )
     List<ClaimJPAEntity> findClaims(
             @Param("participant") String participant,

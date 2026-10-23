@@ -22,21 +22,42 @@ public class ListClaimUseCase {
     }
 
     public Either<Notification, List<ClaimOutputDto>> execute(final ListClaimDto dto) {
-        List<Claim> claims = new ArrayList<>();
-        if (dto.isClaimer()){
-            claims = claimRepository.findClaimsAsClaimer(dto.participant(), dto.statusClaim(), dto.typeClaim(), dto.modifiedAfter(), dto.modifiedBefore(), dto.limit());
-        } else if (dto.isDonor()){
-            claims = claimRepository.findClaimsAsClaimer(dto.participant(), dto.statusClaim(), dto.typeClaim(), dto.modifiedAfter(), dto.modifiedBefore(), dto.limit());
-        } else {
-            claims = claimRepository.findClaimsAsClaimer(dto.participant(), null, null, null, null, 20);
-        }
-        if (claims.isEmpty()){
-            return Either.left(Notification.create("Not found", 404, "There is no claims"));
-        }
-        List<ClaimOutputDto> outputDtos = new ArrayList<>(claims.size());
-        for (Claim c : claims){
+        List<Claim> claims = claimRepository.findClaims(
+                dto.participant(),
+                dto.isDonor(),
+                dto.isClaimer(),
+                dto.statusClaim(),
+                dto.typeClaim(),
+                dto.modifiedAfter(),
+                dto.modifiedAfter(),
+                dto.limit()
+        );
+        if (claims.isEmpty())
+            return Either.left(Notification.create("Not found", 404, "There is no claims."));
 
+        List<ClaimOutputDto> outputDTOs = new ArrayList<>(claims.size());
+        for (Claim c : claims) {
+            var optionalAccount = ownerRepository
+                    .findAccount(c.getClaimerAccountId(), c.getTaxIdNumberClaimer().getTaxIdNumber());
+            if (optionalAccount.isEmpty())
+                return Either.left(Notification.create("Not found.", 404, "Claimer not found."));
+            var account = optionalAccount.get();
+
+            var optionalEntryKey = ownerRepository
+                    .findEntryKey(c.getKeyClaimed(), account.getNumber().getNumber(), c.getTaxIdNumberClaimer().getTaxIdNumber());
+            if (optionalEntryKey.isEmpty())
+                return Either.left(Notification.create("Not found.", 404, "Claimer not found."));
+            var key = optionalEntryKey.get();
+
+            var optionalOwner = ownerRepository
+                    .findByTaxIdNumber(c.getTaxIdNumberClaimer().getTaxIdNumber());
+            if (optionalOwner.isEmpty())
+                return Either.left(Notification.create("Not found.", 404, "Claimer not found."));
+            var owner = optionalOwner.get();
+
+            var output = ClaimOutputDto.from(account, key, c, owner);
+            outputDTOs.add(output);
         }
-        return null;
+        return Either.right(outputDTOs);
     }
 }

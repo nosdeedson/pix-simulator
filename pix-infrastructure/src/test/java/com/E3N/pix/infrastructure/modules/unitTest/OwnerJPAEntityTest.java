@@ -1,12 +1,12 @@
-package com.E3N.pix.infrastructure.modules.ownership.unitTest;
+package com.E3N.pix.infrastructure.modules.unitTest;
 
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
-import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.shared.TypeKey;
+import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.infrastructure.UnitTest;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerJPAEntity;
 import com.E3N.test.Owner.*;
