@@ -27,9 +27,10 @@ public record ClaimOutputDto(
         Instant lastModified
 ) {
 
-    public static ClaimOutputDto from(
-            Account account, EntryKey key, Claim claim, Owner claimer
-    ) {
+    public static ClaimOutputDto from(Claim claim, Owner claimer) {
+        // TODO ADD HAS MORE CLAIMS FOR THE PARTICIPANT
+        var account = claimer.getAccounts().getFirst();
+        var key = account.getEntryKeys().getFirst();
         var acc = new ClaimerAccountDto(account.getParticipant().getParticipant(), account.getBranch().getBranch(), account.getNumber().getNumber(), account.getType(), account.getOpeningDate().toString());
         var tradeName = claimer.getTradeName() == null ? null : claimer.getTradeName().getName();
         var claimerResponse = new ClaimerDto(claimer.getType(), claimer.getTaxIdNumber().getTaxIdNumber(), claimer.getName().getName(), tradeName);

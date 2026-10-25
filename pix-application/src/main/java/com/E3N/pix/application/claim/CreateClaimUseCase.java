@@ -65,7 +65,7 @@ public class CreateClaimUseCase {
                 return Either.left(claim.getNotification());
             }
             claim = this.claimRepository.save(claim);
-            var out = ClaimOutputDto.from(acc.get(), key.get(), claim, claimer.get());
+            var out = ClaimOutputDto.from( claim, claimer.get());
             return Either.right(out);
         }
         return Either.left(notAllowed);

@@ -10,13 +10,14 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="Participant" type="xs:string"/>
-                <xs:element name="IncludeIndirectParticipants" type="xs:boolean"/>
-                <xs:element name="IsDonor" type="xs:boolean"/>
-                <xs:element name="IsClaimer" type="tns:ClaimStatusType"/>
-                <xs:element name="Type" type="tns:TypeClaims"/>
-                <xs:element name="ModifiedAfter" type="xs:dateTime"/>
-                <xs:element name="ModifiedBefore" type="xs:dateTime"/>
-                <xs:element name="Limit" type="xs:int"/>
+                <xs:element name="IncludeIndirectParticipants" type="xs:boolean" minOccurs="0"/>
+                <xs:element name="IsDonor" type="xs:boolean" minOccurs="0"/>
+                <xs:element name="IsClaimer" type="xs:boolean" minOccurs="0"/>
+                <xs:element name="Status" type="tns:ClaimStatusType" minOccurs="0"/>
+                <xs:element name="Type" type="tns:TypeClaims" minOccurs="0"/>
+                <xs:element name="ModifiedAfter" type="xs:dateTime" minOccurs="0"/>
+                <xs:element name="ModifiedBefore" type="xs:dateTime" minOccurs="0"/>
+                <xs:element name="Limit" type="xs:int" minOccurs="0" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -25,7 +26,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:group ref="tns:ResponseCommon"/>
-                <xs:element name="HasMoreElements" type="xs:string"/>
+                <xs:element name="HasMoreElements" type="xs:boolean"/>
                 <xs:element name="Claims" type="tns:ClaimsType"/>
             </xs:sequence>
         </xs:complexType>

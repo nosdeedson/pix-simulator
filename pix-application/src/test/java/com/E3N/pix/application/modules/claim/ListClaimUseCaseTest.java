@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,16 +59,33 @@ public class ListClaimUseCaseTest extends UnitTest {
     }
 
     @Test
-    void givenValidDto_whenCallingExecute_shouldReturnClaimerNotFound() {
+    void givenValidDto_whenCallingExecute_shouldReturnEmptyList() {
         var dto = ListClaimDtoMock.getDto();
         when(claimRepository.findClaims(anyString(), eq(false), eq(false), any(), any(), any(), any(), eq(20)))
                 .thenReturn(List.of());
         var result = useCase.execute(dto);
         result.fold(
                 (notification -> {
-                    Assertions.assertInstanceOf(Notification.class, notification);
-                    Assertions.assertEquals("There is no claims.", notification.getDetail());
-                    return notification;
+                    Assertions.assertNull( notification);
+                    return null;
+                }),
+                claimOutputDTOs -> {
+                    Assertions.assertTrue(claimOutputDTOs.isEmpty());
+                    return null;
+                }
+        );
+    }
+
+    @Test
+    void givenValidDtoWithJustParticipant_whenCallingExecute_shouldReturnEmptyList() {
+        var dto = ListClaimDtoMock.getDto();
+        when(claimRepository.findClaims(anyString(), anyBoolean(), anyBoolean(), any(), any(), any(), any(), eq(20)))
+                .thenReturn(List.of());
+        var result = useCase.execute(dto);
+        result.fold(
+                (notification -> {
+                    Assertions.assertNull( notification);
+                    return null;
                 }),
                 claimOutputDTOs -> {
                     Assertions.assertTrue(claimOutputDTOs.isEmpty());
@@ -81,18 +99,12 @@ public class ListClaimUseCaseTest extends UnitTest {
         var claimer = OwnerMock.getOwner(TypePerson.NATURAL_PERSON);
         var donor = OwnerMock.getOwner(TypePerson.LEGAL_PERSON);
         var claim = ClaimMock.mockClaim(claimer, donor, TypeClaim.PORTABILITY);
-        var account = claimer.getAccounts().getFirst();
-        var key = account.getEntryKeys().getFirst();
-        var listCLaims = ListClaimDtoMock.getDto();
+        var listCLaim = ListClaimDtoMock.getDto();
         when(claimRepository.findClaims(anyString(), eq(false), eq(false), any(), any(), any(), any(), eq(20)))
                 .thenReturn(List.of(claim));
-        when(ownerRepository.findAccount(anyString(), anyString()))
-                .thenReturn(Optional.of(account));
-        when(ownerRepository.findEntryKey(anyString(), anyString(), anyString()))
-                .thenReturn(Optional.of(key));
-        when(ownerRepository.findByTaxIdNumber(anyString()))
+        when(ownerRepository.findByAccountAndKey(anyString(), anyString()))
                 .thenReturn(Optional.of(claimer));
-        var result = useCase.execute(listCLaims);
+        var result = useCase.execute(listCLaim);
         Notification notification = null;
         List<ClaimOutputDto> list = new ArrayList<>();
         if (result instanceof Either.Left<Notification, List<ClaimOutputDto>>(Notification value)) {

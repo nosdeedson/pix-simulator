@@ -14,9 +14,12 @@ import java.util.Optional;
 @Repository
 public interface OwnerJPARepository extends JpaRepository<OwnerJPAEntity, String> {
 
-    @Query("SELECT a FROM Owner o JOIN o.accounts a JOIN FETCH a.keyJPAs ek " +
-            " WHERE ek.key = :key AND a.id = :accountId")
-    Optional<AccountJPAEntity> findAccount(@Param("accountId") String accountId, @Param("key") String key);
+    @Query("SELECT ek FROM entry_key ek " +
+            "JOIN FETCH ek.account a " +
+            "JOIN FETCH a.owner o " +
+            "WHERE ek.key = :key AND a.id = :accountId")
+    Optional<EntryKeyJPAEntity> findByAccountAndKey(@Param("accountId") String accountId,
+                                               @Param("key") String key);
 
     @Query("SELECT o FROM Owner o " +
             "JOIN FETCH o.accounts " +

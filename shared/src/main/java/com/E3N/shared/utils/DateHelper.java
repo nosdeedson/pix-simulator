@@ -31,10 +31,16 @@ public final class DateHelper {
     }
 
     public static String fromGregorianCalendar(final XMLGregorianCalendar day) {
+        if (day == null) return null;
         Instant instant = day.toGregorianCalendar().toZonedDateTime().toInstant();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneId.systemDefault());
         return formatter.format(instant);
+    }
+
+    public static Instant from(final XMLGregorianCalendar day) {
+        if (day == null) return null;
+        return day.toGregorianCalendar().toZonedDateTime().toInstant();
     }
 
     public static XMLGregorianCalendar fromString(final String isoString) {

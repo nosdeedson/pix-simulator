@@ -314,8 +314,8 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
         repository.save(owner);
         var expectedAccount = owner.getAccounts().getFirst().getId().toString();
         var expectedKey = owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
-        var account = repository.findAccount(expectedAccount, expectedKey);
-        Assertions.assertTrue(account.isPresent());
+        var owner1 = repository.findByAccountAndKey(expectedAccount, expectedKey);
+        Assertions.assertTrue(owner1.isPresent());
     }
 
 }

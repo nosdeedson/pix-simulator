@@ -5,6 +5,7 @@ import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.infrastructure.GenericEntity;
 import com.E3N.pix.infrastructure.modules.ownership.account.AccountJPAEntity;
+import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerJPAEntity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -115,6 +116,15 @@ public class EntryKeyJPAEntity extends GenericEntity {
         List<EntryKey> entryKeys = new ArrayList<>(entities.size());
         entities.forEach(entryKey -> entryKeys.add(EntryKeyJPAEntity.from(entryKey)));
         return entryKeys;
+    }
+
+    public static OwnerJPAEntity toOwner(EntryKeyJPAEntity entity){
+        var account = entity.account;
+        var owner = account.getOwner();
+        entity.setAccount(null);
+        account.setKeyJPAs(List.of(entity));
+        owner.setAccounts(List.of(account));
+        return owner;
     }
 
     public String getKey() {

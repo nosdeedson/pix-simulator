@@ -8,8 +8,8 @@ import java.util.List;
 public interface ClaimRepositoryInterface extends CRUDRepositoryInterface<Claim> {
     List<Claim> findClaims(
             final String participant,
-            boolean isDonor,
-            boolean isClaimer,
+            Boolean isDonor,
+            Boolean isClaimer,
             StatusClaim statusClaim,
             TypeClaim typeClaim,
             Instant modifiedAfter,

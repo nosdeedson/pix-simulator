@@ -24,5 +24,5 @@ public interface OwnerRepositoryInterface extends CRUDRepositoryInterface<Owner>
 
     List<String> findByKeys(List<String> keys);
 
-    Optional<Account> findAccount(final String accountId, final String key);
+    Optional<Owner> findByAccountAndKey(final String accountId, final String key);
 }

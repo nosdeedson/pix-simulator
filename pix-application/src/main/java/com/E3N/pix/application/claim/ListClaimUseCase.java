@@ -28,34 +28,21 @@ public class ListClaimUseCase {
                 dto.isClaimer(),
                 dto.statusClaim(),
                 dto.typeClaim(),
-                dto.modifiedAfter(),
+                dto.modifiedBefore(),
                 dto.modifiedAfter(),
                 dto.limit()
         );
-        if (claims.isEmpty())
-            return Either.left(Notification.create("Not found", 404, "There is no claims."));
-
         List<ClaimOutputDto> outputDTOs = new ArrayList<>(claims.size());
+        if (claims.isEmpty())
+            return Either.right(outputDTOs);
+
         for (Claim c : claims) {
-            var optionalAccount = ownerRepository
-                    .findAccount(c.getClaimerAccountId(), c.getTaxIdNumberClaimer().getTaxIdNumber());
-            if (optionalAccount.isEmpty())
-                return Either.left(Notification.create("Not found.", 404, "Claimer not found."));
-            var account = optionalAccount.get();
-
-            var optionalEntryKey = ownerRepository
-                    .findEntryKey(c.getKeyClaimed(), account.getNumber().getNumber(), c.getTaxIdNumberClaimer().getTaxIdNumber());
-            if (optionalEntryKey.isEmpty())
-                return Either.left(Notification.create("Not found.", 404, "Claimer not found."));
-            var key = optionalEntryKey.get();
-
             var optionalOwner = ownerRepository
-                    .findByTaxIdNumber(c.getTaxIdNumberClaimer().getTaxIdNumber());
+                    .findByAccountAndKey(c.getClaimerAccountId(), c.getTaxIdNumberClaimer().getTaxIdNumber());
             if (optionalOwner.isEmpty())
                 return Either.left(Notification.create("Not found.", 404, "Claimer not found."));
             var owner = optionalOwner.get();
-
-            var output = ClaimOutputDto.from(account, key, c, owner);
+            var output = ClaimOutputDto.from(c, owner);
             outputDTOs.add(output);
         }
         return Either.right(outputDTOs);

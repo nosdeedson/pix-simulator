@@ -63,13 +63,15 @@ public class OwnerRepositoryImpl implements OwnerRepositoryInterface {
     }
 
     @Override
-    public Optional<Account> findAccount(String accountId, String key) {
-        var acc = ownerRepository.findAccount(accountId, key);
-        if (acc.isEmpty()) {
+    public Optional<Owner> findByAccountAndKey(String accountId, String key) {
+        var entryKeyJPAEntity = ownerRepository.findByAccountAndKey(accountId, key);
+        if (entryKeyJPAEntity.isEmpty()) {
             return Optional.empty();
         }
-        var jpa = acc.get();
-        return Optional.of(AccountJPAEntity.from(jpa));
+        var jpa = entryKeyJPAEntity.get();
+        var ownerJPA = EntryKeyJPAEntity.toOwner(entryKeyJPAEntity.get());
+        var owner = OwnerJPAEntity.from(ownerJPA);
+        return Optional.of(owner);
     }
 
     @Override
