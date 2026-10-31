@@ -3,7 +3,6 @@ package com.E3N.pix.soap.mapper.claim;
 import com.E3N.pix.application.claim.dto.ListClaim.ListClaimDto;
 import com.E3N.pix.domain.modules.claim.StatusClaim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
-import com.E3N.pix.soap.contract.ClaimStatusType;
 import com.E3N.pix.soap.contract.ListClaimsRequest;
 import com.E3N.shared.utils.DateHelper;
 
@@ -31,4 +30,5 @@ public final class ListClaimRequestToDtoMapper {
                 limit
         );
     }
+
 }

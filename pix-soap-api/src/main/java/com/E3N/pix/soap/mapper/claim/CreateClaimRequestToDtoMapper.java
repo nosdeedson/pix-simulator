@@ -13,7 +13,7 @@ import com.E3N.shared.utils.DateHelper;
 
 public abstract class CreateClaimRequestToDtoMapper {
 
-    private static ClaimerAccountDto toClaimerAccount(AccountType acc){
+    private static ClaimerAccountDto toClaimerAccount(AccountType acc) {
         return new ClaimerAccountDto(
                 acc.getParticipant(),
                 acc.getBranch(),
@@ -23,7 +23,7 @@ public abstract class CreateClaimRequestToDtoMapper {
         );
     }
 
-    private static ClaimerDto toClaimerDto(OwnerType ownerType){
+    private static ClaimerDto toClaimerDto(OwnerType ownerType) {
         return new ClaimerDto(
                 TypePerson.valueOf(ownerType.getType().name()),
                 ownerType.getTaxIdNumber(),

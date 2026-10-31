@@ -117,7 +117,7 @@ public class CreateClaimTest extends UnitTest {
         var result = claim.createClaim(request);
         Assertions.assertInstanceOf(CreateClaimResponse.class, result);
         Assertions.assertEquals(owner.getTaxIdNumber().getTaxIdNumber(), result.getClaim().getClaimer().getTaxIdNumber());
-        Assertions.assertEquals(donor.getAccounts().getFirst().getParticipant().getParticipant(), result.getDonorParticipant());
+        Assertions.assertEquals(donor.getAccounts().getFirst().getParticipant().getParticipant(), result.getClaim().getDonorParticipant());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class CreateClaimTest extends UnitTest {
         var result = claim.createClaim(request);
         Assertions.assertInstanceOf(CreateClaimResponse.class, result);
         Assertions.assertEquals(owner.getTaxIdNumber().getTaxIdNumber(), result.getClaim().getClaimer().getTaxIdNumber());
-        Assertions.assertEquals(donor.getAccounts().getFirst().getParticipant().getParticipant(), result.getDonorParticipant());
+        Assertions.assertEquals(donor.getAccounts().getFirst().getParticipant().getParticipant(), result.getClaim().getDonorParticipant());
     }
 
 }

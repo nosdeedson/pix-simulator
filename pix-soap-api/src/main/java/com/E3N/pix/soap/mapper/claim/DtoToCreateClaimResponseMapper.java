@@ -1,5 +1,6 @@
 package com.E3N.pix.soap.mapper.claim;
 
+
 import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
 import com.E3N.pix.application.claim.dto.createClaim.ClaimerAccountDto;
 import com.E3N.pix.application.claim.dto.createClaim.ClaimerDto;
@@ -8,7 +9,7 @@ import com.E3N.shared.utils.DateHelper;
 
 import java.util.UUID;
 
-public final class DtoToClaimResponseMapper {
+public final class DtoToCreateClaimResponseMapper {
 
     private static OwnerType toOwnerType(ClaimerDto dto) {
         var owner = new OwnerType();
@@ -32,6 +33,12 @@ public final class DtoToClaimResponseMapper {
     private static ClaimType toClaimResponse(ClaimOutputDto dto) {
         var claim = new ClaimType();
         claim.setClaimer(toOwnerType(dto.claimerDto()));
+        claim.setCompletionPeriodEnd(DateHelper.fromInstant(dto.completionPeriodEnd()));
+        claim.setDonorParticipant(dto.donorParticipant());
+        claim.setId(dto.id());
+        claim.setLastModified(DateHelper.fromInstant(dto.lastModified()));
+        claim.setResolutionPeriodEnd(DateHelper.fromInstant(dto.resolutionPeriodEnd()));
+        claim.setStatus(ClaimStatusType.valueOf(dto.statusClaim().name()));
         claim.setClaimerAccount(toAccountType(dto.claimerAccountDto()));
         claim.setKey(dto.key());
         claim.setKeyType(KeyType.valueOf(dto.typeKey().name()));
@@ -41,16 +48,10 @@ public final class DtoToClaimResponseMapper {
 
     public static CreateClaimResponse toResponse(ClaimOutputDto dto) {
         var response = new CreateClaimResponse();
-        response.setCompletionPeriodEnd(DateHelper.fromInstant(dto.completionPeriodEnd()));
         response.setClaim(toClaimResponse(dto));
         response.setCorrelationId(UUID.randomUUID().toString());
-        response.setDonorParticipant(dto.donorParticipant());
-        response.setId(dto.id());
-        response.setLastModified(DateHelper.fromInstant(dto.lastModified()));
-        response.setResolutionPeriodEnd(DateHelper.fromInstant(dto.resolutionPeriodEnd()));
         response.setResponseTime(DateHelper.fromInstant(dto.responseTime()));
         response.setSignature(UUID.randomUUID().toString());
-        response.setStatus(ClaimStatusType.valueOf(dto.statusClaim().name()));
         return response;
     }
 }

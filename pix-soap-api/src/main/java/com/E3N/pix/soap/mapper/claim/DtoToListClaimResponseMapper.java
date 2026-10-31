@@ -38,6 +38,13 @@ public final class DtoToListClaimResponseMapper {
         ct.setKey(dto.key());
         ct.setClaimer(getClaimer(dto.claimerDto()));
         ct.setClaimerAccount(getClaimerAccount(dto.claimerAccountDto()));
+        ct.setId(dto.id());
+        ct.setStatus(ClaimStatusType.valueOf(dto.statusClaim().name()));
+        ct.setResolutionPeriodEnd(DateHelper.fromInstant(dto.resolutionPeriodEnd()));
+        ct.setLastModified(DateHelper.fromInstant(dto.lastModified()));
+        ct.setCompletionPeriodEnd(DateHelper.fromInstant(dto.resolutionPeriodEnd()));
+        ct.setDonorParticipant(dto.donorParticipant());
+        ct.setType(TypeClaims.valueOf(dto.typeClaim().name()));
         return ct;
     }
 
@@ -59,6 +66,15 @@ public final class DtoToListClaimResponseMapper {
                 response.getClaims().getClaim().add(ct);
             }
         }
+        return response;
+    }
+
+    public static GetClaimResponse getClaimResponse(ClaimOutputDto dto){
+        var response = new GetClaimResponse();
+        response.setCorrelationId(UUID.randomUUID().toString().replace("-", ""));
+        response.setResponseTime(DateHelper.fromInstant(Instant.now()));
+        response.setSignature(UUID.randomUUID().toString());
+        response.setClaim(getClaimType(dto));
         return response;
     }
 

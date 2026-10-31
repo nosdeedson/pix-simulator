@@ -8,6 +8,7 @@ import com.E3N.pix.domain.modules.claim.TypeClaim;
 import com.E3N.pix.domain.modules.ownership.account.AccountType;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
+import com.E3N.pix.soap.contract.GetClaimResponse;
 import com.E3N.pix.soap.contract.ListClaimsResponse;
 import com.E3N.pix.soap.mapper.claim.DtoToListClaimResponseMapper;
 import com.E3N.soap.UnitTest;
@@ -101,5 +102,14 @@ public class DtoToListClaimResponseMapperTest extends UnitTest {
         Assertions.assertInstanceOf(ListClaimsResponse.class, result);
         Assertions.assertFalse(result.getClaims().getClaim().isEmpty());
         Assertions.assertEquals(3, result.getClaims().getClaim().size());
-    }
+   }
+
+   @Test
+   void givenValidDto_whenCalling_mapper_shouldReturnGetClaimResponse(){
+        var dto = list.getFirst();
+        var result = DtoToListClaimResponseMapper.getClaimResponse(dto);
+        Assertions.assertInstanceOf(GetClaimResponse.class, result);
+        Assertions.assertEquals(dto.claimerDto().taxIdNumber(), result.getClaim().getClaimer().getTaxIdNumber());
+   }
+
 }

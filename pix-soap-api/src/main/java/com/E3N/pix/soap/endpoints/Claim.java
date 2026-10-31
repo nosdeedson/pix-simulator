@@ -1,20 +1,18 @@
 package com.E3N.pix.soap.endpoints;
 
 import com.E3N.pix.application.claim.CreateClaimUseCase;
+import com.E3N.pix.application.claim.GetClaimUseCase;
 import com.E3N.pix.application.claim.ListClaimUseCase;
 import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.infrastructure.modules.claim.ClaimRepositoryImpl;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.pix.service.Either;
-import com.E3N.pix.soap.contract.CreateClaimRequest;
-import com.E3N.pix.soap.contract.CreateClaimResponse;
-import com.E3N.pix.soap.contract.ListClaimsRequest;
-import com.E3N.pix.soap.contract.ListClaimsResponse;
+import com.E3N.pix.soap.contract.*;
 import com.E3N.pix.soap.excptionHandler.HandleError;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
 import com.E3N.pix.soap.mapper.claim.CreateClaimRequestToDtoMapper;
-import com.E3N.pix.soap.mapper.claim.DtoToClaimResponseMapper;
+import com.E3N.pix.soap.mapper.claim.DtoToCreateClaimResponseMapper;
 import com.E3N.pix.soap.mapper.claim.DtoToListClaimResponseMapper;
 import com.E3N.pix.soap.mapper.claim.ListClaimRequestToDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +48,7 @@ public class Claim {
                     notification -> {
                         throw new SoapFaultException("Invalid request", notification);
                     },
-                    DtoToClaimResponseMapper::toResponse
+                    DtoToCreateClaimResponseMapper::toResponse
             );
         } catch (Exception e) {
             throw HandleError.handleError(e);
@@ -68,6 +66,22 @@ public class Claim {
             return  result.fold(
                     notification -> {throw new SoapFaultException("Invalid request", notification);},
                     DtoToListClaimResponseMapper::getResponse
+            );
+        } catch (Exception e) {
+            throw HandleError.handleError(e);
+        }
+    }
+
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "GetClaimRequest")
+    @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "GetClaimRequest")
+    public GetClaimResponse getClaim(@RequestPayload GetClaimRequest request){
+        try {
+            GetClaimUseCase getClaimUseCase = new GetClaimUseCase(claimRepository, ownerRepository);
+            var result = getClaimUseCase.execute(request.getClaimId());
+            return  result.fold(
+                    notification -> {throw new SoapFaultException("Invalid request", notification);},
+                    DtoToListClaimResponseMapper::getClaimResponse
             );
         } catch (Exception e) {
             throw HandleError.handleError(e);

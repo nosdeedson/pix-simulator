@@ -20,7 +20,6 @@
             <xs:sequence>
                 <xs:group ref="tns:ResponseCommon"/>
                 <xs:element name="Claim" type="tns:ClaimType"/>
-                <xs:group ref="tns:ClaimDataType"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -32,6 +31,7 @@
             <xs:element name="KeyType" type="tns:KeyType"/>
             <xs:element name="ClaimerAccount" type="tns:AccountType"/>
             <xs:element name="Claimer" type="tns:OwnerType"/>
+            <xs:group ref="tns:ClaimDataType"/>
         </xs:sequence>
     </xs:complexType>
 
