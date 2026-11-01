@@ -158,6 +158,22 @@ public class Owner extends Entity {
         }
     }
 
+    public EntryKey removingKey(final String keyDonating){
+        EntryKey removedKey = null;
+        for (Account acc : this.getAccounts()){
+            if (acc.getEntryKeys().size() == 1 && acc.getEntryKeys().getFirst().getKey().getKey().equals(keyDonating)){
+                removedKey = acc.getEntryKeys().getFirst();
+                this.getAccounts().remove(acc);
+                break;
+            }
+            for (EntryKey k : acc.getEntryKeys()){
+                removedKey = k;
+            }
+            acc.getEntryKeys().remove(removedKey);
+        }
+        return removedKey;
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();

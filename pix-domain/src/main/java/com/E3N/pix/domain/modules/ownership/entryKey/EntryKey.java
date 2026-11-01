@@ -7,6 +7,7 @@ import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.shared.utils.ValidateUUID;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class EntryKey extends Entity {

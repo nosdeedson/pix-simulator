@@ -6,6 +6,7 @@ import com.E3N.pix.domain.mocks.ownership.EntryKeyMock;
 import com.E3N.pix.domain.mocks.ownership.OwnerMock;
 import com.E3N.pix.domain.mocks.ownership.UpdateEntryKeyDtoMock;
 import com.E3N.pix.domain.modules.ownership.account.Account;
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypePerson;
@@ -409,5 +410,60 @@ public class OwnerTest extends UnitTest {
                 Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "PARTICIPANT_EXCLUSION"),
                 Arguments.of(OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ(), TypeKey.EVP), "USER_REQUESTED")
         );
+    }
+
+    @Test
+    void givenValidKeyToDonate_whenCalling_removingKey_shouldRemoveKey(){
+        var owner = OwnerMock.getOwnerWithMaxKeys(TypePerson.LEGAL_PERSON, 5);
+        int expectedQTDKeys = 0;
+        for (Account acc : owner.getAccounts()){
+            for (EntryKey key : acc.getEntryKeys()){
+                expectedQTDKeys++;
+            }
+        }
+        Assertions.assertEquals(6, expectedQTDKeys);
+        Assertions.assertEquals(6, owner.getAccounts().size());
+        var expectedKeyToRemove = owner.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
+
+        owner.removingKey(expectedKeyToRemove);
+        expectedQTDKeys = 0;
+        for (Account acc : owner.getAccounts()){
+            for (EntryKey key : acc.getEntryKeys()){
+                expectedQTDKeys++;
+            }
+        }
+        boolean hasKey = owner.getAccounts()
+                .stream().map(it -> it.getEntryKeys().stream().anyMatch(k -> k.isEqual(expectedKeyToRemove))).isParallel();
+        Assertions.assertFalse(hasKey);
+        Assertions.assertEquals(5, expectedQTDKeys);
+    }
+
+    @Test
+    void givenValidKeyToDonateWithVariousKey_whenCalling_removingKey_shouldRemoveKey(){
+        var owner = OwnerMock.getOwner(TypePerson.LEGAL_PERSON, RandomCNPJMock.getRandomCNPJ());
+        var account = AccountMock.getRandomAccountWithSpecificEntryKey(EntryKeyMock.getEntryKeyCnpj());
+        account.addKey(EntryKeyMock.getEntryKeyEVP());
+        owner.addNewAccountOrNewKey(account);
+        int expectedQTDKeys = 0;
+        for (Account acc : owner.getAccounts()){
+            for (EntryKey key : acc.getEntryKeys()){
+                expectedQTDKeys++;
+            }
+        }
+        Assertions.assertEquals(3, expectedQTDKeys);
+        Assertions.assertEquals(2, owner.getAccounts().size());
+        var expectedKeyToRemove = account.getEntryKeys().getFirst().getKey().getKey();
+        owner.removingKey(expectedKeyToRemove);
+        expectedQTDKeys = 0;
+        for (Account acc : owner.getAccounts()){
+            for (EntryKey key : acc.getEntryKeys()){
+                expectedQTDKeys++;
+            }
+        }
+        boolean hasKey = owner.getAccounts()
+                .stream().map(it -> it.getEntryKeys().stream().anyMatch(k -> k.isEqual(expectedKeyToRemove))).isParallel();
+        Assertions.assertFalse(hasKey);
+        Assertions.assertEquals(2, owner.getAccounts().size());
+        Assertions.assertEquals(2, expectedQTDKeys);
     }
 }

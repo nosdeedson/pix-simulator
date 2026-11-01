@@ -1,13 +1,17 @@
 package com.E3N.pix.service.claim;
 
 import com.E3N.pix.domain.modules.claim.Claim;
+import com.E3N.pix.domain.modules.claim.StatusClaim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
+import com.E3N.pix.service.Either;
+import com.E3N.pix.service.claim.enums.ClaimOperationReason;
 
+import java.time.Instant;
 import java.util.Optional;
 
 public class ClaimService {
@@ -61,5 +65,29 @@ public class ClaimService {
                 .getEntryKeys().stream()
                 .filter(it -> it.getKey().getKey().equals(entryKey))
                 .findFirst();
+    }
+
+    public void confirmClaim(Claim claim, Owner donor, final String participant,ClaimOperationReason reason){
+        if (this.resolutionPeriodEnded(reason, claim.getResolutionPeriodEnd(), claim.getDonorParticipant(), participant)
+                && claim.getType().equals(TypeClaim.OWNERSHIP)
+        ) {
+            claim.updateStatus(StatusClaim.CONFIRMED);
+            donor.removingKey(claim.getKeyClaimed());
+        }
+        if (TypeClaim.OWNERSHIP.equals(claim.getType())
+                && ClaimOperationReason.USER_REQUESTED.equals(reason)){
+
+        }
+    }
+
+
+
+    private boolean resolutionPeriodEnded(
+            ClaimOperationReason reason, Instant resolutionPeriodEnd,
+            final String donorClaim, final String participantRequesting
+    ){
+        return ClaimOperationReason.DEFAULT_OPERATION.equals(reason)
+                && resolutionPeriodEnd.isBefore(Instant.now())
+                && donorClaim.equals(participantRequesting);
     }
 }
