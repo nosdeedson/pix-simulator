@@ -31,10 +31,6 @@ import static org.mockito.Mockito.*;
 
 public class ListClaimUseCaseTest extends UnitTest {
 
-    Owner claimer = OwnerMock.getOwner(TypePerson.LEGAL_PERSON);
-    Owner donor = OwnerMock.getOwner(TypePerson.NATURAL_PERSON);
-    Claim claim = ClaimMock.mockClaim(claimer, donor, TypeClaim.PORTABILITY);
-
     @Mock
     private ClaimRepositoryInterface claimRepository;
 
@@ -47,8 +43,7 @@ public class ListClaimUseCaseTest extends UnitTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        Mockito.reset(claimRepository);
-        Mockito.reset(ownerRepository);
+        Mockito.reset(claimRepository, ownerRepository);
     }
 
     @Test
@@ -99,12 +94,12 @@ public class ListClaimUseCaseTest extends UnitTest {
         var claimer = OwnerMock.getOwner(TypePerson.NATURAL_PERSON);
         var donor = OwnerMock.getOwner(TypePerson.LEGAL_PERSON);
         var claim = ClaimMock.mockClaim(claimer, donor, TypeClaim.PORTABILITY);
-        var listCLaim = ListClaimDtoMock.getDto();
+        var listClaim = ListClaimDtoMock.getDto();
         when(claimRepository.findClaims(anyString(), eq(false), eq(false), any(), any(), any(), any(), eq(20)))
                 .thenReturn(List.of(claim));
         when(ownerRepository.findByAccountAndKey(anyString(), anyString()))
                 .thenReturn(Optional.of(claimer));
-        var result = useCase.execute(listCLaim);
+        var result = useCase.execute(listClaim);
         Notification notification = null;
         List<ClaimOutputDto> list = new ArrayList<>();
         if (result instanceof Either.Left<Notification, List<ClaimOutputDto>>(Notification value)) {

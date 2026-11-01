@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://pix.com/soap/contract"
+           targetNamespace="http://pix.com/soap/contract"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="create-claims.xsd"/>
+
+    <xs:element name="AcknowledgeClaimRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Signature" type="xs:string"/>
+                <xs:element name="ClaimId" type="xs:string"/>
+                <xs:element name="Participant" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="AcknowledgeClaimResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="tns:ResponseCommon"/>
+                <xs:element name="Claim" type="tns:ClaimType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+           
+           

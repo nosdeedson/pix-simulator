@@ -1,5 +1,6 @@
 package com.E3N.pix.soap.endpoints;
 
+import com.E3N.pix.application.claim.AcknowledgeClaimUseCase;
 import com.E3N.pix.application.claim.CreateClaimUseCase;
 import com.E3N.pix.application.claim.GetClaimUseCase;
 import com.E3N.pix.application.claim.ListClaimUseCase;
@@ -83,6 +84,21 @@ public class Claim {
                     notification -> {throw new SoapFaultException("Invalid request", notification);},
                     DtoToListClaimResponseMapper::getClaimResponse
             );
+        } catch (Exception e) {
+            throw HandleError.handleError(e);
+        }
+    }
+
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "AcknowledgeClaimRequest")
+    @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "AcknowledgeClaimRequest")
+    public AcknowledgeClaimResponse acknowledge(@RequestPayload AcknowledgeClaimRequest request){
+        try {
+            AcknowledgeClaimUseCase useCase = new AcknowledgeClaimUseCase(claimRepository, ownerRepository);
+            return useCase.execute(request.getClaimId(), request.getParticipant())
+                    .fold(notification -> {throw  new SoapFaultException("Invalid request", notification);},
+                            DtoToListClaimResponseMapper::getAcknowledge);
+
         } catch (Exception e) {
             throw HandleError.handleError(e);
         }

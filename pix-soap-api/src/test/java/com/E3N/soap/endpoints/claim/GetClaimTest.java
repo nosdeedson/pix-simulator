@@ -10,18 +10,17 @@ import com.E3N.pix.soap.endpoints.Claim;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
 import com.E3N.soap.mapper.mocks.claim.ClaimsEndpointMock;
 import com.E3N.soap.mapper.mocks.entryKey.OwnerMock;
-import com.E3N.test.Owner.RandomParticipant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.net.SocketException;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GetClaimTest {
@@ -35,7 +34,7 @@ public class GetClaimTest {
     private Claim claim;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         claim = new Claim(claimRepository, ownerRepository);
     }
 
@@ -47,7 +46,7 @@ public class GetClaimTest {
     }
 
     @Test
-    void givenNoneExistentId_whenCalling_execute_shouldReturnNotificationWithClaimNotFound(){
+    void givenNoneExistentId_whenCalling_getClaim_shouldReturnNotificationWithClaimNotFound() {
         var expectedId = UUID.randomUUID().toString();
         when(claimRepository.findById(any()))
                 .thenReturn(Optional.empty());
@@ -59,7 +58,7 @@ public class GetClaimTest {
     }
 
     @Test
-    void givenNoneExistentId_whenCalling_execute_shouldReturnNotificationWithOwnerNotFound(){
+    void givenNoneExistentId_whenCalling_getClaim_shouldReturnNotificationWithOwnerNotFound() {
         var expectedId = UUID.randomUUID().toString();
         var claimer = OwnerMock.createOwner(TypePerson.NATURAL_PERSON);
         var donor = OwnerMock.createOwner(TypePerson.LEGAL_PERSON);
@@ -76,7 +75,7 @@ public class GetClaimTest {
     }
 
     @Test
-    void givenAExistentId_whenCalling_execute_shouldReturnAClaim(){
+    void givenAExistentId_whenCalling_getClaim_shouldReturnAClaim() {
         var claimer = OwnerMock.createOwner(TypePerson.NATURAL_PERSON);
         var donor = OwnerMock.createOwner(TypePerson.LEGAL_PERSON);
         var claims = ClaimsEndpointMock.mockClaim(claimer, donor, TypeClaim.PORTABILITY);

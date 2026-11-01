@@ -7,5 +7,6 @@
     <xs:include schemaLocation="create-claims.xsd"/>
     <xs:include schemaLocation="list-claims.xsd"/>
     <xs:include schemaLocation="get-claim.xsd"/>
+    <xs:include schemaLocation="acknowledge-claim.xsd"/>
 
 </xs:schema>

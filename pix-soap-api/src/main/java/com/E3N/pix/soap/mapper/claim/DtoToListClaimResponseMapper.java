@@ -78,4 +78,13 @@ public final class DtoToListClaimResponseMapper {
         return response;
     }
 
+    public static AcknowledgeClaimResponse getAcknowledge(ClaimOutputDto dto){
+        var response = new AcknowledgeClaimResponse();
+        response.setCorrelationId(UUID.randomUUID().toString());
+        response.setResponseTime(DateHelper.fromInstant(Instant.now()));
+        response.setSignature(UUID.randomUUID().toString());
+        response.setClaim(getClaimType(dto));
+        return response;
+    }
+
 }
