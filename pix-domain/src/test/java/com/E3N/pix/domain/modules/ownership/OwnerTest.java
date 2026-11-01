@@ -452,17 +452,15 @@ public class OwnerTest extends UnitTest {
         }
         Assertions.assertEquals(3, expectedQTDKeys);
         Assertions.assertEquals(2, owner.getAccounts().size());
-        var expectedKeyToRemove = account.getEntryKeys().getFirst().getKey().getKey();
-        owner.removingKey(expectedKeyToRemove);
+        var expectedKeyToRemove = account.getEntryKeys().getFirst();
+        var removedKey = owner.removingKey(expectedKeyToRemove.getKey().getKey());
         expectedQTDKeys = 0;
         for (Account acc : owner.getAccounts()){
             for (EntryKey key : acc.getEntryKeys()){
                 expectedQTDKeys++;
             }
         }
-        boolean hasKey = owner.getAccounts()
-                .stream().map(it -> it.getEntryKeys().stream().anyMatch(k -> k.isEqual(expectedKeyToRemove))).isParallel();
-        Assertions.assertFalse(hasKey);
+        Assertions.assertEquals(expectedKeyToRemove.getKey().getKey(), removedKey.getKey().getKey());
         Assertions.assertEquals(2, owner.getAccounts().size());
         Assertions.assertEquals(2, expectedQTDKeys);
     }

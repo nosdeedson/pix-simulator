@@ -136,6 +136,10 @@ public class Claim extends Entity {
         this.status = status;
     }
 
+    public void updateCompletionPeriod(Instant completionPeriodEnd){
+        this.completionPeriodEnd = completionPeriodEnd;
+    }
+
     @Override
     protected void validate() {
         this.notification = Notification.create();

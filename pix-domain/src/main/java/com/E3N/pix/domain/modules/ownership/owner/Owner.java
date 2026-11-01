@@ -167,7 +167,8 @@ public class Owner extends Entity {
                 break;
             }
             for (EntryKey k : acc.getEntryKeys()){
-                removedKey = k;
+                if (k.getKey().getKey().equals(keyDonating))
+                    removedKey = k;
             }
             acc.getEntryKeys().remove(removedKey);
         }

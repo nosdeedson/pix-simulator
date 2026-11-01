@@ -34,13 +34,12 @@ public class ConfirmClaimUseCase {
             );
         }
         var claimService = new ClaimService();
-        var optionalDonor = ownerRepository.findByKey(claim.getKeyClaimed());
-        if (optionalDonor.isEmpty()) {
-            return Either.left(Notification.create("Not found", 404, "Donor not found."));
-        }
-        var donor = optionalDonor.get();
-        claimService.confirmClaim(claim, donor, participant, reason);
-        var claimer = ownerRepository.findByTaxIdNumber(claim.getTaxIdNumberClaimer().toString()).orElseThrow();
+        var donor = ownerRepository.findByKey(claim.getKeyClaimed()).orElseThrow();
+        var claimer = ownerRepository.findByTaxIdNumber(claim.getTaxIdNumberClaimer().getTaxIdNumber()).orElseThrow();
+        claimService.confirmClaim(claim, donor, claimer, participant, reason);
+        ownerRepository.update(donor);
+        ownerRepository.update(claimer);
+        claimRepository.update(claim);
         return Either.right(ClaimOutputDto.from(claim, claimer));
     }
 }
