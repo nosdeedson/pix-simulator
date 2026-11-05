@@ -16,7 +16,8 @@ public final class DateHelper {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
             LocalDate localDate = LocalDate.parse(dateString, formatter);
-            return localDate.atStartOfDay(ZoneOffset.UTC).toInstant();
+            var t = localDate.atStartOfDay(ZoneOffset.UTC).toInstant();
+            return t;
         } catch (DateTimeException | IllegalArgumentException e) {
             return null;
         }

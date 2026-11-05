@@ -9,11 +9,9 @@ import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
-import com.E3N.pix.service.Either;
 import com.E3N.pix.service.claim.enums.ClaimOperationReason;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 public class ClaimService {
@@ -69,24 +67,32 @@ public class ClaimService {
                 .findFirst();
     }
 
-    public void confirmClaim(Claim claim, Owner donor, Owner claimer, final String participant, ClaimOperationReason reason){
-        this.resolutionPeriodNotEnded(reason, claim.getResolutionPeriodEnd(), claim.getDonorParticipant(), participant);
-        var donatingKey = donor.removingKey(claim.getKeyClaimed());
+    public void confirmClaim(Claim claim, Owner donor, Owner claimer, final String participantRequesting, ClaimOperationReason reason) {
+        this.resolutionPeriodNotEnded(reason, claim.getResolutionPeriodEnd(), claim.getDonorParticipant(), participantRequesting, claim.getType());
         if (TypeClaim.OWNERSHIP.equals(claim.getType())
-                && ClaimOperationReason.USER_REQUESTED.equals(reason)){
+                && ClaimOperationReason.DEFAULT_OPERATION.equals(reason)
+                && claim.getResolutionPeriodEnd().isBefore(Instant.now())
+                && participantRequesting.equals(claim.getDonorParticipant())
+        ) {
+            donor.removingKey(claim.getKeyClaimed());
+        } else if (ClaimOperationReason.USER_REQUESTED.equals(reason)
+                && participantRequesting.equals(claim.getDonorParticipant())
+        ) {
             claim.updateCompletionPeriod(Instant.now());
-            transferKey(claimer.getAccounts(), claimer, donatingKey, claim);
-        } else if (TypeClaim.PORTABILITY.equals(claim.getType())
-                && (ClaimOperationReason.USER_REQUESTED.equals(reason) || ClaimOperationReason.ACCOUNT_CLOSURE.equals(reason))){
-            transferKey(claimer.getAccounts(), claimer, donatingKey, claim);
+            var donatingKey = donor.removingKey(claim.getKeyClaimed());
+            transferKey(claimer, donatingKey, claim);
         } else {
             throw new RuntimeException("The operation does not match any requirement.");
         }
     }
 
-    private void transferKey(List<Account> accounts, Owner claimer, EntryKey donatingKey, final Claim claim){
-        for (Account acc : claimer.getAccounts()){
-            if (acc.getId().toString().equals(claim.getClaimerAccountId())){
+    private boolean isDonor(final String participantRequesting, final String donorParticipant) {
+        return participantRequesting.equals(donorParticipant);
+    }
+
+    private void transferKey(Owner claimer, EntryKey donatingKey, final Claim claim) {
+        for (Account acc : claimer.getAccounts()) {
+            if (acc.getId().toString().equals(claim.getClaimerAccountId())) {
                 acc.addKey(donatingKey);
             }
         }
@@ -95,11 +101,13 @@ public class ClaimService {
 
     private void resolutionPeriodNotEnded(
             ClaimOperationReason reason, Instant resolutionPeriodEnd,
-            final String donorClaim, final String participantRequesting
-    ){
+            final String donorClaim, final String participantRequesting, TypeClaim typeClaim
+    ) {
         if (ClaimOperationReason.DEFAULT_OPERATION.equals(reason)
                 && resolutionPeriodEnd.isAfter(Instant.now())
-                && donorClaim.equals(participantRequesting)){
+                && donorClaim.equals(participantRequesting)
+                && TypeClaim.OWNERSHIP.equals(typeClaim)
+        ) {
             throw new RuntimeException("This operation is not allowed, wait until the resolution period finishes");
         }
     }

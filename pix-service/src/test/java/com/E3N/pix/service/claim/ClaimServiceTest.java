@@ -7,6 +7,7 @@ import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.UniTest;
+import com.E3N.pix.service.claim.enums.ClaimOperationReason;
 import com.E3N.pix.service.ownership.mocks.OwnerMock;
 import com.E3N.test.Owner.RandomCNPJMock;
 import com.E3N.test.Owner.RandomCpfMock;
@@ -19,9 +20,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,12 +33,6 @@ public class ClaimServiceTest extends UniTest {
 
     @InjectMocks
     private ClaimService claimService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        Mockito.reset();
-    }
 
     static List<Arguments> providerValidValues() {
         var keyForPortabilityCPF = RandomCpfMock.getRandomCFP();
@@ -51,6 +49,32 @@ public class ClaimServiceTest extends UniTest {
                 Arguments.of(UUID.randomUUID().toString(), RandomParticipant.getParticipant(), RandomKeysMock.randomPhone(),
                         TypeKey.PHONE, RandomParticipant.getParticipant(), TypeClaim.OWNERSHIP, keyForPortabilityCNPJ, TypePerson.LEGAL_PERSON)
         );
+    }
+
+    static List<Arguments> providerEVPKeys() {
+        return List.of(
+                Arguments.of(RandomKeysMock.randomEVP(), TypeClaim.OWNERSHIP),
+                Arguments.of(RandomKeysMock.randomEVP(), TypeClaim.PORTABILITY)
+        );
+    }
+
+    static List<Arguments> providerInvalidValues() {
+        var keyForPortabilityCPF = RandomCpfMock.getRandomCFP();
+        var keyForPortabilityCNPJ = RandomCNPJMock.getRandomCNPJ();
+        return List.of(
+                Arguments.of(UUID.randomUUID().toString(), RandomParticipant.getParticipant(), RandomKeysMock.randomEmails(),
+                        TypeKey.EMAIL, RandomParticipant.getParticipant(), TypeClaim.OWNERSHIP, RandomCNPJMock.getRandomCNPJ(), TypePerson.LEGAL_PERSON),
+                Arguments.of(UUID.randomUUID().toString(), RandomParticipant.getParticipant(), keyForPortabilityCPF,
+                        TypeKey.CPF, RandomParticipant.getParticipant(), TypeClaim.OWNERSHIP, keyForPortabilityCPF, TypePerson.NATURAL_PERSON),
+                Arguments.of(UUID.randomUUID().toString(), RandomParticipant.getParticipant(), keyForPortabilityCNPJ,
+                        TypeKey.CNPJ, RandomParticipant.getParticipant(), TypeClaim.OWNERSHIP, keyForPortabilityCNPJ, TypePerson.LEGAL_PERSON)
+        );
+    }
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        Mockito.reset();
     }
 
     @ParameterizedTest
@@ -79,13 +103,6 @@ public class ClaimServiceTest extends UniTest {
         Assertions.assertFalse(result.getNotification().hasError());
     }
 
-    static List<Arguments> providerEVPKeys() {
-        return List.of(
-                Arguments.of(RandomKeysMock.randomEVP(), TypeClaim.OWNERSHIP),
-                Arguments.of(RandomKeysMock.randomEVP(), TypeClaim.PORTABILITY)
-        );
-    }
-
     @ParameterizedTest
     @MethodSource("providerEVPKeys")
     void givenTypeKeyEVP_whenCalling_getInstance_shouldReturnClaimWithNotification(String key, TypeClaim typeClaim) {
@@ -102,19 +119,6 @@ public class ClaimServiceTest extends UniTest {
         Assertions.assertInstanceOf(Claim.class, result);
         Assertions.assertTrue(result.getNotification().hasError());
         Assertions.assertEquals("Is not allowed to create a claim for a key if type is EVP", result.getNotification().getViolations().getFirst().reason());
-    }
-
-    static List<Arguments> providerInvalidValues() {
-        var keyForPortabilityCPF = RandomCpfMock.getRandomCFP();
-        var keyForPortabilityCNPJ = RandomCNPJMock.getRandomCNPJ();
-        return List.of(
-                Arguments.of(UUID.randomUUID().toString(), RandomParticipant.getParticipant(), RandomKeysMock.randomEmails(),
-                        TypeKey.EMAIL, RandomParticipant.getParticipant(), TypeClaim.OWNERSHIP, RandomCNPJMock.getRandomCNPJ(), TypePerson.LEGAL_PERSON),
-                Arguments.of(UUID.randomUUID().toString(), RandomParticipant.getParticipant(), keyForPortabilityCPF,
-                        TypeKey.CPF, RandomParticipant.getParticipant(), TypeClaim.OWNERSHIP, keyForPortabilityCPF, TypePerson.NATURAL_PERSON),
-                Arguments.of(UUID.randomUUID().toString(), RandomParticipant.getParticipant(), keyForPortabilityCNPJ,
-                        TypeKey.CNPJ, RandomParticipant.getParticipant(), TypeClaim.OWNERSHIP, keyForPortabilityCNPJ, TypePerson.LEGAL_PERSON)
-        );
     }
 
     @ParameterizedTest
@@ -163,19 +167,38 @@ public class ClaimServiceTest extends UniTest {
     }
 
     @Test
-    void givenValidValues_whenCalling_getEntryToDonate_shouldReturnEntryKey(){
+    void givenValidValues_whenCalling_getEntryToDonate_shouldReturnEntryKey() {
         var donor = OwnerMock.mockOwner();
         var expectedKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
-        var result = ClaimService.getEntryToDonate(donor,  expectedKey);
+        var result = ClaimService.getEntryToDonate(donor, expectedKey);
         Assertions.assertInstanceOf(EntryKey.class, result.get());
         Assertions.assertEquals(expectedKey, result.get().getKey().getKey());
     }
 
     @Test
-    void givenInvalidValues_whenCalling_getEntryToDonate_shouldReturnEmptyOptional(){
+    void givenInvalidValues_whenCalling_getEntryToDonate_shouldReturnEmptyOptional() {
         var donor = OwnerMock.mockOwner();
         var expectedKey = "any-key";
-        var result = ClaimService.getEntryToDonate(donor,  expectedKey);
+        var result = ClaimService.getEntryToDonate(donor, expectedKey);
         Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void givenValidValues_whenCalling_confirmClaim_shouldThrow() {
+        Instant fiveDaysInFuture = Instant.now().plus(5, ChronoUnit.DAYS);
+        try (MockedStatic<Instant> mockedInstant =
+                     Mockito.mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS)) {
+            mockedInstant.when(Instant::now).thenReturn(fiveDaysInFuture);
+            var donor = OwnerMock.mockOwner();
+            var claimer = OwnerMock.mockOwner();
+            var claim = ClaimServiceMock.mockClaim(claimer, donor, TypeClaim.OWNERSHIP);
+            var service = new ClaimService();
+            var result = Assertions.assertThrows(RuntimeException.class, () -> service.confirmClaim(
+                    claim, donor, claimer,
+                    donor.getAccounts().getFirst().getParticipant().getParticipant(), ClaimOperationReason.DEFAULT_OPERATION
+            ));
+
+            Assertions.assertEquals("This operation is not allowed, wait until the resolution period finishes", result.getMessage());
+        }
     }
 }
