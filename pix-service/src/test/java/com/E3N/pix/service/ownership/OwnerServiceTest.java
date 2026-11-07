@@ -1,5 +1,7 @@
 package com.E3N.pix.service.ownership;
 
+import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
@@ -9,6 +11,7 @@ import com.E3N.pix.service.UniTest;
 import com.E3N.pix.service.ownership.dto.OwnerDto;
 import com.E3N.pix.service.ownership.mocks.OwnerMock;
 import com.E3N.pix.service.ownership.mocks.dto.OwnerDtoMock;
+import com.E3N.test.Owner.RandomKeysMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -22,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class OwnerServiceTest extends UniTest {
 
@@ -94,7 +98,8 @@ public class OwnerServiceTest extends UniTest {
 
     @RepeatedTest(100)
     void givenExistentKeyValues_whenCalling_validateKeyExistence_shouldReturnNotification() {
-        var owner = OwnerMock.mockOwner();
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var owner = OwnerMock.mockOwner(key);
         var dto = OwnerDtoMock.from(owner);
         var result = ownerService.validateKeyExistence(owner, dto);
         Assertions.assertInstanceOf(Notification.class, result);
@@ -105,7 +110,8 @@ public class OwnerServiceTest extends UniTest {
 
     @Test
     void givenExistentKeyValues_whenCalling_validateKeyExistenceWithDifferentAccount_shouldReturnNotification() {
-        var owner = OwnerMock.mockOwner();
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var owner = OwnerMock.mockOwner(key);
         var dto = OwnerDtoMock.fromDifferentAccount(owner);
         var result = ownerService.validateKeyExistence(owner, dto);
         Assertions.assertInstanceOf(Notification.class, result);
@@ -116,7 +122,8 @@ public class OwnerServiceTest extends UniTest {
 
     @Test
     void givenDifferentParticipants_whenCalling_validateKeyExistence_shouldReturnNotificationZeroError() {
-        var owner = OwnerMock.mockOwner();
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var owner = OwnerMock.mockOwner(key);
         var dto = OwnerDtoMock.getOwner(TypePerson.NATURAL_PERSON, TypeKey.EVP);
         var result = ownerService.validateKeyExistence(owner, dto);
         Assertions.assertInstanceOf(Notification.class, result);

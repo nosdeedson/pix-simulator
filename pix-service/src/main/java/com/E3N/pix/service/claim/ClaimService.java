@@ -72,11 +72,11 @@ public class ClaimService {
         if (TypeClaim.OWNERSHIP.equals(claim.getType())
                 && ClaimOperationReason.DEFAULT_OPERATION.equals(reason)
                 && claim.getResolutionPeriodEnd().isBefore(Instant.now())
-                && participantRequesting.equals(claim.getDonorParticipant())
+                && participantRequesting.equals(claim.getClaimerParticipant())
         ) {
             donor.removingKey(claim.getKeyClaimed());
         } else if (ClaimOperationReason.USER_REQUESTED.equals(reason)
-                && participantRequesting.equals(claim.getDonorParticipant())
+                && participantRequesting.equals(claim.getClaimerParticipant())
         ) {
             claim.updateCompletionPeriod(Instant.now());
             var donatingKey = donor.removingKey(claim.getKeyClaimed());
@@ -84,10 +84,6 @@ public class ClaimService {
         } else {
             throw new RuntimeException("The operation does not match any requirement.");
         }
-    }
-
-    private boolean isDonor(final String participantRequesting, final String donorParticipant) {
-        return participantRequesting.equals(donorParticipant);
     }
 
     private void transferKey(Owner claimer, EntryKey donatingKey, final Claim claim) {

@@ -17,16 +17,15 @@ public abstract class OwnerMock {
 
     private static final Faker faker = new Faker();
 
-    public static Owner mockOwner() {
+    public static Owner mockOwner(EntryKey entryKey) {
         var name = faker.name().firstName() + " " + faker.name().lastName();
         name = Normalizer.normalize(name, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "")         // remove accents
                 .replaceAll("[^a-zA-Z ]", "")     // remove ', -, .
                 .replaceAll("\\s+", " ")
                 .trim();
-        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
         var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
-                RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), key);
+                RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), entryKey);
         return Owner.getInstance(name, name, RandomCpfMock.getRandomCFP(), TypePerson.NATURAL_PERSON, account);
     }
 }

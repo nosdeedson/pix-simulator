@@ -3,16 +3,19 @@ package com.E3N.pix.service.claim;
 import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
 import com.E3N.pix.domain.modules.ownership.entryKey.EntryKey;
+import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.UniTest;
 import com.E3N.pix.service.claim.enums.ClaimOperationReason;
+import com.E3N.pix.service.mocks.ClaimServiceMock;
 import com.E3N.pix.service.ownership.mocks.OwnerMock;
 import com.E3N.test.Owner.RandomCNPJMock;
 import com.E3N.test.Owner.RandomCpfMock;
 import com.E3N.test.Owner.RandomKeysMock;
 import com.E3N.test.Owner.RandomParticipant;
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +33,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class ClaimServiceTest extends UniTest {
+
+    static final Faker faker = new Faker();
 
     @InjectMocks
     private ClaimService claimService;
@@ -150,8 +155,10 @@ public class ClaimServiceTest extends UniTest {
 
     @Test
     void givenRightTypeClaim_whenCalling_validateTypeClaim_shouldReturnNull() {
-        var claimer = OwnerMock.mockOwner();
-        var donor = OwnerMock.mockOwner();
+        var key = EntryKey.getInstance(RandomKeysMock.randomEVP(), TypeKey.EVP, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var claimer = OwnerMock.mockOwner(key);
+        var donatingKey = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var donor = OwnerMock.mockOwner(donatingKey);
         var claimerParticipant = claimer.getAccounts().getFirst().getParticipant().getParticipant();
         var typeOfKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType();
         var result = ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, claimerParticipant, typeOfKey);
@@ -160,7 +167,8 @@ public class ClaimServiceTest extends UniTest {
 
     @Test
     void givenWrongTypeClaim_whenCalling_validateTypeClaim_shouldReturnNull() {
-        var claimer = OwnerMock.mockOwner();
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var claimer = OwnerMock.mockOwner(key);
         var result = ClaimService.validateTypeClaim(claimer, claimer, TypeClaim.PORTABILITY, RandomParticipant.getParticipant(), TypeKey.PHONE);
         Assertions.assertInstanceOf(Notification.class, result);
         Assertions.assertEquals("Type of claim must be Ownership", result.getDetail());
@@ -168,16 +176,18 @@ public class ClaimServiceTest extends UniTest {
 
     @Test
     void givenValidValues_whenCalling_getEntryToDonate_shouldReturnEntryKey() {
-        var donor = OwnerMock.mockOwner();
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var donor = OwnerMock.mockOwner(key);
         var expectedKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
-        var result = ClaimService.getEntryToDonate(donor, expectedKey);
-        Assertions.assertInstanceOf(EntryKey.class, result.get());
-        Assertions.assertEquals(expectedKey, result.get().getKey().getKey());
+        var result = ClaimService.getEntryToDonate(donor, expectedKey).orElseThrow();
+        Assertions.assertInstanceOf(EntryKey.class, result);
+        Assertions.assertEquals(expectedKey, result.getKey().getKey());
     }
 
     @Test
     void givenInvalidValues_whenCalling_getEntryToDonate_shouldReturnEmptyOptional() {
-        var donor = OwnerMock.mockOwner();
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var donor = OwnerMock.mockOwner(key);
         var expectedKey = "any-key";
         var result = ClaimService.getEntryToDonate(donor, expectedKey);
         Assertions.assertTrue(result.isEmpty());
@@ -189,8 +199,10 @@ public class ClaimServiceTest extends UniTest {
         try (MockedStatic<Instant> mockedInstant =
                      Mockito.mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS)) {
             mockedInstant.when(Instant::now).thenReturn(fiveDaysInFuture);
-            var donor = OwnerMock.mockOwner();
-            var claimer = OwnerMock.mockOwner();
+            var donatingKey = EntryKey.getInstance(RandomKeysMock.randomPhone(), TypeKey.PHONE, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+            var donor = OwnerMock.mockOwner(donatingKey);
+            var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+            var claimer = OwnerMock.mockOwner(key);
             var claim = ClaimServiceMock.mockClaim(claimer, donor, TypeClaim.OWNERSHIP);
             var service = new ClaimService();
             var result = Assertions.assertThrows(RuntimeException.class, () -> service.confirmClaim(
@@ -200,5 +212,51 @@ public class ClaimServiceTest extends UniTest {
 
             Assertions.assertEquals("This operation is not allowed, wait until the resolution period finishes", result.getMessage());
         }
+    }
+
+    @Test
+    void givenValidValuesToConfirmByDefault_whenCalling_confirmClaim_shouldRemoveKeyFromDonor(){
+        Instant today = Instant.now();
+        Instant eightDayAgo = today.minus(8, ChronoUnit.DAYS);
+        try (MockedStatic<Instant> mockedStatic = Mockito.mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS)) {
+            mockedStatic.when(Instant::now).thenReturn(eightDayAgo);
+            var donatingKey = EntryKey.getInstance(RandomKeysMock.randomPhone(), TypeKey.PHONE, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+            var donor = OwnerMock.mockOwner(donatingKey);
+            var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+            var claimer = OwnerMock.mockOwner(key);
+            var claim = ClaimServiceMock.mockClaim(claimer, donor, TypeClaim.OWNERSHIP);
+            mockedStatic.when(Instant::now).thenReturn(today);
+            var service = new ClaimService();
+            var claimerParticipant = claimer.getAccounts().getFirst().getParticipant().getParticipant();
+            Assertions.assertDoesNotThrow(() -> service.confirmClaim(claim, donor, claimer, claimerParticipant, ClaimOperationReason.DEFAULT_OPERATION));
+            Assertions.assertTrue(donor.getAccounts().isEmpty());
+        }
+    }
+
+    @Test
+    void givenUserRequestToConfirmClaim_whenCalling_confirmClaim_shouldTransferKey(){
+        var donatingKey = EntryKey.getInstance(RandomKeysMock.randomPhone(), TypeKey.PHONE, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var donor = OwnerMock.mockOwner(donatingKey);
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var claimer = OwnerMock.mockOwner(key);
+        var claim = ClaimServiceMock.mockClaim(claimer, donor, TypeClaim.OWNERSHIP);
+        var claimerParticipant = claimer.getAccounts().getFirst().getParticipant().getParticipant();
+        var service = new ClaimService();
+        Assertions.assertDoesNotThrow(() -> service.confirmClaim(claim, donor, claimer, claimerParticipant, ClaimOperationReason.USER_REQUESTED));
+        Assertions.assertTrue(donor.getAccounts().isEmpty());
+        Assertions.assertEquals(2, claimer.getAccounts().getFirst().getEntryKeys().size());
+    }
+
+    @Test
+    void givenInvalidValues_whenCalling_confirmClaim_shouldThrow(){
+        var donatingKey = EntryKey.getInstance(RandomKeysMock.randomPhone(), TypeKey.PHONE, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var donor = OwnerMock.mockOwner(donatingKey);
+        var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var claimer = OwnerMock.mockOwner(key);
+        var claim = ClaimServiceMock.mockClaim(claimer, donor, TypeClaim.OWNERSHIP);
+        var claimerParticipant = donor.getAccounts().getFirst().getParticipant().getParticipant();
+        var service = new ClaimService();
+        var result = Assertions.assertThrows(RuntimeException.class, () -> service.confirmClaim(claim, donor, claimer, claimerParticipant, ClaimOperationReason.USER_REQUESTED));
+        Assertions.assertEquals("The operation does not match any requirement.", result.getMessage());
     }
 }

@@ -1,4 +1,4 @@
-package com.E3N.pix.service.claim;
+package com.E3N.pix.service.mocks;
 
 import com.E3N.pix.domain.modules.claim.Claim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
@@ -13,7 +13,7 @@ public final class ClaimServiceMock {
                 claimer.getAccounts().getFirst().getId().toString(),
                 claimer.getAccounts().getFirst().getParticipant().getParticipant(),
                 donor.getAccounts().getFirst().getParticipant().getParticipant(),
-                claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(),
+                donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(),
                 claimer.getTaxIdNumber().getTaxIdNumber(),
                 typeClaim,
                 donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType(),
