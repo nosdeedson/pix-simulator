@@ -7,6 +7,7 @@ import com.E3N.pix.domain.modules.ownership.entryKey.Reason;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.shared.TypeKey;
 import com.E3N.pix.domain.shared.TypePerson;
+import com.E3N.pix.domain.valueObject.key.Key;
 import com.E3N.test.Owner.*;
 import com.github.javafaker.Faker;
 
@@ -26,6 +27,19 @@ public abstract class OwnerMock {
                 .trim();
         var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
                 RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), entryKey);
+        return Owner.getInstance(name, name, RandomCpfMock.getRandomCFP(), TypePerson.NATURAL_PERSON, account);
+    }
+
+    public static Owner mockOwnerPassingKey(String entryKey, TypeKey typeKey) {
+        var name = faker.name().firstName() + " " + faker.name().lastName();
+        name = Normalizer.normalize(name, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")         // remove accents
+                .replaceAll("[^a-zA-Z ]", "")     // remove ', -, .
+                .replaceAll("\\s+", " ")
+                .trim();
+        var Key = EntryKey.getInstance(entryKey, typeKey, Reason.USER_REQUESTED, UUID.randomUUID().toString());
+        var account = Account.getInstance(RandomAccountMock.randomBranch(), RandomAccountMock.randomAccountNumber(),
+                RandomParticipant.getParticipant(), AccountType.CACC, RandomDateMock.getRandomStringDateWithoutTimeZone(), Key);
         return Owner.getInstance(name, name, RandomCpfMock.getRandomCFP(), TypePerson.NATURAL_PERSON, account);
     }
 }

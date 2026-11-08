@@ -12,9 +12,15 @@ import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.claim.enums.ClaimOperationReason;
 
 import java.time.Instant;
+import java.util.IllegalFormatCodePointException;
 import java.util.Optional;
 
 public class ClaimService {
+
+    static final String DONOR_CANNOT = "Donor cannot cancel this type of claim.";
+    static final String CLAIMER_CANNOT = "Claimer cannot cancel this type of claim.";
+    static final String CLAIM_STATUS_NOT_ALLOW = "Claim's status does not permit to cancel.";
+    static final String RESOLUTION_PERIOD_NOT_ENDED = "Claim's resolution period must have ended to cancel as default operation.";
 
     public Claim create(
             final String claimerAccountId,
@@ -86,6 +92,67 @@ public class ClaimService {
         }
     }
 
+    public Notification cannotCancel(final Claim claim, ClaimOperationReason reason, final String participantRequest) {
+        // ok
+        if (ClaimOperationReason.PARTICIPANT_EXCLUSION.equals(reason)){
+            return Notification.create("Conflict", 409, "The use of 'PARTICIPANT_EXCLUSION is exclusive for DICT.");
+        }
+        // ok
+        if (claim.getType().equals(TypeClaim.PORTABILITY)
+                && (!claim.getStatus().equals(StatusClaim.OPEN)
+                && !claim.getStatus().equals(StatusClaim.WAITING_RESOLUTION))
+                && claim.getClaimerParticipant().equals(participantRequest)
+        ) {
+            return Notification.create("Conflict", 409, CLAIM_STATUS_NOT_ALLOW);
+        }
+        // ok
+        if (reason.equals(ClaimOperationReason.DEFAULT_OPERATION) && Instant.now().isBefore(claim.getResolutionPeriodEnd())
+        && claim.getClaimerParticipant().equals(participantRequest)) {
+            return Notification.create("Conflict", 409, RESOLUTION_PERIOD_NOT_ENDED);
+        }
+        // ok
+        if (ClaimOperationReason.ACCOUNT_CLOSURE.equals(reason) && claim.getDonorParticipant().equals(participantRequest)) {
+            return Notification.create("Conflict", 409, DONOR_CANNOT );
+        }
+        // ok
+        if (ClaimOperationReason.DEFAULT_OPERATION.equals(reason) && claim.getClaimerParticipant().equals(participantRequest)) {
+            return Notification.create("Conflict", 409, CLAIMER_CANNOT);
+        }
+        // ok
+        if (claim.getDonorParticipant().equals(participantRequest) &&
+                (ClaimOperationReason.RECONCILIATION.equals(reason) || ClaimOperationReason.RFB_VALIDATION.equals(reason))) {
+            return Notification.create("Conflict", 409, DONOR_CANNOT);
+        }
+        if (claim.getStatus().equals(StatusClaim.CONFIRMED)
+                && claim.getDonorParticipant().equals(participantRequest)
+                && (
+                        ClaimOperationReason.FRAUD.equals(reason)
+                        || ClaimOperationReason.RECONCILIATION.equals(reason)
+                        || ClaimOperationReason.RFB_VALIDATION.equals(reason)
+                    )
+        ){
+            return Notification.create("Conflict", 409, DONOR_CANNOT);
+        }
+        if (claim.getStatus().equals(StatusClaim.WAITING_RESOLUTION) && ClaimOperationReason.RECONCILIATION.equals(reason)){
+            return Notification.create("Conflict", 409, CLAIM_STATUS_NOT_ALLOW);
+        }
+        if (claim.getType().equals(TypeClaim.OWNERSHIP)
+                && (
+                        !claim.getStatus().equals(StatusClaim.WAITING_RESOLUTION)
+                        || !claim.getStatus().equals(StatusClaim.OPEN)
+                        || !claim.getStatus().equals(StatusClaim.CONFIRMED)
+                    )
+        ){
+            return Notification.create("Conflict", 409, CLAIM_STATUS_NOT_ALLOW);
+        }
+        if (claim.getType().equals(TypeClaim.OWNERSHIP) && claim.getDonorParticipant().equals(participantRequest)
+                && !ClaimOperationReason.FRAUD.equals(reason)
+        ){
+            return Notification.create("Conflict", 409, DONOR_CANNOT);
+        }
+        return null;
+    }
+
     private void transferKey(Owner claimer, EntryKey donatingKey, final Claim claim) {
         for (Account acc : claimer.getAccounts()) {
             if (acc.getId().toString().equals(claim.getClaimerAccountId())) {
@@ -107,4 +174,5 @@ public class ClaimService {
             throw new RuntimeException("This operation is not allowed, wait until the resolution period finishes");
         }
     }
+
 }
