@@ -6,7 +6,7 @@ import com.E3N.pix.soap.contract.ReasonType;
 import com.E3N.pix.soap.mapper.entryKey.CreateEntryKeyRequestToDtoMapper;
 import com.E3N.pix.soap.mapper.entryKey.UpdateEntryKeyRequestToDtoMapper;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.entryKey.EntryKeyRequestMock;
+import com.E3N.soap.mocks.entryKey.EntryKeyRequestMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

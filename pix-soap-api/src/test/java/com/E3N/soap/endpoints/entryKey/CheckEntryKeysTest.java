@@ -1,11 +1,10 @@
 package com.E3N.soap.endpoints.entryKey;
 
-import com.E3N.pix.application.ownership.ExistentKeysDto;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.pix.soap.contract.CheckKeysResponse;
 import com.E3N.pix.soap.endpoints.EntryKey;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.entryKey.EntryKeyRequestMock;
+import com.E3N.soap.mocks.entryKey.EntryKeyRequestMock;
 import com.E3N.test.Owner.RandomKeysMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

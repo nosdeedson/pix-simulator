@@ -1,7 +1,6 @@
 package com.E3N.soap.endpoints.claim;
 
 import com.E3N.pix.domain.modules.claim.TypeClaim;
-import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
 import com.E3N.pix.domain.shared.TypePerson;
 import com.E3N.pix.infrastructure.modules.claim.ClaimRepositoryImpl;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
@@ -9,9 +8,8 @@ import com.E3N.pix.soap.contract.AcknowledgeClaimRequest;
 import com.E3N.pix.soap.contract.AcknowledgeClaimResponse;
 import com.E3N.pix.soap.endpoints.Claim;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
-import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.claim.ClaimsEndpointMock;
-import com.E3N.soap.mapper.mocks.entryKey.OwnerMock;
+import com.E3N.soap.mocks.claim.ClaimsEndpointMock;
+import com.E3N.soap.mocks.entryKey.OwnerMock;
 import com.E3N.test.Owner.RandomParticipant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -3,7 +3,7 @@ package com.E3N.soap.mapper.claim;
 import com.E3N.pix.application.claim.dto.ListClaim.ListClaimDto;
 import com.E3N.pix.soap.mapper.claim.ListClaimRequestToDtoMapper;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.claim.ListClaimRequestMock;
+import com.E3N.soap.mocks.claim.ListClaimRequestMock;
 import com.E3N.test.Owner.RandomParticipant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -245,7 +245,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
         var owner1 = getOwner(TypePerson.LEGAL_PERSON);
         var owner2 = getOwner(TypePerson.NATURAL_PERSON);
         var expectedKey1 = owner1.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
-        var expectedKey2 = "not-exist";
+        var expectedKey2 = UUID.randomUUID().toString();
         var keys = List.of(expectedKey1, expectedKey2);
         repository.save(owner1);
         repository.save(owner2);

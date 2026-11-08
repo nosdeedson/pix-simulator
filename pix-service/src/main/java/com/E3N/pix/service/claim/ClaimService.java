@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class ClaimService {
 
-    public static Claim create(
+    public Claim create(
             final String claimerAccountId,
             final String claimerParticipant,
             final String key,
@@ -46,7 +46,7 @@ public class ClaimService {
      * @param donor   @description is an owner
      * @return null or Notification
      */
-    public static Notification validateTypeClaim(
+    public Notification validateTypeClaim(
             Owner claimer, Owner donor, TypeClaim typeClaim,
             String claimerParticipant, TypeKey claimedTypeKey
     ) {
@@ -60,7 +60,7 @@ public class ClaimService {
         return null;
     }
 
-    public static Optional<EntryKey> getEntryToDonate(Owner donor, final String entryKey) {
+    public Optional<EntryKey> getEntryToDonate(Owner donor, final String entryKey) {
         return donor.getAccounts().getFirst()
                 .getEntryKeys().stream()
                 .filter(it -> it.getKey().getKey().equals(entryKey))

@@ -7,7 +7,7 @@ import com.E3N.pix.soap.contract.UpdateEntryKeyResponse;
 import com.E3N.pix.soap.mapper.entryKey.OwnerToEntryKeyResponseMapper;
 import com.E3N.shared.utils.DateHelper;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.entryKey.OwnerMock;
+import com.E3N.soap.mocks.entryKey.OwnerMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

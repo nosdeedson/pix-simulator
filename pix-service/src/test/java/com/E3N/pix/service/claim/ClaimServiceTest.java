@@ -94,7 +94,8 @@ public class ClaimServiceTest extends UniTest {
             String claimerTaxIdNumber,
             TypePerson claimerTypePerson
     ) {
-        var result = ClaimService.create(
+        var service = new ClaimService();
+        var result = service.create(
                 claimerAccountId,
                 claimerParticipant,
                 key,
@@ -111,7 +112,8 @@ public class ClaimServiceTest extends UniTest {
     @ParameterizedTest
     @MethodSource("providerEVPKeys")
     void givenTypeKeyEVP_whenCalling_getInstance_shouldReturnClaimWithNotification(String key, TypeClaim typeClaim) {
-        var result = ClaimService.create(
+        var service = new ClaimService();
+        var result = service.create(
                 UUID.randomUUID().toString(),
                 RandomParticipant.getParticipant(),
                 key,
@@ -138,7 +140,8 @@ public class ClaimServiceTest extends UniTest {
             String claimerTaxIdNumber,
             TypePerson claimerTypePerson
     ) {
-        var result = ClaimService.create(
+        var service = new ClaimService();
+        var result = service.create(
                 claimerAccountId,
                 claimerParticipant,
                 key,
@@ -161,7 +164,8 @@ public class ClaimServiceTest extends UniTest {
         var donor = OwnerMock.mockOwner(donatingKey);
         var claimerParticipant = claimer.getAccounts().getFirst().getParticipant().getParticipant();
         var typeOfKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType();
-        var result = ClaimService.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, claimerParticipant, typeOfKey);
+        var service = new ClaimService();
+        var result = service.validateTypeClaim(claimer, donor, TypeClaim.OWNERSHIP, claimerParticipant, typeOfKey);
         Assertions.assertNull(result);
     }
 
@@ -169,7 +173,8 @@ public class ClaimServiceTest extends UniTest {
     void givenWrongTypeClaim_whenCalling_validateTypeClaim_shouldReturnNull() {
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
         var claimer = OwnerMock.mockOwner(key);
-        var result = ClaimService.validateTypeClaim(claimer, claimer, TypeClaim.PORTABILITY, RandomParticipant.getParticipant(), TypeKey.PHONE);
+        var service = new ClaimService();
+        var result = service.validateTypeClaim(claimer, claimer, TypeClaim.PORTABILITY, RandomParticipant.getParticipant(), TypeKey.PHONE);
         Assertions.assertInstanceOf(Notification.class, result);
         Assertions.assertEquals("Type of claim must be Ownership", result.getDetail());
     }
@@ -179,7 +184,8 @@ public class ClaimServiceTest extends UniTest {
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
         var donor = OwnerMock.mockOwner(key);
         var expectedKey = donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey();
-        var result = ClaimService.getEntryToDonate(donor, expectedKey).orElseThrow();
+        var service = new ClaimService();
+        var result = service.getEntryToDonate(donor, expectedKey).orElseThrow();
         Assertions.assertInstanceOf(EntryKey.class, result);
         Assertions.assertEquals(expectedKey, result.getKey().getKey());
     }
@@ -189,7 +195,8 @@ public class ClaimServiceTest extends UniTest {
         var key = EntryKey.getInstance(RandomKeysMock.randomEmails(), TypeKey.EMAIL, Reason.USER_REQUESTED, UUID.randomUUID().toString());
         var donor = OwnerMock.mockOwner(key);
         var expectedKey = "any-key";
-        var result = ClaimService.getEntryToDonate(donor, expectedKey);
+        var service = new ClaimService();
+        var result = service.getEntryToDonate(donor, expectedKey);
         Assertions.assertTrue(result.isEmpty());
     }
 

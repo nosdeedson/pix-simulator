@@ -1,21 +1,16 @@
 package com.E3N.pix.soap.endpoints;
 
-import com.E3N.pix.application.claim.AcknowledgeClaimUseCase;
-import com.E3N.pix.application.claim.CreateClaimUseCase;
-import com.E3N.pix.application.claim.GetClaimUseCase;
-import com.E3N.pix.application.claim.ListClaimUseCase;
+import com.E3N.pix.application.claim.*;
 import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.infrastructure.modules.claim.ClaimRepositoryImpl;
 import com.E3N.pix.infrastructure.modules.ownership.owner.OwnerRepositoryImpl;
 import com.E3N.pix.service.Either;
+import com.E3N.pix.service.claim.enums.ClaimOperationReason;
 import com.E3N.pix.soap.contract.*;
 import com.E3N.pix.soap.excptionHandler.HandleError;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
-import com.E3N.pix.soap.mapper.claim.CreateClaimRequestToDtoMapper;
-import com.E3N.pix.soap.mapper.claim.DtoToCreateClaimResponseMapper;
-import com.E3N.pix.soap.mapper.claim.DtoToListClaimResponseMapper;
-import com.E3N.pix.soap.mapper.claim.ListClaimRequestToDtoMapper;
+import com.E3N.pix.soap.mapper.claim.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -100,6 +95,20 @@ public class Claim {
                             DtoToListClaimResponseMapper::getAcknowledge);
 
         } catch (Exception e) {
+            throw HandleError.handleError(e);
+        }
+    }
+
+    @PayloadRoot(namespace = NAME_SPACE_URI, localPart = "ConfirmClaimRequest")
+    @ResponsePayload
+    @SoapAction(SOAP_ACTION_PREFIX + "ConfirmClaimRequest")
+    public ConfirmClaimResponse confirmClaim(@RequestPayload ConfirmClaimRequest request){
+        try {
+            ConfirmClaimUseCase useCase = new ConfirmClaimUseCase(claimRepository, ownerRepository);
+            return useCase.execute(request.getClaimId(), request.getParticipant(), ClaimOperationReason.valueOf(request.getReason().name()))
+                    .fold(notification -> {throw new SoapFaultException("Invalid request", notification);},
+                            DtoToConfirmClaimResponseMapper::getConfirmResponse);
+        } catch (Exception e){
             throw HandleError.handleError(e);
         }
     }

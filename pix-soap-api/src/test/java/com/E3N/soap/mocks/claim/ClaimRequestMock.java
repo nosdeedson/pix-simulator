@@ -1,4 +1,4 @@
-package com.E3N.soap.mapper.mocks.claim;
+package com.E3N.soap.mocks.claim;
 
 import com.E3N.pix.domain.modules.ownership.account.Account;
 import com.E3N.pix.domain.modules.ownership.owner.Owner;

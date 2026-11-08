@@ -1,4 +1,4 @@
-package com.E3N.soap.mapper.mocks.claim;
+package com.E3N.soap.mocks.claim;
 
 import com.E3N.pix.soap.contract.ClaimStatusType;
 import com.E3N.pix.soap.contract.ListClaimsRequest;

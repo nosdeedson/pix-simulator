@@ -1,4 +1,4 @@
-package com.E3N.soap.mapper.mocks.claim;
+package com.E3N.soap.mocks.claim;
 
 import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
 import com.E3N.pix.application.claim.dto.createClaim.ClaimerAccountDto;

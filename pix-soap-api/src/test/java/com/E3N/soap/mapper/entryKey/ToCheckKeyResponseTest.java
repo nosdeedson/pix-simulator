@@ -4,7 +4,7 @@ import com.E3N.pix.application.ownership.ExistentKeysDto;
 import com.E3N.pix.soap.contract.CheckKeysResponse;
 import com.E3N.pix.soap.mapper.entryKey.CheckEntryKeysResponseMapper;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.entryKey.ExistentKeyDtoMock;
+import com.E3N.soap.mocks.entryKey.ExistentKeyDtoMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

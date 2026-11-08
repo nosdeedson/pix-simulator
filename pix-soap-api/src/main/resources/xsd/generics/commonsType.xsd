@@ -57,6 +57,17 @@
         </xs:sequence>
     </xs:group>
 
+    <xs:simpleType name="ClaimOperationReasonType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="USER_REQUESTED"/>
+            <xs:enumeration value="ACCOUNT_CLOSURE"/>
+            <xs:enumeration value="FRAUD"/>
+            <xs:enumeration value="DEFAULT_OPERATION"/>
+            <xs:enumeration value="RECONCILIATION"/>
+            <xs:enumeration value="RFB_VALIDATION"/>
+            <xs:enumeration value="PARTICIPANT_EXCLUSION"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 
 </xs:schema>

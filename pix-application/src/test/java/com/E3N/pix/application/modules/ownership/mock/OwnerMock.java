@@ -14,7 +14,7 @@ import java.util.UUID;
 public abstract class OwnerMock {
     public static Owner getOwner(TypePerson typePerson) {
         var key = EntryKey.getInstance(
-                RandomKeysMock.randomEmails(), TypeKey.EMAIL,
+                "thiago.gomes@hotmail.com", TypeKey.EMAIL,
                 Reason.USER_REQUESTED, UUID.randomUUID().toString()
         );
         var account = Account.getInstance(

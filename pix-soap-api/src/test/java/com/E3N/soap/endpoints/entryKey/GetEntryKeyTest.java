@@ -7,7 +7,7 @@ import com.E3N.pix.soap.contract.GetEntryKeyResponse;
 import com.E3N.pix.soap.endpoints.EntryKey;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.entryKey.OwnerMock;
+import com.E3N.soap.mocks.entryKey.OwnerMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

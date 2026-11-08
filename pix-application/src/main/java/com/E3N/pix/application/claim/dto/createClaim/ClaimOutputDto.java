@@ -32,9 +32,6 @@ public record ClaimOutputDto(
         var account = claimer.getAccounts().stream()
                 .filter(acc -> acc.getId().toString().equals(claim.getClaimerAccountId()))
                 .findFirst().orElseThrow();
-        var key = account.getEntryKeys().stream()
-                .filter(k -> k.getKey().getKey().equals(claim.getKeyClaimed()))
-                .findFirst().orElseThrow();
         var acc = new ClaimerAccountDto(account.getParticipant().getParticipant(), account.getBranch().getBranch(), account.getNumber().getNumber(), account.getType(), account.getOpeningDate().toString());
         var tradeName = claimer.getTradeName() == null ? null : claimer.getTradeName().getName();
         var claimerResponse = new ClaimerDto(claimer.getType(), claimer.getTaxIdNumber().getTaxIdNumber(), claimer.getName().getName(), tradeName);
@@ -42,8 +39,8 @@ public record ClaimOutputDto(
                 Instant.now(),
                 UUID.randomUUID().toString().replace("-", ""),
                 claim.getType(),
-                key.getKey().getKey(),
-                key.getKey().getType(),
+                claim.getKeyClaimed(),
+                claim.getTypeKeyClaimed(),
                 acc,
                 claimerResponse,
                 claim.getDonorParticipant(),

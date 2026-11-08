@@ -11,44 +11,9 @@ import java.util.UUID;
 
 public final class DtoToCreateClaimResponseMapper {
 
-    private static OwnerType toOwnerType(ClaimerDto dto) {
-        var owner = new OwnerType();
-        owner.setTradeName(dto.tradeName());
-        owner.setType(OwnerTypeEnum.valueOf(dto.typePerson().name()));
-        owner.setTaxIdNumber(dto.taxIdNumber());
-        owner.setName(dto.name());
-        return owner;
-    }
-
-    private static AccountType toAccountType(ClaimerAccountDto dto) {
-        var acc = new AccountType();
-        acc.setParticipant(dto.participant());
-        acc.setOpeningDate(DateHelper.fromString(dto.openingDate()));
-        acc.setBranch(dto.branch());
-        acc.setAccountNumber(dto.accountNumber());
-        acc.setAccountType(AccountTypeEnum.valueOf(dto.accountType().name()));
-        return acc;
-    }
-
-    private static ClaimType toClaimResponse(ClaimOutputDto dto) {
-        var claim = new ClaimType();
-        claim.setClaimer(toOwnerType(dto.claimerDto()));
-        claim.setCompletionPeriodEnd(DateHelper.fromInstant(dto.completionPeriodEnd()));
-        claim.setDonorParticipant(dto.donorParticipant());
-        claim.setId(dto.id());
-        claim.setLastModified(DateHelper.fromInstant(dto.lastModified()));
-        claim.setResolutionPeriodEnd(DateHelper.fromInstant(dto.resolutionPeriodEnd()));
-        claim.setStatus(ClaimStatusType.valueOf(dto.statusClaim().name()));
-        claim.setClaimerAccount(toAccountType(dto.claimerAccountDto()));
-        claim.setKey(dto.key());
-        claim.setKeyType(KeyType.valueOf(dto.typeKey().name()));
-        claim.setType(TypeClaims.valueOf(dto.typeClaim().name()));
-        return claim;
-    }
-
     public static CreateClaimResponse toResponse(ClaimOutputDto dto) {
         var response = new CreateClaimResponse();
-        response.setClaim(toClaimResponse(dto));
+        response.setClaim(DtoToClaimTypeMapper.toClaimResponse(dto));
         response.setCorrelationId(UUID.randomUUID().toString());
         response.setResponseTime(DateHelper.fromInstant(dto.responseTime()));
         response.setSignature(UUID.randomUUID().toString());

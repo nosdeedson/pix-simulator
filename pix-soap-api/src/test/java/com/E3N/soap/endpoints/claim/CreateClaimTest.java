@@ -13,8 +13,9 @@ import com.E3N.pix.soap.contract.TypeClaims;
 import com.E3N.pix.soap.endpoints.Claim;
 import com.E3N.pix.soap.excptionHandler.SoapFaultException;
 import com.E3N.soap.UnitTest;
-import com.E3N.soap.mapper.mocks.claim.ClaimRequestMock;
-import com.E3N.soap.mapper.mocks.entryKey.OwnerMock;
+import com.E3N.soap.mocks.claim.ClaimRequestMock;
+import com.E3N.soap.mocks.claim.ClaimSoapMock;
+import com.E3N.soap.mocks.entryKey.OwnerMock;
 import com.E3N.test.Owner.RandomKeysMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,19 +30,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateClaimTest extends UnitTest {
-
-    public static com.E3N.pix.domain.modules.claim.Claim mockClaim(Owner claimer, Owner donor, TypeClaim typeClaim) {
-        return com.E3N.pix.domain.modules.claim.Claim.getInstance(
-                claimer.getAccounts().getFirst().getId().toString(),
-                claimer.getAccounts().getFirst().getParticipant().getParticipant(),
-                donor.getAccounts().getFirst().getParticipant().getParticipant(),
-                claimer.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(),
-                claimer.getTaxIdNumber().getTaxIdNumber(),
-                typeClaim,
-                donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType(),
-                claimer.getType()
-        );
-    }
 
     @Mock
     private OwnerRepositoryImpl ownerRepository;
@@ -110,7 +98,7 @@ public class CreateClaimTest extends UnitTest {
                 .thenReturn(Optional.of(owner));
         var donor = OwnerMock.withDifferentParticipant(owner, RandomKeysMock.randomPhone(), TypeKey.PHONE);
         when(ownerRepository.findByKey(anyString())).thenReturn(Optional.of(donor));
-        var claimSaved = mockClaim(owner, donor, TypeClaim.OWNERSHIP);
+        var claimSaved = ClaimSoapMock.mockClaim(owner, donor, TypeClaim.OWNERSHIP);
         when(claimRepository.save(any())).thenReturn(claimSaved);
         var request = ClaimRequestMock.from(owner, TypeClaims.OWNERSHIP, donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(),
                 donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType());
@@ -127,7 +115,7 @@ public class CreateClaimTest extends UnitTest {
                 .thenReturn(Optional.of(owner));
         var donor = OwnerMock.withDifferentParticipant(owner, RandomKeysMock.randomEmails(), TypeKey.EMAIL);
         when(ownerRepository.findByKey(anyString())).thenReturn(Optional.of(donor));
-        var claimSaved = mockClaim(owner, donor, TypeClaim.PORTABILITY);
+        var claimSaved = ClaimSoapMock.mockClaim(owner, donor, TypeClaim.PORTABILITY);
         when(claimRepository.save(any())).thenReturn(claimSaved);
         var request = ClaimRequestMock.from(owner, TypeClaims.PORTABILITY, donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getKey(),
                 donor.getAccounts().getFirst().getEntryKeys().getFirst().getKey().getType());

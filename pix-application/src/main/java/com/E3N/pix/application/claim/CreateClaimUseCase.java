@@ -34,26 +34,24 @@ public class CreateClaimUseCase {
             Notification notification = Notification.create("Not found", 404, "Claimer not found.");
             return Either.left(notification);
         }
-        Optional<Account> acc = claimer.get().getAccounts().stream()
+        Account acc = claimer.get().getAccounts().stream()
                 .filter(it -> it.getNumber().getNumber().equals(dto.claimerAccountDto().accountNumber()))
-                .findAny();
-        if (acc.isEmpty()) {
-            return Either.left(Notification.create("Not found", 404, "Claimer account not found."));
-        }
+                .findAny().orElseThrow();
         var donor = ownerRepository.findByKey(dto.key());
         if (donor.isEmpty()) {
             Notification notification = Notification.create("Not found", 404, "Donor not found");
             return Either.left(notification);
         }
-        Optional<EntryKey> key = ClaimService.getEntryToDonate(donor.get(), dto.key());
+        var service = new ClaimService();
+        Optional<EntryKey> key = service.getEntryToDonate(donor.get(), dto.key());
         if (key.isEmpty()) {
             return Either.left(Notification.create("Not found", 404, "Key not found."));
         }
-        var notAllowed = ClaimService.validateTypeClaim(claimer.get(), donor.get(), dto.typeClaim(), acc.get().getParticipant().getParticipant(), key.get().getKey().getType());
+        var notAllowed = service.validateTypeClaim(claimer.get(), donor.get(), dto.typeClaim(), acc.getParticipant().getParticipant(), key.get().getKey().getType());
         if (notAllowed == null) {
-            var claim = ClaimService.create(
-                    acc.get().getId().toString(),
-                    acc.get().getParticipant().getParticipant(),
+            var claim = service.create(
+                    acc.getId().toString(),
+                    acc.getParticipant().getParticipant(),
                     key.get().getKey().getKey(),
                     key.get().getKey().getType(),
                     donor.get().getAccounts().getFirst().getParticipant().getParticipant(),
