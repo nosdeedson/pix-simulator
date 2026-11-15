@@ -4,6 +4,7 @@ import com.E3N.pix.application.claim.dto.createClaim.ClaimOutputDto;
 import com.E3N.pix.domain.modules.claim.ClaimRepositoryInterface;
 import com.E3N.pix.domain.modules.claim.StatusClaim;
 import com.E3N.pix.domain.modules.claim.TypeClaim;
+import com.E3N.pix.domain.modules.ownership.owner.Owner;
 import com.E3N.pix.domain.modules.ownership.owner.OwnerRepositoryInterface;
 import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.Either;
@@ -33,9 +34,8 @@ public class CancelClaimUseCase {
         if (service.canCancel(claim, reason, participantRequest)){
             claim.updateStatus(StatusClaim.CANCELLED);
             claimRepository.update(claim);
-            var claimer = ownerRepository.findByAccountAndKey(claim.getClaimerAccountId(), claim.getKeyClaimed())
-                    .orElseThrow();
-            var output = ClaimOutputDto.from(claim, claimer);
+            Owner whoAsking = ownerRepository.findByKey(claim.getKeyClaimed()).orElseThrow();
+            var output = ClaimOutputDto.from(claim, whoAsking);
             return Either.right(output);
         }
         return Either.left(Notification.create("Conflict", 409, "Participant is not allowed to access this resource."));

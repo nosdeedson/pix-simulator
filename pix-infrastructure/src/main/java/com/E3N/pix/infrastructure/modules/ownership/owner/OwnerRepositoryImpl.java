@@ -29,8 +29,14 @@ public class OwnerRepositoryImpl implements OwnerRepositoryInterface {
 
     @Override
     public Optional<Owner> findByKey(String key) {
-        var ownerJPA = this.ownerRepository.findByKey(key);
-        return ownerJPA.map(OwnerJPAEntity::from);
+        var entryKeyJPAEntity = this.ownerRepository.findByKey(key);
+        if (entryKeyJPAEntity.isEmpty()) {
+            return Optional.empty();
+        }
+        var jpa = entryKeyJPAEntity.get();
+        var ownerJPA = EntryKeyJPAEntity.toOwner(entryKeyJPAEntity.get());
+        var owner = OwnerJPAEntity.from(ownerJPA);
+        return Optional.of(owner);
     }
 
     @Override

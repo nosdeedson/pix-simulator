@@ -65,7 +65,7 @@ public class OwnerRepositoryImplIT extends IntegrationTest {
         var requestedOwner = repository.findByKey(expectedKeyToFind);
         Assertions.assertInstanceOf(Optional.class, requestedOwner);
         Assertions.assertInstanceOf(Owner.class, requestedOwner.get());
-        Assertions.assertEquals(2, requestedOwner.get().getAccounts().getFirst().getEntryKeys().size());
+        Assertions.assertEquals(1, requestedOwner.get().getAccounts().getFirst().getEntryKeys().size());
 
     }
 

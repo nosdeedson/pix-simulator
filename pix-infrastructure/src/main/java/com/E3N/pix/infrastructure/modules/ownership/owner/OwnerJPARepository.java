@@ -27,8 +27,11 @@ public interface OwnerJPARepository extends JpaRepository<OwnerJPAEntity, String
     Optional<OwnerJPAEntity> findByTaxIdNumber(@Param("taxIdNumber") String taxIdNumber);
 
     // BRINGS ALL KEYS OF ACCOUNT
-    @Query("SELECT o FROM Owner o JOIN FETCH o.accounts a JOIN a.keyJPAs ek WHERE ek.key = :key")
-    Optional<OwnerJPAEntity> findByKey(@Param("key") String key);
+    @Query("SELECT ek FROM entry_key ek " +
+            "JOIN FETCH ek.account a " +
+            "JOIN FETCH a.owner o " +
+            "WHERE ek.key = :key ")
+    Optional<EntryKeyJPAEntity> findByKey(@Param("key") String key);
 
     @Query("SELECT ek FROM entry_key ek JOIN FETCH ek.account a JOIN a.owner o" +
             " WHERE ek.key = :key AND a.number = :numberAccount AND o.taxIdNumber = :taxIdNumber")
