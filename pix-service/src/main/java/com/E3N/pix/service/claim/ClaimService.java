@@ -12,15 +12,11 @@ import com.E3N.pix.domain.validation.Notification;
 import com.E3N.pix.service.claim.enums.ClaimOperationReason;
 
 import java.time.Instant;
-import java.util.IllegalFormatCodePointException;
 import java.util.Optional;
 
 public class ClaimService {
 
-    static final String DONOR_CANNOT = "Donor cannot cancel this type of claim.";
-    static final String CLAIMER_CANNOT = "Claimer cannot cancel this type of claim.";
-    static final String CLAIM_STATUS_NOT_ALLOW = "Claim's status does not permit to cancel.";
-    static final String RESOLUTION_PERIOD_NOT_ENDED = "Claim's resolution period must have ended to cancel as default operation.";
+    static final String CLAIM_STATUS_NOT_ALLOW = "Claim's status %s does not permit cancellation or you are not allowed.";
 
     public Claim create(
             final String claimerAccountId,
@@ -92,65 +88,64 @@ public class ClaimService {
         }
     }
 
-    public Notification cannotCancel(final Claim claim, ClaimOperationReason reason, final String participantRequest) {
-        // ok
+    /**
+     * Case: 'FRAUD, RECONCILIATION or RFB_VALIDATION' claimer can cancel portability if status is 'CONFIRMED'.
+     * Case: 'FRAUD' donor can cancel OWNERSHIP.
+     *
+     * @param claim              @description claim being canceled
+     * @param reason             @description why the claim is being canceled
+     * @param participantRequest @description who is canceling
+     * @return 'null' when can cancel or a Notification with the detail
+     */
+    public boolean canCancel(final Claim claim, ClaimOperationReason reason, final String participantRequest) {
+        // VALIDATE PARTICIPANT_EXCLUSION
         if (ClaimOperationReason.PARTICIPANT_EXCLUSION.equals(reason)){
-            return Notification.create("Conflict", 409, "The use of 'PARTICIPANT_EXCLUSION is exclusive for DICT.");
+            return false;
         }
-        // ok
-        if (claim.getType().equals(TypeClaim.PORTABILITY)
-                && (!claim.getStatus().equals(StatusClaim.OPEN)
-                && !claim.getStatus().equals(StatusClaim.WAITING_RESOLUTION))
-                && claim.getClaimerParticipant().equals(participantRequest)
-        ) {
-            return Notification.create("Conflict", 409, CLAIM_STATUS_NOT_ALLOW);
+        if (claim.getType().equals(TypeClaim.PORTABILITY)) {
+            // Validate claim status (OPEN, WAITING_RESOLUTION) CASE (USER_REQUESTED, FRAUD) CLAIMER AND DONOR CAN CANCEL
+            if ( ( StatusClaim.OPEN.equals(claim.getStatus()) || StatusClaim.WAITING_RESOLUTION.equals(claim.getStatus()) )
+                            && ( ClaimOperationReason.USER_REQUESTED.equals(reason) || ClaimOperationReason.FRAUD.equals(reason) )
+            ) {
+                return true;
+            }
+            // Validate status claim (WAITING_RESOLUTION) reason RECONCILIATION can not cancel claim
+            else if (StatusClaim.WAITING_RESOLUTION.equals(claim.getStatus()) && ClaimOperationReason.RECONCILIATION.equals(reason)){
+                return false;
+            }
+            // Case reason (ACCOUNT_CLOSURE, RECONCILIATION, RF_VALIDATION) Claimer can cancel claim
+            else if ( (ClaimOperationReason.ACCOUNT_CLOSURE.equals(reason)
+                || ClaimOperationReason.RECONCILIATION.equals(reason)
+                || ClaimOperationReason.RFB_VALIDATION.equals(reason))
+                    && claim.isClaimer(participantRequest)
+            ) {
+                return true;
+            }
+            // Case reason DEFAULT_OPERATION donor can cancel claim
+            else if (ClaimOperationReason.DEFAULT_OPERATION.equals(reason) && claim.isDonor(participantRequest) ){
+                return true;
+            }
+            // Case reason (FRAUD, RFB_VALIDATION, RECONCILIATION) and status claim is confirmed
+            else if ( (ClaimOperationReason.FRAUD.equals(reason)
+                    || ClaimOperationReason.RFB_VALIDATION.equals(reason)
+                    || ClaimOperationReason.RECONCILIATION.equals(reason) )
+                    && StatusClaim.CONFIRMED.equals(claim.getStatus())
+                    && claim.isClaimer(participantRequest)
+            ){
+                return true;
+            }
         }
-        // ok
-        if (reason.equals(ClaimOperationReason.DEFAULT_OPERATION) && Instant.now().isBefore(claim.getResolutionPeriodEnd())
-        && claim.getClaimerParticipant().equals(participantRequest)) {
-            return Notification.create("Conflict", 409, RESOLUTION_PERIOD_NOT_ENDED);
+        if (TypeClaim.OWNERSHIP.equals(claim.getType()) && claim.isClaimer(participantRequest)){
+            // Case status claim is (OPEN, WAITING_RESOLUTION, CONFIRMED) when OWNERSHIP just claimer can cancel
+            // if reason is DEFAULT_OPERATION completion period must have expired
+            return StatusClaim.OPEN.equals(claim.getStatus())
+                    || StatusClaim.WAITING_RESOLUTION.equals(claim.getStatus())
+                    || StatusClaim.CONFIRMED.equals(claim.getStatus())
+                    || (ClaimOperationReason.DEFAULT_OPERATION.equals(reason) && claim.completionPeriodEnded());
         }
-        // ok
-        if (ClaimOperationReason.ACCOUNT_CLOSURE.equals(reason) && claim.getDonorParticipant().equals(participantRequest)) {
-            return Notification.create("Conflict", 409, DONOR_CANNOT );
-        }
-        // ok
-        if (ClaimOperationReason.DEFAULT_OPERATION.equals(reason) && claim.getClaimerParticipant().equals(participantRequest)) {
-            return Notification.create("Conflict", 409, CLAIMER_CANNOT);
-        }
-        // ok
-        if (claim.getDonorParticipant().equals(participantRequest) &&
-                (ClaimOperationReason.RECONCILIATION.equals(reason) || ClaimOperationReason.RFB_VALIDATION.equals(reason))) {
-            return Notification.create("Conflict", 409, DONOR_CANNOT);
-        }
-        if (claim.getStatus().equals(StatusClaim.CONFIRMED)
-                && claim.getDonorParticipant().equals(participantRequest)
-                && (
-                        ClaimOperationReason.FRAUD.equals(reason)
-                        || ClaimOperationReason.RECONCILIATION.equals(reason)
-                        || ClaimOperationReason.RFB_VALIDATION.equals(reason)
-                    )
-        ){
-            return Notification.create("Conflict", 409, DONOR_CANNOT);
-        }
-        if (claim.getStatus().equals(StatusClaim.WAITING_RESOLUTION) && ClaimOperationReason.RECONCILIATION.equals(reason)){
-            return Notification.create("Conflict", 409, CLAIM_STATUS_NOT_ALLOW);
-        }
-        if (claim.getType().equals(TypeClaim.OWNERSHIP)
-                && (
-                        !claim.getStatus().equals(StatusClaim.WAITING_RESOLUTION)
-                        || !claim.getStatus().equals(StatusClaim.OPEN)
-                        || !claim.getStatus().equals(StatusClaim.CONFIRMED)
-                    )
-        ){
-            return Notification.create("Conflict", 409, CLAIM_STATUS_NOT_ALLOW);
-        }
-        if (claim.getType().equals(TypeClaim.OWNERSHIP) && claim.getDonorParticipant().equals(participantRequest)
-                && !ClaimOperationReason.FRAUD.equals(reason)
-        ){
-            return Notification.create("Conflict", 409, DONOR_CANNOT);
-        }
-        return null;
+
+        return claim.isDonor(participantRequest) && ClaimOperationReason.FRAUD.equals(reason)
+                && !claim.getStatus().equals(StatusClaim.CONFIRMED);
     }
 
     private void transferKey(Owner claimer, EntryKey donatingKey, final Claim claim) {

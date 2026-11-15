@@ -46,8 +46,9 @@ public class Claim extends Entity {
         this.donorParticipant = donorParticipant;
         this.keyClaimed = keyClaimed;
         this.lastModified = Instant.now();
-        this.resolutionPeriodEnd = Instant.now().plus(7, ChronoUnit.DAYS);
-        this.completionPeriodEnd = Instant.now();
+        var period = Instant.now().plus(7, ChronoUnit.DAYS);
+        this.resolutionPeriodEnd = period;
+        this.completionPeriodEnd = period;
         this.status = StatusClaim.OPEN;
         this.taxIdNumberClaimer = TaxIdNumber.getInstance(typePerson, taxIdNumberClaimer);
         this.type = type;
@@ -130,6 +131,18 @@ public class Claim extends Entity {
                 typeKeyClaimed,
                 typePerson
         );
+    }
+
+    public boolean isClaimer(final String participantRequest){
+        return participantRequest.equals(this.claimerParticipant);
+    }
+
+    public boolean isDonor(final String participantRequest){
+        return participantRequest.equals(this.donorParticipant);
+    }
+
+    public boolean completionPeriodEnded(){
+        return this.completionPeriodEnd.isBefore(Instant.now());
     }
 
     public void updateStatus(StatusClaim status){
