@@ -9,5 +9,6 @@
     <xs:include schemaLocation="get-claim.xsd"/>
     <xs:include schemaLocation="acknowledge-claim.xsd"/>
     <xs:include schemaLocation="confirm-claim.xsd"/>
+    <xs:include schemaLocation="cancel-claim.xsd"/>
 
 </xs:schema>
